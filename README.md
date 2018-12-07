@@ -1,0 +1,324 @@
+# Winkit Angular
+
+IMPORTANT: Before starting a Winkit Angular project, make sure to read about the [basics of Winkit CLI](https://github.com/WINKgroup/winkit-cli).
+
+## Adding Winkit Angular plugin
+
+To add the Winkit Angular plugin to your project, run:
+```
+winkit add:plugin angular
+```
+## Help
+To get help on Winkit Angular commands run `winkit angular --help`
+
+## Commands
+
+### winkit angular init|i \<projectName\>
+
+Initializes a new WDK Angular application in a new folder.
+```
+winkit angular init myproject
+```
+The application works right out of the box. Included are: authentication, password recovery, user CRUD, profile page, file upload, etc.
+
+### winkit angular generate|g model \<name\>
+
+Generate a new model and its associated server model, ready to be mapped.
+
+NOTE: If you are using **Strapi** remember to also:
+* create the model on the server-side (ex. using the Strapi dashboard)
+* add the `wid: string` parameter for both models
+
+(if you are using **Firestore** you don't have to do anything because everything will be managed by WDK Angular)
+
+Let's explain with an example:
+```
+winkit angular generate model Foo
+```
+This command will generate the following file structure in the _src/app/modules/_ folder:
+
+* `foo/`
+    * `models/`
+        * `Foo.ts`
+        * `ServerFoo.ts`
+        * `FooDataFactory.ts`
+    * `foo.conf.json`
+    * `foo.module.ts`
+    * `foo.routing.ts`
+
+NOTE: The _foo/_ directory and the _foo.conf.json_, _foo.module.ts_ and _foo.routing.ts_ files are only generated if they don't exist yet.
+
+##### 1. src/app/modules/foo/models/Foo.ts
+_map(obj: ServerFoo): Foo_ : maps the model starting from its server model.
+```
+Ex. const foo = new Foo().map(serverFoo);
+```
+
+_mapReverse(): ServerFoo_ : maps the model starting from its server model.
+```
+Ex. const serverFoo = foo.mapReverse();
+```
+##### 2. src/app/modules/foo/models/ServerFoo.ts
+_static map(obj: Foo): ServerFoo_ : this method is called by the model _mapReverse_ function.
+
+Edit this method to manage the mapping as you need.
+```
+Ex.
+const o = {} as ServerFoo;
+o.first_name = obj.firstName || null;
+```
+
+_static mapReverse(serverObject: ServerUser): User_ : this method is called by the  model _map_ function.
+
+Edit this method to manage the mapping as you need.
+```
+Ex.
+const o = {} as Foo;
+o.firstName = serverObject.first_name || null;
+```
+##### 3. src/app/modules/foo/models/FooDataFactory.ts
+File providing data used by the model's components. This file is updated by Winkit Angular.
+
+##### 4. src/app/modules/foo/foo.conf.json
+The model configuration file. For more information on using the file, see the [update model](#winkit-angular-update-u-model-name) documentation.
+
+##### 5. src/app/modules/foo/foo.module.ts
+The model module file - a standard Angular module which handles all the data and dependencies related to the model.
+
+##### 6. src/app/modules/foo/foo.routing.ts
+The model routing file. It exports an object with 2 properties: 
+* `componentRoutes` _(required)_:  an array of Angular type [Routes](https://angular.io/api/router/Routes)
+* `routeInfo` _(optional)_:  an object of type [RouteInfo](https://gitlab.com/winkular/winkular/blob/master/src/app/@core/sidebar/sidebar.metadata.ts)
+### winkit angular generate|g service \<modelName\>
+
+Generate a new service for given model, so you'll be ready to implement CRUD that works with the server chosen in the initialization.
+
+NOTE: If the associated model does not exist yet, it is generated together with all necessary files (for more info see [generate model](#winkit-angular-generate-g-model-name) section), before the the service file is generated.
+
+Let's explain with an example:
+```
+winkit angular generate|g service Foo
+```
+
+This command will generate the service and add it to the foo.module.ts:
+##### src/app/modules/foo/service/foo.service.ts
+on creation the service includes methods that allow you to:
+- Create model
+- Update model
+- Delete model
+- Get model by id
+- Get paginated list
+
+### winkit angular generate|g detail \<modelName\>
+Generate a new detail component for given model and implement its routing, so you'll be ready to display model info.
+
+Let's explain with an example:
+```
+winkit angular generate|g detail Foo
+```
+
+This command will generate:
+##### 1. src/app/modules/foo/foo-detail/
+- foo-detail.component.ts
+- foo-detail.component.html
+- foo-detail.component.scss
+
+This component implements the CRUD of the Model, including validation.
+
+##### 2. `foo/:id` route in src/app/modules/foo/foo.routing.ts
+By default the generated route is accessible just by authenticated user with ADMIN role.
+<br>Thanks to this route you can:
+-  Create new instance of this model:
+```
+ localhost:5000/foo/new
+```
+-  Detail / Update the instance with given id, ex. #1:
+```
+ localhost:5000/foo/1
+```
+---
+NOTE: The model info will be displayed in the detail component inside a `<form>` element. You can manage the form control elements inside the form by:
+* editing the `<modelName>-detail.component.html` file
+* editing the `<modelName>.conf.json` configuration file and updating the model and detail ([more info](#winkit-angular-update-u-model-name))
+* passing an array of type [FormControlList](https://gitlab.com/winkular/winkular/blob/master/src/app/@core/models/FormControlTypes.ts) as the 2nd argument in the `<modelName>DataFactory.getFormControls()` call in `<modelName>-detail.component.ts` and assigning the returned data to the formControlList attribute of the detail component. For example:
+```angularjs
+this.formControlList = ZdueDataFactory.getFormControls(this, [
+  {name: 'sometext', type: FormControlType.TEXT}
+]);
+```
+### winkit angular generate|g list \<modelName\>
+Generates a new list component for given model, implements its routing and adds the link to the sidebar, so the list is ready to be displayed, including pagination and filtering.
+
+Let's explain with an example:
+```
+winkit angular generate|g list Foo
+```
+This command will generate:
+##### 1. src/app/modules/foo/foo-list/
+- foo-list.component.ts
+- foo-list.component.html
+- foo-list.component.scss
+
+This component includes the paginated table list and the filter component.
+
+##### 2. `foo-list` route in src/app/modules/foo/foo.routing.ts
+By default the generated route is accessible just by authenticated user with ADMIN role.
+<br>Every element in the table includes a link to its detail page.
+##### 3. `foo-list` link in src/app/@core/sidebar/sidebar-routes.config.ts
+By default the link is visible just to ADMIN users.
+
+### winkit angular update|u model \<name\>
+Updates a model based on the configuration in the _\<name\>.conf.json_ file.
+
+([example configuration file](https://gitlab.com/winkular/winkular/blob/master/src/app/modules/user/user.conf.json))
+
+The schema of the the _\<name\>.conf.json_ configuration file is the following:
+* **"properties"** (`Array<ModelProperty>`): an array of ModelProperty objects.
+
+**IMPORTANT**: To exclude a ModelProperty from being updated by Winkit (ex. because you want to something custom with it), set its `skipUpdate` property to `true` (see below for more info);
+
+The structure of the **ModelProperty** object is the following:
+* **name** (`string`: _required_): the name of the model property;
+* **type** (`string`: _optional_): a string containing a typescript type ([more info](https://www.typescriptlang.org/docs/handbook/basic-types.html));
+* **optional** (`boolean`: _optional_): adds TypeScript's optional class marker to a property ([more info](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#optional-class-properties));
+* **value** (`string`: _optional_): a string containing the default value assigned to the model on initialization. Setting this key results in ignoring the _type_ and _optional_ keys;
+* **skipUpdate** (`boolean`: _optional_): setting this value to `true` results in the model property not being added to the model or updated (if it already exists on the model) when `winkit angular update|u ...` is called;
+* **htmlConfig** (`object`: _optional_): An object containing configuration of a single form control element (used in the detail component of a given model). For more information see [Structure of the htmlConfig object](#structure-of-the-htmlConfig-object) section below;
+
+NOTE: The _id_, __id_ and _wid_ model properties are not affected by the _\<name\>.conf.json_ configuration.
+
+#### Structure of the `htmlConfig` object
+
+The structure of `htmlConfig` object mostly reflects [attributes of an HTMLInputElement](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) but also has some additional settings:
+
+GENERAL
+
+* **type** (`FormControlType | HTMLInputElement.type`): a [HTMLInputElement type](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types) or one of the special types listed in the [FormControlType](https://gitlab.com/winkular/winkular/blob/master/src/app/@core/models/FormControlTypes.ts) enum;
+* **required** (`boolean`: _optional_): sets the `required` attribute of the input element;
+* **disabled** (`boolean`: _optional_): sets the `disabled` attribute of the input element;
+* **readonly** (`boolean`: _optional_): sets the `readonly` attribute of the input element;
+* **pattern** (`boolean`: _optional_): sets the `pattern` attribute of the input element;
+* **wrapperClass** (`string`: _optional_): The class of the generated HTML element. Default value: `col-sm-6 mb-3`
+* **innerWrapperClass** (`string`: _optional_): The class of the `<div>` element that wraps the contents of the generated HTML element.
+* **order** (`number | string`: _optional_): Sets the CSS [order property](https://developer.mozilla.org/en-US/docs/Web/CSS/order) of the form element.
+* **inputFeedbackText** (`string`: _optional_): The text inside the `<small>` element, which is displayed when the value of the input is invalid. **NOTE**: Setting the `inputFeedbackText` attribute is the condition for displaying the `<small>` feedback element.
+* **inputFeedbackExample** (`string`: _optional_): The italicized text  displayed in round brackets after `inputFeedbackText` inside the `<small>` element.
+
+FORM ELEMENT TYPE: SELECT
+* **options** (`Array<string | {name: string, value: any}>`: _required_): The list of `<option>` elements that will be generated inside the `<select>` element.
+
+FORM ELEMENT TYPE: MEDIA
+* **allowedTypes** (`Array<MediaType>`: _required_): Array of [MediaType enum](https://gitlab.com/winkular/winkular/blob/master/src/app/shared/components/media-manager/Media.ts) values.
+
+FORM ELEMENT TYPE: TEXTAREA
+* **rows** (`number`: _optional_): sets the `rows` attribute of the `<textarea>` element. Default value: `6`
+
+**IMPORTANT**:
+* Inside _htmlConfig_ you can use the `that` keyword to reference an external object. By default this object is the current model's detail component class (ex. _FooDetailComponent_). This is achieved by passing `this` as the 1st argument in the `<modelName>DataFactory.getFormControls()` call in `<modelName>-detail.component.ts`. To reference a different object pass it as the 1st argument instead of `this`.
+* To set a string literal as a value in _htmlConfig_ wrap it in additional quotes, ex.: `"'example string literal'"`
+
+Let's explain with an example:
+
+**src/app/modules/foo/foo.conf.json**
+```json
+{
+  "properties": [
+    {"name": "first", "optional": true},
+    {"name": "second", "type": "{id: number, [key: string]: any, someKey: SomeClass[]}"},
+    {"name": "third", "value": "['some string', 1.2]"},
+    {"name": "fourth", "skipUpdate": true},
+    {"name": "fifth", "type": "string", "htmlConfig": {
+      "type": "FormControlType.SELECT", "required": true, "options": "that.fifthPropOptions"
+    }}
+  ]
+}
+```
+With the above configuration, running this command:
+```
+winkit angular update|u model Foo
+```
+will result in the following property settings in `Foo.ts` and `ServerFoo.ts` models:
+
+##### 1. src/app/modules/foo/models/Foo.ts
+
+```
+...
+id: string;
+wid: string;
+first?;
+second: {id: number, [key: string]: any, someKey: SomeClass[]};
+third = ['some string', 1.2];
+fifth: string;
+...
+constructor()
+constructor(id?: string,
+            first?,
+            second?: {id: number, [key: string]: any, someKey: SomeClass[]},
+            third?: any,
+            fifth?: string) {
+    this.id = typeof id !== 'undefined' ? id : null;
+    this.wid = typeof id !== 'undefined' ? id : null;
+    this.first = typeof first !== 'undefined' ? first : null;
+    this.second = typeof second !== 'undefined' ? second : null;
+    this.third = typeof third !== 'undefined' ? third : ['some string', 1.2];
+    this.fifth = typeof fifth !== 'undefined' ? fifth : null;
+}
+...
+```
+##### 2. src/app/modules/foo/models/ServerFoo.ts
+```
+...
+_id?: string;
+wid?: string;
+first?;
+second: {id: number, [key: string]: any, someKey: SomeClass[]};
+third: any = ['some string', 1.2];
+fifth: string;
+...
+static map(obj: Zuno): ServerZuno {
+    const o = {} as ServerZuno;
+    o._id = typeof obj.id !== 'undefined' ? obj.id : null;
+    o.wid = typeof obj.id !== 'undefined' ? obj.id : null;
+    o.first = typeof obj.first !== 'undefined' ? obj.first : null;
+    o.second = typeof obj.second !== 'undefined' ? obj.second : null;
+    o.third = typeof obj.third !== 'undefined' ? obj.third : null;
+    o.fifth = typeof obj.fifth !== 'undefined' ? obj.fifth : null;
+    return o;
+}
+...
+static mapReverse(serverObject: ServerZuno): Zuno {
+    const o = {} as Zuno;
+    o.id = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
+    o.wid = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
+    o.first = typeof serverObject.first !== 'undefined' ? serverObject.first : null;
+    o.second = typeof serverObject.second !== 'undefined' ? serverObject.second : null;
+    o.third = typeof serverObject.third !== 'undefined' ? serverObject.third : null;
+    o.fifth = typeof serverObject.fifth !== 'undefined' ? serverObject.fifth : null;
+    return o;
+}
+...
+```
+NOTE: Before the server model is generated, you are prompted to choose the update method. Choosing `automatic` will result in using the property names provided in the configuration file. Choosing the `manual` option triggers a simple property mapping tool, where you can provide new names for server-side properties.
+
+##### 3. src/app/modules/foo/models/FooDataFactory.ts
+
+```
+...
+static getFormControls = (that: any, customControlList: FormControlList = []): FormControlList => {
+    const generatedFormControls: FormControlList = [
+      {name: 'fifth', required: true, type: FormControlType.SELECT, options: that.fifthPropOptions}
+    ];
+...
+```
+# Known issues
+- Strapi has been reported to not support Node.js >9 versions on certain versions of Windows. [Link to issue](https://github.com/strapi/strapi/issues/1602)
+- In Strapi 3.0.0-alpha.15 and 3.0.0-alpha.16 there is a bug causing update actions of User objects to fail. For possible solutions see [this Strapi issue report](https://github.com/strapi/strapi/issues/2446)
+- In Strapi 3.0.0-alpha.15 and 3.0.0-alpha.16 there is a bug causing create requests for non-User models to return a 404 error, even though instances of models are correctly created. See [this Strapi issue report](https://github.com/strapi/strapi/issues/2447)
+- In Firestore the filter feature is case sensitive and must match the whole value
+# What's next?
+### winkit angular update|u model \<modelName\>
+- Validate all generated html elements in the ViewModel of the detail component
+- Add the generated parameter to the table header in the list component
+
+### winkit angular delete|d \<elementType\> \<modelName\>
+This command will delete the model and all its associated files.
