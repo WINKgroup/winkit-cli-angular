@@ -36,15 +36,17 @@ To get help on Winkit Angular commands run `winkit angular --help`
 ## Server configuration
 
 Out-of-the-box **Winkit Angular** supports two server platforms - Strapi ([visit website](https://strapi.io/)) and Firestore ([visit website](https://firebase.google.com/docs/firestore/)). Learn how to prepare your server for work with Winkit Angular:
-* [Firestore](firestore)
-* [Strapi](strapi)
+* [Firestore](#conf-server-firestore)
+* [Strapi](#conf-server-strapi)
 
+<a name="conf-server-firestore"></a>
 ### Firestore
 
 If you want to use Winkular with Firestore you must first configure your project in [Firebase](https://console.firebase.google.com/u/0/).
 <br>Once the project is created, open `/src/environments/environment.ts` and update `firebaseConfig` with the project info.
 <br>Do the same for `/src/environments/environment.prod.ts` with info for production environment.
 
+<a name="conf-server-strapi"></a>
 ### Strapi
 1. install strapi globally
     ```
