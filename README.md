@@ -2,17 +2,171 @@
 
 IMPORTANT: Before starting a Winkit Angular project, make sure to read about the [basics of Winkit CLI](https://github.com/WINKgroup/winkit-cli).
 
+# Contents
+
+1. [Adding Winkit Angular plugin](#adding-winkit-angular-plugin)
+2. [Getting help](#getting-help)
+3. [Quick start](#quick-start)
+4. [Winkit Angular commands](#commands)
+    1. [Initializing a project](#init-project)
+    2. [Generating a model](#generate-model)
+    3. [Generating a service](#generate-service)
+    4. [Generating a detail](#generate-detail)
+    5. [Generating a list](#generate-list)
+    6. [Updating a model](#update-model)
+5. [Known issues](#known-issues)
+6. [What's next?](#whats-next)
+
 ## Adding Winkit Angular plugin
 
 To add the Winkit Angular plugin to your project, run:
 ```
 winkit add:plugin angular
 ```
-## Help
+## Getting help
 To get help on Winkit Angular commands run `winkit angular --help`
+
+## Quick start
+- [Configure your server](#conf-server)
+- Run `winkit angular init <projectName>`
+- Choose the server you want to work with (**Firestore** or **Strapi / Http**)
+- Enjoy!
+
+<a name="conf-server"></a>
+## Server configuration
+
+Out-of-the-box **Winkit Angular** supports two server platforms - Strapi ([visit website](https://strapi.io/)) and Firestore ([visit website](https://firebase.google.com/docs/firestore/)). Learn how to prepare your server for work with Winkit Angular:
+* [Firestore](firestore)
+* [Strapi](strapi)
+
+### Firestore
+
+If you want to use Winkular with Firestore you must first configure your project in [Firebase](https://console.firebase.google.com/u/0/).
+<br>Once the project is created, open `/src/environments/environment.ts` and update `firebaseConfig` with the project info.
+<br>Do the same for `/src/environments/environment.prod.ts` with info for production environment.
+
+### Strapi
+1. install strapi globally
+    ```
+    npm install strapi@alpha -g
+    ```
+
+2. Run the following command line in your terminal:
+    ```
+    strapi new strapi-winkular
+    ```
+
+3. Go to your project and launch the server:
+    ```
+    cd strapi-winkular
+    strapi start
+    ```
+
+4. Create your first admin user
+
+5. Open `strapi-winkular/plugins/users-permissions/models/User.settings.json`
+
+6. Replace the content with the following:
+
+    ```
+    {
+      "connection": "default",
+      "info": {
+        "name": "user",
+        "description": ""
+      },
+      "attributes": {
+        "username": {
+          "type": "string",
+          "minLength": 3,
+          "unique": true,
+          "configurable": false,
+          "required": true
+        },
+        "email": {
+          "type": "email",
+          "minLength": 6,
+          "configurable": false,
+          "required": true
+        },
+        "password": {
+          "type": "password",
+          "minLength": 6,
+          "configurable": false,
+          "private": true
+        },
+        "confirmed": {
+          "type": "boolean",
+          "default": false,
+          "configurable": false
+        },
+        "blocked": {
+          "type": "boolean",
+          "default": false,
+          "configurable": false
+        },
+        "role": {
+          "model": "role",
+          "via": "users",
+          "plugin": "users-permissions",
+          "configurable": false
+        },
+        "userRole": {
+          "default": "",
+          "type": "string"
+        },
+        "firstName": {
+          "default": "",
+          "type": "string"
+        },
+        "lastName": {
+          "default": "",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "type": "string"
+        },
+        "telephone": {
+          "default": "",
+          "type": "string"
+        },
+        "profileImg": {
+          "default": "",
+          "type": "string"
+        },
+        "dateOfBirth": {
+          "default": "",
+          "type": "integer"
+        },
+        "registeredAt": {
+          "default": "",
+          "type": "integer"
+        },
+        "isMale": {
+          "default": false,
+          "type": "boolean"
+        },
+        "media": {
+          "collection": "file",
+          "via": "related",
+          "plugin": "upload"
+        }
+      },
+      "collectionName": "users-permissions_user"
+    }
+    
+    ```
+
+7. Go to `http://localhost:1337/admin/plugins/content-manager/user?source=users-permissions`
+
+8. Open the admin detail and populate the userRole field with the value `ADMIN` then save.
+
+9. Now you can log into Winkular using these user credentials!
 
 ## Commands
 
+<a id="init-project"></a>
 ### winkit angular init|i \<projectName\>
 
 Initializes a new WDK Angular application in a new folder.
@@ -21,6 +175,7 @@ winkit angular init myproject
 ```
 The application works right out of the box. Included are: authentication, password recovery, user CRUD, profile page, file upload, etc.
 
+<a id="generate-model"></a>
 ### winkit angular generate|g model \<name\>
 
 Generate a new model and its associated server model, ready to be mapped.
@@ -89,6 +244,8 @@ The model module file - a standard Angular module which handles all the data and
 The model routing file. It exports an object with 2 properties: 
 * `componentRoutes` _(required)_:  an array of Angular type [Routes](https://angular.io/api/router/Routes)
 * `routeInfo` _(optional)_:  an object of type [RouteInfo](https://gitlab.com/winkular/winkular/blob/master/src/app/@core/sidebar/sidebar.metadata.ts)
+
+<a id="generate-service"></a>
 ### winkit angular generate|g service \<modelName\>
 
 Generate a new service for given model, so you'll be ready to implement CRUD that works with the server chosen in the initialization.
@@ -109,6 +266,7 @@ on creation the service includes methods that allow you to:
 - Get model by id
 - Get paginated list
 
+<a id="generate-detail"></a>
 ### winkit angular generate|g detail \<modelName\>
 Generate a new detail component for given model and implement its routing, so you'll be ready to display model info.
 
@@ -146,6 +304,8 @@ this.formControlList = ZdueDataFactory.getFormControls(this, [
   {name: 'sometext', type: FormControlType.TEXT}
 ]);
 ```
+
+<a id="generate-list"></a>
 ### winkit angular generate|g list \<modelName\>
 Generates a new list component for given model, implements its routing and adds the link to the sidebar, so the list is ready to be displayed, including pagination and filtering.
 
@@ -167,6 +327,7 @@ By default the generated route is accessible just by authenticated user with ADM
 ##### 3. `foo-list` link in src/app/@core/sidebar/sidebar-routes.config.ts
 By default the link is visible just to ADMIN users.
 
+<a id="update-model"></a>
 ### winkit angular update|u model \<name\>
 Updates a model based on the configuration in the _\<name\>.conf.json_ file.
 
@@ -317,7 +478,6 @@ static getFormControls = (that: any, customControlList: FormControlList = []): F
 - In Firestore the filter feature is case sensitive and must match the whole value
 # What's next?
 ### winkit angular update|u model \<modelName\>
-- Validate all generated html elements in the ViewModel of the detail component
 - Add the generated parameter to the table header in the list component
 
 ### winkit angular delete|d \<elementType\> \<modelName\>
