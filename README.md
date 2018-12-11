@@ -237,7 +237,7 @@ o.firstName = serverObject.first_name || null;
 File providing data used by the model's components. This file is updated by Winkit Angular.
 
 ##### 4. src/app/modules/foo/foo.conf.json
-The model configuration file. For more information on using the file, see the [update model](#winkit-angular-update-u-model-name) documentation.
+The model configuration file. For more information on using the file, see the [update model](#update-model) documentation.
 
 ##### 5. src/app/modules/foo/foo.module.ts
 The model module file - a standard Angular module which handles all the data and dependencies related to the model.
@@ -252,7 +252,7 @@ The model routing file. It exports an object with 2 properties:
 
 Generate a new service for given model, so you'll be ready to implement CRUD that works with the server chosen in the initialization.
 
-NOTE: If the associated model does not exist yet, it is generated together with all necessary files (for more info see [generate model](#winkit-angular-generate-g-model-name) section), before the the service file is generated.
+NOTE: If the associated model does not exist yet, it is generated together with all necessary files (for more info see [generate model](#generate-model) section), before the the service file is generated.
 
 Let's explain with an example:
 ```
@@ -299,7 +299,7 @@ By default the generated route is accessible just by authenticated user with ADM
 ---
 NOTE: The model info will be displayed in the detail component inside a `<form>` element. You can manage the form control elements inside the form by:
 * editing the `<modelName>-detail.component.html` file
-* editing the `<modelName>.conf.json` configuration file and updating the model and detail ([more info](#winkit-angular-update-u-model-name))
+* editing the `<modelName>.conf.json` configuration file and updating the model and detail ([more info](#update-model))
 * passing an array of type [FormControlList](https://github.com/WINKgroup/winkit-cli-angular/blob/master/resources/templates/project_template/src/app/%40core/models/FormControlTypes.ts) as the 2nd argument in the `<modelName>DataFactory.getFormControls()` call in `<modelName>-detail.component.ts` and assigning the returned data to the formControlList attribute of the detail component. For example:
 ```angularjs
 this.formControlList = ZdueDataFactory.getFormControls(this, [
