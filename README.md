@@ -245,7 +245,7 @@ The model module file - a standard Angular module which handles all the data and
 ##### 6. src/app/modules/foo/foo.routing.ts
 The model routing file. It exports an object with 2 properties: 
 * `componentRoutes` _(required)_:  an array of Angular type [Routes](https://angular.io/api/router/Routes)
-* `routeInfo` _(optional)_:  an object of type [RouteInfo](https://gitlab.com/winkular/winkular/blob/master/src/app/@core/sidebar/sidebar.metadata.ts)
+* `routeInfo` _(optional)_:  an object of type [RouteInfo](https://github.com/WINKgroup/winkit-cli-angular/blob/master/resources/templates/project_template/src/app/%40core/sidebar/sidebar.metadata.ts)
 
 <a id="generate-service"></a>
 ### winkit angular generate|g service \<modelName\>
@@ -300,7 +300,7 @@ By default the generated route is accessible just by authenticated user with ADM
 NOTE: The model info will be displayed in the detail component inside a `<form>` element. You can manage the form control elements inside the form by:
 * editing the `<modelName>-detail.component.html` file
 * editing the `<modelName>.conf.json` configuration file and updating the model and detail ([more info](#winkit-angular-update-u-model-name))
-* passing an array of type [FormControlList](https://gitlab.com/winkular/winkular/blob/master/src/app/@core/models/FormControlTypes.ts) as the 2nd argument in the `<modelName>DataFactory.getFormControls()` call in `<modelName>-detail.component.ts` and assigning the returned data to the formControlList attribute of the detail component. For example:
+* passing an array of type [FormControlList](https://github.com/WINKgroup/winkit-cli-angular/blob/master/resources/templates/project_template/src/app/%40core/models/FormControlTypes.ts) as the 2nd argument in the `<modelName>DataFactory.getFormControls()` call in `<modelName>-detail.component.ts` and assigning the returned data to the formControlList attribute of the detail component. For example:
 ```angularjs
 this.formControlList = ZdueDataFactory.getFormControls(this, [
   {name: 'sometext', type: FormControlType.TEXT}
@@ -333,7 +333,7 @@ By default the link is visible just to ADMIN users.
 ### winkit angular update|u model \<name\>
 Updates a model based on the configuration in the _\<name\>.conf.json_ file.
 
-([example configuration file](https://gitlab.com/winkular/winkular/blob/master/src/app/modules/user/user.conf.json))
+([example configuration file](https://github.com/WINKgroup/winkit-cli-angular/blob/master/resources/templates/project_template/src/app/modules/user/user.conf.json))
 
 The schema of the the _\<name\>.conf.json_ configuration file is the following:
 * **"properties"** (`Array<ModelProperty>`): an array of ModelProperty objects.
@@ -356,7 +356,7 @@ The structure of `htmlConfig` object mostly reflects [attributes of an HTMLInput
 
 GENERAL
 
-* **type** (`FormControlType | HTMLInputElement.type`): a [HTMLInputElement type](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types) or one of the special types listed in the [FormControlType](https://gitlab.com/winkular/winkular/blob/master/src/app/@core/models/FormControlTypes.ts) enum;
+* **type** (`FormControlType | HTMLInputElement.type`): a [HTMLInputElement type](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types) or one of the special types listed in the [FormControlType](https://github.com/WINKgroup/winkit-cli-angular/blob/master/resources/templates/project_template/src/app/%40core/models/FormControlTypes.ts) enum;
 * **required** (`boolean`: _optional_): sets the `required` attribute of the input element;
 * **disabled** (`boolean`: _optional_): sets the `disabled` attribute of the input element;
 * **readonly** (`boolean`: _optional_): sets the `readonly` attribute of the input element;
@@ -371,7 +371,7 @@ FORM ELEMENT TYPE: SELECT
 * **options** (`Array<string | {name: string, value: any}>`: _required_): The list of `<option>` elements that will be generated inside the `<select>` element.
 
 FORM ELEMENT TYPE: MEDIA
-* **allowedTypes** (`Array<MediaType>`: _required_): Array of [MediaType enum](https://gitlab.com/winkular/winkular/blob/master/src/app/shared/components/media-manager/Media.ts) values.
+* **allowedTypes** (`Array<MediaType>`: _required_): Array of [MediaType enum](https://github.com/WINKgroup/winkit-cli-angular/blob/master/resources/templates/project_template/src/app/shared/components/media-manager/Media.ts) values.
 
 FORM ELEMENT TYPE: TEXTAREA
 * **rows** (`number`: _optional_): sets the `rows` attribute of the `<textarea>` element. Default value: `6`
