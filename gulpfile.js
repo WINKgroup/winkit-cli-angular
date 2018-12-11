@@ -2,11 +2,10 @@
 const gulp = require('gulp');
 const prompt = require('inquirer').createPromptModule();
 const fs = require('fs');
+const fsExtra = require('fs-extra');
 const color = require('gulp-color');
 const mkdirp = require('mkdirp');
-const git = require('gulp-git');
 const del = require('del');
-const deleteLines = require('gulp-delete-lines');
 const shell = require('gulp-shell');
 
 const { modelTemplate, serverModelTemplate, serviceTemplate, componentDetailViewModelTemplate, componentDetailViewTemplate, componentDetailStyleTemplate, componentListViewModelTemplate, componentListViewTemplate, componentListStyleTemplate, windowKeyList, moduleTemplate, REGEXS, validateName, getModulePaths, elementTypes, checkAlreadyExist, staticTexts, dynamicTexts, nonUpdateableModels, configTemplate, moduleRoutingTemplate, getTypesToImport, getUserPropMap, getDuplicateValuesByPropName, dataFactoryTemplate
@@ -655,30 +654,13 @@ async function cloneRepo() {
             console.log(e);
             resolve(false);
         }
-
-        git.init((err) => {
-            if (err) onError(err, resolve);
-            else {
-                git.addRemote('origin', 'https://gitlab.com/winkular/winkular.git', (err) => {
-                    if (err) onError(err);
-                    else {
-                        git.pull('origin', 'master', {args: '--rebase'}, (err) => {
-                            git.removeRemote('origin', (err1) => {
-                                if (err1) onError(err1);
-                                else {
-                                    if (err) {
-                                        onError(err);
-                                    } else {
-                                        console.log(color(staticTexts.cloned[0], staticTexts.cloned[1]));
-                                        resolve(true);
-                                    }
-                                }
-                            });
-                        });
-                    }
-                });
+        fsExtra.copy(`${__dirname}/resources/templates/project_template`, './', err => {
+            if (err) {
+                onError(err)
             }
-        });
+            console.log(color(staticTexts.cloned[0], staticTexts.cloned[1]));
+            resolve(true);
+        })
     });
 }
 
@@ -723,32 +705,17 @@ async function configure() {
                     })
                 ]).then(() => {
                     del.sync(['implementableServers/**']);
-                    gulp.src('.gitignore')
-                        .pipe(deleteLines({
-                            'filters': [
-                                /\/src\//i
-                            ]
-                        }))
-                        .pipe(gulp.dest('./'))
+                    console.log(color(staticTexts.configured[0], staticTexts.configured[1]));
+                    console.log(color(staticTexts.enjoy[0], staticTexts.enjoy[1]));
+                    gulp.src('./package.json', {read: false})
+                        .pipe(shell([
+                            'npm run firstRun'
+                        ]))
+                        .on('end', () => {
+                            resolve(true);
+                        })
                         .on('error', () => {
                             resolve(false);
-                        })
-                        .on('end', () => {
-                            shell.task(['git add . && git commit -m "project initialized"'])(err => {
-                                if (err) resolve(false);
-                                console.log(color(staticTexts.configured[0], staticTexts.configured[1]));
-                                console.log(color(staticTexts.enjoy[0], staticTexts.enjoy[1]));
-                                gulp.src('./package.json', {read: false})
-                                    .pipe(shell([
-                                        'npm run firstRun'
-                                    ]))
-                                    .on('end', () => {
-                                        resolve(true);
-                                    })
-                                    .on('error', () => {
-                                        resolve(false);
-                                    });
-                            });
                         });
                 });
             });

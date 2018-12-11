@@ -1,0 +1,91 @@
+<div class="card filters">
+  <div class="card-header" style="display: flex; justify-content: space-between;" (click)="toggleCardExpanded()">
+    <h4 class="card-title">{{'Filter' | translate}}</h4>
+    <button class="btn btn-primary pb-0">
+      <i class="material-icons">{{cardExpanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</i>
+    </button>
+  </div>
+  <div class="card-body" *ngIf="fieldList && fieldList.length > 0 && cardExpanded; else cardCollapsed">
+    <div class="row">
+      <div *ngFor="let section of fields | keys; let first = first" class="col-12 flex-column">
+        <h5 *ngIf="section !== generalSectionKey" class="mb-4 col-12 text-uppercase" [class.mt-4]="!first">{{section | translate}}</h5>
+        <div [class.border]="section !== generalSectionKey" class="rounded d-flex flex-wrap py-3">
+          <ng-container *ngFor="let field of fieldList | where : { section: section }">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf="field.type === fieldType.TEXT && !field.hide">
+              <div>
+                <div class="form-group label-floating">
+                  <label for="" class="control-label">{{field.label | translate}}</label>
+                  <input type="text" class="form-control" name="{{field.attrName}}" [(ngModel)]="fields[section][field.attrName]"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf="field.type === fieldType.NUMBER && !field.hide">
+              <div>
+                <div class="form-group label-floating">
+                  <label for="" class="control-label">{{field.label | translate}}</label>
+                  <input type="number" class="form-control" name="{{field.attrName}}" [(ngModel)]="fields[section][field.attrName]"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 date-input" *ngIf="field.type === fieldType.DATE && !field.hide">
+              <div class="form-group label-floating">
+                <label for="" class="control-label full-width">{{field.label | translate}}</label>
+                <div class="input-group">
+                  <input class="form-control" placeholder="{{field.placeholder | translate}}"
+                         name="{{field.attrName}}" [(ngModel)]="fields[section][field.attrName]" ngbDatepicker #d="ngbDatepicker" readonly>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary p-1" (click)="d.toggle()" type="button">
+                      <mat-icon style="font-size: 1.2rem; cursor: pointer;">calendar_today</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf="field.type === fieldType.SELECT && !field.hide">
+              <div class="full-width padding0">
+                <label for="" class="control-label">{{field.label | translate}}</label>
+                <select class="form-control" [(ngModel)]="fields[section][field.attrName]" [disabled]="field.list.length < 1" [name]="field.attrName" (change)="field.onValueSelected ? field.onValueSelected($event) : null">
+                  <option [value]=""></option>
+                  <option *ngFor="let el of field.list" [value]="el.id">{{el.name | translate}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xs-12" *ngIf="field.type === fieldType.CHECK_LIST && !field.hide">
+              <h4 class="info-text">{{field.label | translate}}</h4>
+              <div class="checkbox checkbox-inline margin0 col-xs-6 col-sm-4 col-md-4" *ngFor="let el of field.list">
+                <label>
+                  <input type="checkbox" name="optionsCheckboxes" [(ngModel)]="fields[section][field.attrName][el.id]">{{el.name | translate}}
+                </label>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf="field.type === fieldType.BOOLEAN && !field.hide">
+              <div class="full-width padding0">
+                <label for="" class="control-label">{{field.placeholder | translate}}</label>
+                <select class="form-control" [(ngModel)]="fields[section][field.attrName]" [name]="field.attrName">
+                  <option [value]=""></option>
+                  <option [value]="'true'">{{'YES' | translate}}</option>
+                  <option [value]="'false'">{{'NO' | translate}}</option>
+                </select>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #cardCollapsed>
+      <div class="card-body p-2">
+        <div class="row">
+          <div class="col-12 flex-column">
+            <ng-container *ngFor="let f of fieldList">
+              <h5 *ngIf="filterData[f.attrName]" class="float-left m-1"><span class="badge badge-primary">{{f.placeholder | translate}}</span></h5>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+  </ng-template>
+  <div *ngIf="cardExpanded" class="card-footer">
+    <button class="btn btn-secondary float-left" (click)="clearFieldList()">{{'Clear' | translate}}</button>
+    <button class="btn btn-primary float-right" (click)="filter()">{{'Filter' | translate}}</button>
+  </div>
+</div>

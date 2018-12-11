@@ -1,0 +1,5 @@
+<div class="languages-container">
+  <button *ngFor="let lan of languages" [class.active]="lan === currentLanguage" (click)="useLanguage(lan)">{{lan}}</button>
+</div>
+<router-outlet></router-outlet>
+<cookie-law #cookieLaw position="bottom" learnMore="/privacy-and-cookies-policy"></cookie-law>

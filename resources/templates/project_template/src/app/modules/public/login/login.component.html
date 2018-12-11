@@ -1,0 +1,34 @@
+<div class=" p-4 mt-5 col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12 offset-sm-3 offset-md-3 offset-lg-4 offset-xl-4">
+  <form #f="ngForm" novalidate (ngSubmit)="submit(f.value, f.valid)" class="form-signin">
+    <div class="text-center mb-4">
+      <img [class.isLoading]="isLoading" class="mb-4" src="../../../../assets/img/winkit-logo.png" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">LOGIN</h1>
+    </div>
+
+    <div class="form-label-group">
+      <input [(ngModel)]="user.email" #email="ngModel" name="email" type="email" id="inputEmail" class="form-control" placeholder="{{'Email address' | translate}}" required pattern="{{globals.getEmailRegex()}}">
+      <label for="inputEmail" translate>{{'Email address' | translate}}</label>
+      <small [hidden]="email.valid || (email.pristine && !f.submitted)" class="text-danger">
+        {{'Insert valid email' | translate}} <i>(john@doe.com)</i>
+      </small>
+    </div>
+
+    <div class="form-label-group mt-2">
+      <input [(ngModel)]="user.password" #password="ngModel" name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+      <label for="inputPassword">{{'Password' | translate}}</label>
+      <small [hidden]="password.valid || (password.pristine && !f.submitted)" class="text-danger">
+        {{'Insert password' | translate}}
+      </small>
+    </div>
+    <div class="col-xs-12 mb-3 text-right">
+      <a routerLink="/recovery-password">
+        {{'Forgot password?' | translate}}
+      </a>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="isLoading">{{"Let's go" | translate}}</button>
+    <div class="col-xs-12 text-center mt-2">
+      <a routerLink="/register">{{"Don't you have an account? Register!" | translate}}</a>
+    </div>
+    <p class="mt-5 mb-3 text-muted text-center">Winkular by <a href="https://wink.by" target="_blank">Wink</a></p>
+  </form>
+</div>

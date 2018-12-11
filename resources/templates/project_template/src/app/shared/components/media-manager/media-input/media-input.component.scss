@@ -1,0 +1,31 @@
+.preview {
+  height: 100px;
+  width: 100px;
+  float: left;
+  border-radius: 12px;
+  background-color: #e3e3e3;
+  background-position: center;
+  background-size: cover;
+  overflow: hidden;
+  .hover {
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+    color: #ffffff;
+    font-family: 'Arial Black', arial-black, sans-serif;
+    font-weight: lighter;
+    font-size: 14px;
+    line-height: 120%;
+    background-color: rgba(51, 51, 51, 0.4);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  &:hover, &:active, &:focus {
+    .hover {
+      opacity: 1;
+    }
+  }
+}

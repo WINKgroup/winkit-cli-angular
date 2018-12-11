@@ -1,0 +1,8 @@
+<app-toolbar [title]="title" [buttonCTA]="'ADD USER'" (onButtonClicked)="addUser()" [loading]="loadingList.list" ></app-toolbar>
+<div class="col-xs-12 col-sm-12 p-0 mb-3">
+  <app-filters [fieldList]="filterFields" (onFilterClicked)="filterList($event)" [prevFilterData]="filtersFromUrl"></app-filters>
+</div>
+<app-table [headers]="tableHeaders" [list]="userList" [showIndexHeader]="true" [elementsPerPage]="elementsPerPage"
+           [hasNextPage]="hasNextPage" [(currentPage)]="currentPage" (loadMoreItems)="loadMoreItems($event)"
+           [loading]="loadingList.list" [showExportActions]="loggedinUser.userRole === userRole.ADMIN" [exportableFormats]="['CSV', 'XLSX']">
+</app-table>

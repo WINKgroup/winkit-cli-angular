@@ -1,0 +1,36 @@
+.preview {
+  height: 140px;
+  width: 140px;
+  float: left;
+  border-radius: 12px;
+  background-color: #e3e3e3;
+  background-position: center;
+  background-size: cover;
+  overflow: hidden; }
+  .preview .hover {
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+    color: #ffffff;
+    font-family: 'Arial Black', arial-black, sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    line-height: 120%;
+    background-color: rgba(51, 51, 51, 0.4);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; }
+    .preview .hover.add {
+      opacity: 1;
+      background-color: transparent; }
+    .preview .hover.checked {
+      opacity: 1;
+      color: #40dc7e; }
+  .preview:hover .hover, .preview:active .hover, .preview:focus .hover {
+    opacity: 1; }
+    .preview:hover .hover.add, .preview:active .hover.add, .preview:focus .hover.add {
+      background-color: rgba(51, 51, 51, 0.4); }
+
+/*# sourceMappingURL=media-modal.component.css.map */

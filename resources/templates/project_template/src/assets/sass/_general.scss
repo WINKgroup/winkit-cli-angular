@@ -1,0 +1,17 @@
+/*!
+  * Put here all general variables.
+  * include it in all .scss of your components
+ */
+.h-100vh {
+  height: 100vh !important;
+}
+.isLoading {
+  -webkit-animation: rotateY 1.5s infinite linear;
+  animation: rotateY 1.5s infinite linear;
+}
+@-webkit-keyframes rotateY {
+  to { -webkit-transform: rotateY(360deg); }
+}
+@keyframes rotateY {
+  to { transform: rotateY(360deg); }
+}

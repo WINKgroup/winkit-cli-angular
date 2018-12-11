@@ -1,0 +1,15 @@
+<nav class="col-md-3 col-lg-2 d-none d-lg-block bg-light sidebar">
+  <div class="sidebar-sticky">
+    <ul class="nav flex-column">
+      <li class="nav-item" *ngFor="let item of menuItems">
+        <a routerLinkActive="active" class="nav-link" [routerLink]="item.path">
+          {{item.title | translate}}
+        </a>
+      </li>
+    </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>MENU HEADER</span>
+    </h6>
+  </div>
+</nav>

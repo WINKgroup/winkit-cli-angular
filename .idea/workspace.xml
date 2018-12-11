@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a3d7c015-5795-43b6-8618-60a84ab53583" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/winkit-cli-angular.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/.nvmrc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/angular.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/classes/BaseError.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/classes/CustomNotification.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/classes/Globals.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/classes/LoginResponse.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/classes/MyMissingTranslationHandler.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/classes/ResponseError.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/classes/ServerUser.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/classes/User.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/classes/Utils.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/AppComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/BaseComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/BasePageComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/DashboardComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/FiltersComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/LoginComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/MediaInputComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/MediaModalComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/NavbarComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/PlatformLayoutComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/PolicyComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/PublicLayoutComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/RecoveryPasswordComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/RegisterComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/ResetPasswordComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/SidebarComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/TableComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/ToolbarComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/UserDetailComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/components/UserListComponent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/coverage.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/dependencies.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/ionicons.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/ionicons.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/ionicons.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/ionicons.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/ionicons.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-300.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-300.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-300.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-300.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-300.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-700.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-700.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-700.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-700.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-700.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-regular.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-regular.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-regular.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-regular.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/fonts/roboto-v15-latin-regular.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/graph/dependencies.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/guards/AdminGuard.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/guards/AuthGuard.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/images/compodoc-vectorise-inverted.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/images/compodoc-vectorise.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/images/coverage-badge-documentation.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/images/favicon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/injectables/AuthenticationService.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/injectables/BaseService.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/injectables/GoogleAnalyticsEventsService.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/injectables/LocalStoreService.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/injectables/MessageService.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/injectables/SessionService.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/injectables/StorageService.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/injectables/UserService.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/interfaces/AuthenticationServiceModel.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/interfaces/BaseServiceModel.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/interfaces/FilterFieldElement.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/interfaces/Mappable.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/interfaces/Media.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/interfaces/RouteInfo.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/interfaces/UserMedia.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/interfaces/UserServiceModel.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/compodoc.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/lazy-load-graphs.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/EventDispatcher.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/bootstrap-native.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/clipboard.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/custom-elements.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/d3.v3.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/deep-iterator.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/es6-shim.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/htmlparser.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/innersvg.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/lit-html.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/prism.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/promise.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/svg-pan-zoom.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/tablesort.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/tablesort.number.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/vis.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/libs/zepto.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/menu-wc.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/menu.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/search/lunr.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/search/search-lunr.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/search/search.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/search/search_index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/sourceCode.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/svg-pan-zoom.controls.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/tabs.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/js/tree.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/miscellaneous/enumerations.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/miscellaneous/functions.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/miscellaneous/typealiases.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/miscellaneous/variables.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/AppModule.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/AppModule/dependencies.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/ComponentsModule.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/ComponentsModule/dependencies.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/CoreModule.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/CoreModule/dependencies.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/GuardsModule.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/PagesModule.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/PagesModule/dependencies.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/PipeModule.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/PipeModule/dependencies.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/PlatformModule.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/PlatformModule/dependencies.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/PublicModule.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/PublicModule/dependencies.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/ServicesModule.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/modules/ServicesModule/dependencies.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/overview.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/pipes/KeysPipe.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/pipes/OrderByPipe.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/pipes/ReversePipe.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/pipes/SafePipe.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/pipes/WherePipe.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/bootstrap-card.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/bootstrap.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/compodoc.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/ionicons.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/laravel.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/material.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/original.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/postmark.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/prism.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/readthedocs.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/reset.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/stripe.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/tablesort.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/documentation/styles/vagrant.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/e2e/app.e2e-spec.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/e2e/app.po.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/e2e/tsconfig.e2e.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/implementableServers/firestore/environments/environment.prod.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/implementableServers/firestore/environments/environment.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/implementableServers/firestore/media-manager/storage.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/implementableServers/firestore/services/authentication.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/implementableServers/firestore/services/base.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/implementableServers/firestore/user/user.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/implementableServers/strapi/environments/environment.prod.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/implementableServers/strapi/environments/environment.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/implementableServers/strapi/media-manager/storage.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/implementableServers/strapi/services/authentication.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/implementableServers/strapi/services/base.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/implementableServers/strapi/user/user.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/karma.conf.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/protractor.conf.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/base-component/base.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/base-component/base.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/base-component/base.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/base-component/base.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/base-component/base.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/base-page/base-page.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/base-page/base-page.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/base-page/base-page.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/base-page/base-page.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/base-page/base-page.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/core.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/guards/AdminGuard.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/guards/AuthGuard.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/layouts/platform/platform-layout.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/layouts/platform/platform-layout.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/layouts/public/public-layout.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/layouts/public/public-layout.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/layouts/public/public-layout.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/layouts/public/public-layout.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/layouts/public/public-layout.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/models/AuthenticationServiceModel.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/models/BaseServiceModel.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/models/CustomNotification.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/models/FormControlTypes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/models/Mappable.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/models/ModuleRouting.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/models/ResponseError.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/models/UserServiceModel.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/navbar/navbar.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/navbar/navbar.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/navbar/navbar.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/navbar/navbar.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/navbar/navbar.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/services/google-analytics-events.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/services/local-store.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/services/message.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/services/services.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/services/session.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/sidebar/sidebar-routes.config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/sidebar/sidebar.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/sidebar/sidebar.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/sidebar/sidebar.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/sidebar/sidebar.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/sidebar/sidebar.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/sidebar/sidebar.metadata.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/static/Globals.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/@core/static/Utils.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/app.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/app.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/app.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/app.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/app.component.spec.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/app.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/app.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/app.routing.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/dashboard/dashboard.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/dashboard/dashboard.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/dashboard/dashboard.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/dashboard/dashboard.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/dashboard/dashboard.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/dashboard/dashboard.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/dashboard/dashboard.routing.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/modules.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/login/login.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/login/login.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/login/login.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/login/login.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/login/login.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/login/login.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/login/login.routing.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/public.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/recovery-password/recovery-password.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/recovery-password/recovery-password.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/recovery-password/recovery-password.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/recovery-password/recovery-password.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/recovery-password/recovery-password.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/recovery-password/recovery-password.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/recovery-password/recovery-password.routing.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/register/register.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/register/register.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/register/register.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/register/register.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/register/register.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/register/register.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/register/regsiter.routing.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/reset-password/reset-password.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/reset-password/reset-password.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/reset-password/reset-password.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/reset-password/reset-password.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/reset-password/reset-password.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/reset-password/reset-password.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/public/reset-password/reset-password.routing.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/models/ServerUser.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/models/User.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/models/UserDataFactory.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user-detail/user-detail.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user-detail/user-detail.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user-detail/user-detail.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user-detail/user-detail.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user-detail/user-detail.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user-list/user-list.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user-list/user-list.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user-list/user-list.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user-list/user-list.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user-list/user-list.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user.conf.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user.routing.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/components.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/filters/filters.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/filters/filters.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/form-element/form-element.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/form-element/form-element.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/media-manager/Media.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/media-manager/UserMedia.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/media-manager/media-input/media-input.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/media-manager/media-input/media-input.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/media-manager/media-input/media-input.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/media-manager/media-input/media-input.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/media-manager/media-input/media-input.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/media-manager/media-modal/media-modal.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/media-manager/media-modal/media-modal.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/media-manager/media-modal/media-modal.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/media-manager/media-modal/media-modal.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/media-manager/media-modal/media-modal.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/policy/policy.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/policy/policy.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/table/table.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/table/table.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/table/table.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/table/table.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/table/table.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/toolbar/toolbar.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/toolbar/toolbar.component.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/toolbar/toolbar.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/toolbar/toolbar.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/components/toolbar/toolbar.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/pipes/keys.pipe.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/pipes/orderby.pipe.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/pipes/pipe.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/pipes/reverse.pipe.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/pipes/safe.pipe.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/pipes/where.pipe.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/app/shared/shared.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/.gitkeep" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/i18n/en.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/i18n/it.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/img/logo.psd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/img/noimage.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/img/pdf_icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/img/winkit-logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/_floating-labels.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/_floating-labels.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/_floating-labels.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/_general.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/_general.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/_general.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/_overrides.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/_variables.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/_variables.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/_variables.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/main.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/main.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/assets/sass/main.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/environments/environment.prod.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/environments/environment.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/favicon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/main.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/polyfills.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/styles.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/styles.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/test.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/tsconfig.app.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/tsconfig.spec.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/src/typings.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/tslint.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/templates/project_template/winkit.conf.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gulpfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/gulpfile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/file_templates/detail.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/templates/file_templates/detail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/file_templates/list.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/templates/file_templates/list.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/file_templates/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/templates/file_templates/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/file_templates/model.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/templates/file_templates/model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/file_templates/service.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/templates/file_templates/service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/index.js" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-2058107713">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.open.time.11" value="1" />
+          <entry key="project.open.time.2" value="1" />
+          <entry key="project.opened" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="js" value="3" />
+          <entry key="json" value="2" />
+          <entry key="md" value="1" />
+          <entry key="nvmrc" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JSON" value="2" />
+          <entry key="JavaScript" value="3" />
+          <entry key="Markdown" value="1" />
+          <entry key="PLAIN_TEXT" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="js" value="65" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JavaScript" value="65" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/templates/project_template/.nvmrc">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gulpfile.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="189">
+              <caret line="717" column="35" lean-forward="true" selection-start-line="717" selection-start-column="35" selection-end-line="717" selection-end-column="35" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user.conf.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="26" column="79" selection-start-line="26" selection-start-column="79" selection-end-line="26" selection-end-column="79" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="171">
+              <caret line="6" column="40" selection-end-line="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/index.js">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/gulpfile.js" />
+        <option value="$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user.conf.json" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <gulpfiles>
+      <GulpfileState>
+        <gulpfile-path>$PROJECT_DIR$/gulpfile.js</gulpfile-path>
+      </GulpfileState>
+    </gulpfiles>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths>
+      <path value="$PROJECT_DIR$/resources/templates/project_template/package.json" />
+    </packageJsonPaths>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="85" />
+    <option name="y" value="25" />
+    <option name="width" value="1750" />
+    <option name="height" value="970" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="winkit-cli-angular" type="b2602c69:ProjectViewProjectNode" />
+              <item name="winkit-cli-angular" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="winkit-cli-angular" type="b2602c69:ProjectViewProjectNode" />
+              <item name="winkit-cli-angular" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="winkit-cli-angular" type="b2602c69:ProjectViewProjectNode" />
+              <item name="winkit-cli-angular" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="winkit-cli-angular" type="b2602c69:ProjectViewProjectNode" />
+              <item name="winkit-cli-angular" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="project_template" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="winkit-cli-angular" type="b2602c69:ProjectViewProjectNode" />
+              <item name="winkit-cli-angular" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="project_template" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="winkit-cli-angular" type="b2602c69:ProjectViewProjectNode" />
+              <item name="winkit-cli-angular" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="project_template" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="winkit-cli-angular" type="b2602c69:ProjectViewProjectNode" />
+              <item name="winkit-cli-angular" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="project_template" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="winkit-cli-angular" type="b2602c69:ProjectViewProjectNode" />
+              <item name="winkit-cli-angular" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="project_template" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="user" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../TESTS/test1" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2018.2.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\wink\winkit-cli-angular\resources\templates\project_template" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\wink\winkit-cli-angular\resources\templates" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a3d7c015-5795-43b6-8618-60a84ab53583" name="Default Changelist" comment="" />
+      <created>1544528836746</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1544528836746</updated>
+      <workItem from="1544528838508" duration="2641000" />
+      <workItem from="1544536686654" duration="674000" />
+      <workItem from="1544538497165" duration="389000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="3704000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24983476" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Gulp" order="2" side_tool="true" />
+      <window_info id="Favorites" order="3" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.32907802" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/resources/templates/project_template/.nvmrc">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="6" column="40" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gulpfile.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="717" column="35" lean-forward="true" selection-start-line="717" selection-start-column="35" selection-end-line="717" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/templates/project_template/winkit.conf.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/templates/project_template/src/app/modules/user/user.conf.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="26" column="79" selection-start-line="26" selection-start-column="79" selection-end-line="26" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

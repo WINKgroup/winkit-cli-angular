@@ -1,0 +1,30 @@
+<div class=" p-4 mt-5 col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12 offset-sm-3 offset-md-3 offset-lg-4 offset-xl-4">
+  <form #f="ngForm" novalidate (ngSubmit)="submit(f.value, f.valid)" class="form-signin">
+    <div class="text-center mb-4">
+      <img [class.isLoading]="isLoading" class="mb-4" src="../../../../assets/img/winkit-logo.png" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">{{'REGISTER' | translate}}</h1>
+      <p>{{'Join in the community' | translate}}</p>
+    </div>
+
+    <div class="form-label-group">
+      <input [(ngModel)]="user.email" #inputEmail="ngModel" [class.is-invalid]="f.submitted && (inputEmail.invalid || inputEmail.pristine)" name="inputEmail" type="email" id="inputEmail" class="form-control" placeholder="{{'Email address' | translate}}" required autofocus pattern="{{globals.getEmailRegex()}}">
+      <label for="inputEmail">{{'Email address' | translate}}</label>
+    </div>
+
+    <div class="form-label-group">
+      <input [(ngModel)]="user.password" #inputPassword="ngModel" [class.is-invalid]="f.submitted && (inputPassword.invalid || inputPassword.pristine)" name="inputPassword" type="password" id="inputPassword" class="form-control" placeholder="{{'Password' | translate}}" required>
+      <label for="inputPassword">{{'Password' | translate}}</label>
+    </div>
+
+    <div class="form-label-group">
+      <input [(ngModel)]="confirmPassword" #inputConfirmPassword="ngModel" [class.is-invalid]="f.submitted && (inputConfirmPassword.invalid || inputConfirmPassword.pristine || confirmPassword !== user.password)" name="inputConfirmPassword" type="password" id="inputConfirmPassword" class="form-control" placeholder="{{'Confirm Password' | translate}}" required>
+      <label for="inputConfirmPassword">{{'Confirm Password' | translate}}</label>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="isLoading">{{'Confirm' | translate}}</button>
+    <div class="col-xs-12 text-center mt-2">
+      <a routerLink="/login">{{'or go to Login' | translate}}</a>
+    </div>
+    <p class="mt-5 mb-3 text-muted text-center">Winkular by <a href="https://wink.by" target="_blank">Wink</a></p>
+  </form>
+</div>

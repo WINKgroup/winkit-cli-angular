@@ -1,0 +1,22 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" routerLink="/dashboard" >{{environment.APP_NAME}}</a>
+  <button class="navbar-toggler btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#navbarToggler"  aria-expanded="false" aria-label="Toggle navigation" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="navbarToggler">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarToggler" [ngbCollapse]="isCollapsed">
+    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+      <li *ngFor="let item of menuItems" class="nav-item">
+        <a routerLinkActive="active" [routerLink]="item.path" class="nav-link d-lg-none">{{item.title | translate}}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" routerLink="/profile">
+          {{'Profile' | translate}}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/login" (click)="logout()">{{'Logout' | translate}}</a>
+      </li>
+    </ul>
+  </div>
+</nav>

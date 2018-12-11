@@ -1,0 +1,54 @@
+<div [ngClass]="inputData.innerWrapperClass">
+  <label class="col-sm-12 p-0 form-label-group" for="{{inputData.name}}">
+    {{inputData.labelText | translate}}
+    <small *ngIf="inputData.required">({{'required' | translate}})</small>
+  </label>
+  <ng-container [ngSwitch]="inputData.type">
+
+    <ng-container *ngSwitchCase="iFormControlType.MEDIA">
+      <div class="col-sm-12 p-0">
+        <media-input [(url)]="inputValue" [allowedTypes]="inputData.imageAllowedTypes"></media-input>
+      </div>
+      <div class="col-sm-12"></div>
+    </ng-container>
+
+    <select *ngSwitchCase="iFormControlType.SELECT" id="{{inputData.name}}" name="{{inputData.name}}"
+            [ngClass]="{'form-control': true,  'is-invalid': parentForm.submitted && parentForm.controls[inputData.name] && parentForm.controls[inputData.name].invalid}"
+            [(ngModel)]="inputValue"
+            [disabled]="inputData.disabled"
+            [required]="inputData.required">
+      <option [ngValue]="null"></option>
+      <option *ngFor="let el of inputData.options" [ngValue]="(el.value !== undefined ? el.value : el)">{{el.name || el | translate}}</option>
+    </select>
+
+    <div *ngSwitchCase="iFormControlType.DATEPICKER" class="input-group">
+      <input id="{{inputData.name}}" [placeholder]="inputData.labelText | translate"
+             name="{{inputData.name}}" [(ngModel)]="inputValue" ngbDatepicker #d="ngbDatepicker"
+             [ngClass]="{'form-control': true,  'is-invalid': parentForm.submitted && parentForm.controls[inputData.name] && parentForm.controls[inputData.name].invalid}"
+             [readonly]="inputData.readonly">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary p-1" (click)="d.toggle()" type="button">
+          <mat-icon style="font-size: 1.2rem; cursor: pointer;">calendar_today</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <textarea *ngSwitchCase="iFormControlType.TEXTAREA"
+              id="{{inputData.name}}" name="{{inputData.name}}" class="form-control" rows="{{inputData.rows || 6}}"
+              [placeholder]="inputData.labelText"
+              [(ngModel)]="inputValue"></textarea>
+
+    <input *ngSwitchDefault id="{{inputData.name}}" type="{{inputData.type}}" name="{{inputData.name}}"
+           [ngClass]="{'form-control': true,  'is-invalid': parentForm.submitted && parentForm.controls[inputData.name] && parentForm.controls[inputData.name].invalid}"
+           [(ngModel)]="inputValue"
+           [placeholder]="inputData.name | translate"
+           [pattern]="inputData.pattern"
+           [required]="inputData.required"
+           [disabled]="inputData.disabled"
+           [readonly]="inputData.readonly"/>
+
+  </ng-container>
+  <small *ngIf="inputData.inputFeedbackText !== undefined" [hidden]="!(parentForm.submitted && parentForm.controls[inputData.name] && parentForm.controls[inputData.name].invalid)" class="text-danger">
+    {{inputData.inputFeedbackText | translate}} <i *ngIf="inputData.inputFeedbackExample">({{inputData.inputFeedbackExample}})</i>
+  </small>
+</div>
