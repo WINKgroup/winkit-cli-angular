@@ -1,22 +1,22 @@
-# Winkular CLI
+# Winkit CLI
 
-Using this CLI you can start a new Winkular Project from scratch and manage its content.
+Using this CLI you can start a new Winkit Project from scratch and manage its content.
 
-A Winkular project is a base platform generated with [Angular CLI](https://github.com/angular/angular-cli) that has the goal of generating a platform to menage CRUD of dynamic content.
+A Winkit project is a base platform generated with [Angular CLI](https://github.com/angular/angular-cli) that has the goal of generating a platform to menage CRUD of dynamic content.
 
 ## Minimum requirements
 - [Yarn 1.10.1](https://yarnpkg.com/en/docs/install)
 - [Node 8.12.0 + npm](https://nodejs.org/)
 
 ## Get started
-- Go in winkular-cli folder and run `yarn install`
-- Run `yarn link && yarn link "winkular"` in the folder where you will generate the project
-- Open the terminal and type `winkular --help`
+- Go in winkit-cli folder and run `yarn install`
+- Run `yarn link && yarn link "winkit"` in the folder where you will generate the project
+- Open the terminal and type `winkit --help`
 
-## Init new Winkular Based project
+## Init new Winkit Based project
 - [Configure your server](#conf-server)
 - Create a new folder and go inside
-- Run `winkular init`
+- Run `winkit init`
 - Choose the server you want to work with (**Firestore** or **Strapi / Http**)
 - Enjoy!
 
@@ -25,7 +25,7 @@ A Winkular project is a base platform generated with [Angular CLI](https://githu
 
 ### a. Firestore
 
-If you want to use Winkular with Firestore you must first configure your project in [Firebase](https://console.firebase.google.com/u/0/).
+If you want to use Winkit with Firestore you must first configure your project in [Firebase](https://console.firebase.google.com/u/0/).
 <br>Once the project is created, open `/src/environments/environment.ts` and update `firebaseConfig` with the project info.
 <br>Do the same for `/src/environments/environment.prod.ts` with info for production environment.
 
@@ -37,18 +37,18 @@ npm install strapi@alpha -g
 
 2. Run the following command line in your terminal:
 ```
-strapi new strapi-winkular
+strapi new strapi-winkit
 ```
 
 3. Go to your project and launch the server:
 ```
-cd strapi-winkular
+cd strapi-winkit
 strapi start
 ```
 
 4. Create your first admin user
 
-5. Open `strapi-winkular/plugins/users-permissions/models/User.settings.json`
+5. Open `strapi-winkit/plugins/users-permissions/models/User.settings.json`
 
 6. Replace the content with the following:
 
@@ -146,21 +146,21 @@ strapi start
 
 8. Open the admin detail and populate the userRole field with the value `ADMIN` then save.
 
-9. Now you can log into Winkular using these user credentials!
+9. Now you can log into Winkit using these user credentials!
 
 # Commands
 
-### winkular init
+### winkit init
 
-The Winkular CLI makes it easy to create an application that already works, right out of the box.
+The Winkit CLI makes it easy to create an application that already works, right out of the box.
 <br>Included are: authentication, password recovery, user CRUD, profile page, file upload, etc. And everything will work after this command!
 
-### winkular create:model|cm \<name\>
+### winkit create:model|cm \<name\>
 
 Generate a new model and its associated server model, ready to be mapped.
 <br>Let's explain with an example:
 ```
-winkular create:model Foo
+winkit create:model Foo
 ```
 This command will generate two files:
 ##### 1. src/app/models/Foo.ts
@@ -193,12 +193,12 @@ const o = {} as Foo;
 o.firstName = serverObject.first_name || null;
 ```
 
-### winkular create:service|cs \<modelName\>
+### winkit create:service|cs \<modelName\>
 
 Generate a new service for given model, so you'll be ready to implement CRUD that works with the server chosen in the initialization.
 <br>Let's explain with an example:
 ```
-winkular create:service Foo
+winkit create:service Foo
 ```
 
 This command will generate the service and add it to the services.module.ts:
@@ -210,11 +210,11 @@ on creation the service includes methods that allow you to:
 - Get model by id
 - Get paginated list
 
-### winkular create:detail|cd \<modelName\>
+### winkit create:detail|cd \<modelName\>
 Generate a new detail component for given model and implement its routing, so you'll be ready to display model info.
 <br>Let's explain with an example:
 ```
-winkular create:detail Foo
+winkit create:detail Foo
 ```
 
 This command will generate:
@@ -238,14 +238,14 @@ By default the generated route is accessible just by authenticated user with ADM
 ```
 
 NOTE: if you are using Strapi remember to also create the model on the server-side (ex. using the Strapi dashboard).
-<br>If you are using Firestore you don't have to do anything because everything will be managed by Winkular.
+<br>If you are using Firestore you don't have to do anything because everything will be managed by Winkit.
 
-### winkular create:list|cl \<modelName\>
+### winkit create:list|cl \<modelName\>
 Generates a new list component for given model, implements its routing and adds the link to the navbar, so the list is ready to be displayed, including pagination and filtering.
 
 Let's explain with an example:
 ```
-winkular create:list Foo
+winkit create:list Foo
 ```
 This command will generate:
 ##### 1. src/app/pages/platform/foo-list/
@@ -267,10 +267,10 @@ By default the link is visible just to ADMIN users.
 
 # Contact
 
-If you find any errors, typos, issues... basically anything that you think we should fix or improve in Winkular, send us an email to info@wink.by
+If you find any errors, typos, issues... basically anything that you think we should fix or improve in Winkit, send us an email to info@wink.by
 
 # What's next?
-### winkular update:model|um \<modelName\>
+### winkit update:model|um \<modelName\>
 This command will:
 - Automatically find new parameters added to the model and update constructors and mapping methods
 - Generate html elements for new parameters in the detail component

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>winkular documentation</title>
+        <title>winkit documentation</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,7 +13,7 @@
     <body>
 
         <div class="navbar navbar-default navbar-fixed-top visible-xs">
-            <a href="./" class="navbar-brand">winkular documentation</a>
+            <a href="./" class="navbar-brand">winkit documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -33,7 +33,7 @@
                <div class="content getting-started">
                    <div class="content-data">
 
-<h1 id="winkular">Winkular</h1>
+<h1 id="winkit">Winkit</h1>
 <p>This project is a base platform generated with <a href="https://github.com/angular/angular-cli">Angular CLI</a> that has the goal of generating a backoffice to menage CRUD of dynamic content.</p>
 <h2 id="get-started">Get started</h2>
 <ul>
@@ -46,7 +46,7 @@
 </ul>
 <h2 id="configure-server">Configure server</h2>
 <h3 id="a-firestore">a. Firestore</h3>
-<p>If you want to use Winkular with Firestore you must configure before your project from <a href="https://console.firebase.google.com/u/0/">Firebase</a>.</p>
+<p>If you want to use Winkit with Firestore you must configure before your project from <a href="https://console.firebase.google.com/u/0/">Firebase</a>.</p>
 <p>Once created the project open <code>/src/environments/environment.ts</code> an update <code>firebaseConfig</code> with the project info.</p>
 <p>Do the same for <code>/src/environments/environment.prod.ts</code> with info for production environment.</p>
 <h3 id="b-strapi">b. Strapi</h3>
@@ -54,13 +54,13 @@
 <li><p>install strapi globally</p>
 <div><pre class="line-numbers"><code class="language-none">npm install strapi&#64;alpha -g</code></pre></div></li>
 <li><p>Run the following command line in your terminal:</p>
-<div><pre class="line-numbers"><code class="language-none">strapi new strapi-winkular</code></pre></div></li>
+<div><pre class="line-numbers"><code class="language-none">strapi new strapi-winkit</code></pre></div></li>
 <li><p>Go to your project and launch the server:</p>
-<div><pre class="line-numbers"><code class="language-none">cd strapi-winkular
+<div><pre class="line-numbers"><code class="language-none">cd strapi-winkit
 strapi start</code></pre></div></li>
 <li><p>Create your first admin user</p>
 </li>
-<li><p>Open <code>strapi-winkular/plugins/users-permissions/models/User.settings.json</code></p>
+<li><p>Open <code>strapi-winkit/plugins/users-permissions/models/User.settings.json</code></p>
 </li>
 <li><p>Replace the content with the follow:</p>
 </li>
@@ -156,7 +156,7 @@ strapi start</code></pre></div></li>
 </li>
 <li><p>Open the detail of the admin, assign at userRole the value <code>ADMIN</code> and save.</p>
 </li>
-<li><p>Now you can log into Winkular using this user credentials!</p>
+<li><p>Now you can log into Winkit using this user credentials!</p>
 </li>
 </ol>
 <h2 id="development-server">Development server</h2>

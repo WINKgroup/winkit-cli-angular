@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "winkular": {
+    "winkit": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -50,19 +50,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "winkular:build",
+            "browserTarget": "winkit:build",
             "port": 5000
           },
           "configurations": {
             "production": {
-              "browserTarget": "winkular:build:production"
+              "browserTarget": "winkit:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "winkular:build"
+            "browserTarget": "winkit:build"
           }
         },
         "test": {
@@ -98,7 +98,7 @@
         }
       }
     },
-    "winkular-e2e": {
+    "winkit-e2e": {
       "root": "",
       "sourceRoot": "e2e",
       "projectType": "application",
@@ -107,7 +107,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "winkular:serve"
+            "devServerTarget": "winkit:serve"
           }
         },
         "lint": {
@@ -125,7 +125,7 @@
       }
     }
   },
-  "defaultProject": "winkular",
+  "defaultProject": "winkit",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

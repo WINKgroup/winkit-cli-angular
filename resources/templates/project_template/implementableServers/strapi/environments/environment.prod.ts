@@ -2,7 +2,7 @@ export const environment = {
   BASE_SERVER_URL: 'http://localhost:1337/',
   BASE_URL: 'http://localhost:5000/',
   COMPANY_NAME: 'Wink S.r.l.',
-  APP_NAME: 'Winkular',
+  APP_NAME: 'Winkit',
   ANALYTICS_UA_ID: '',
   DEFAULT_LANGUAGE: 'en',
   CURRENCY: '€',

@@ -42,7 +42,7 @@ Out-of-the-box **Winkit Angular** supports two server platforms - Strapi ([visit
 <a name="conf-server-firestore"></a>
 ### Firestore
 
-If you want to use Winkular with Firestore you must first configure your project in [Firebase](https://console.firebase.google.com/u/0/).
+If you want to use Winkit with Firestore you must first configure your project in [Firebase](https://console.firebase.google.com/u/0/).
 <br>Once the project is created, open `/src/environments/environment.ts` and update `firebaseConfig` with the project info.
 <br>Do the same for `/src/environments/environment.prod.ts` with info for production environment.
 
@@ -55,18 +55,18 @@ If you want to use Winkular with Firestore you must first configure your project
 
 2. Run the following command line in your terminal:
     ```
-    strapi new strapi-winkular
+    strapi new strapi-winkit
     ```
 
 3. Go to your project and launch the server:
     ```
-    cd strapi-winkular
+    cd strapi-winkit
     strapi start
     ```
 
 4. Create your first admin user
 
-5. Open `strapi-winkular/plugins/users-permissions/models/User.settings.json`
+5. Open `strapi-winkit/plugins/users-permissions/models/User.settings.json`
 
 6. Replace the content with the following:
 
@@ -164,7 +164,7 @@ If you want to use Winkular with Firestore you must first configure your project
 
 8. Open the admin detail and populate the userRole field with the value `ADMIN` then save.
 
-9. Now you can log into Winkular using these user credentials!
+9. Now you can log into Winkit using these user credentials!
 
 ## Commands
 

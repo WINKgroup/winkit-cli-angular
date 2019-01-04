@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('winkular App', () => {
+describe('winkit App', () => {
   let page: AppPage;
 
   beforeEach(() => {
