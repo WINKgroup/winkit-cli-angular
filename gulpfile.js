@@ -629,7 +629,7 @@ async function update(elementType, name) {
     switch (elementType) {
         case elementTypes.MODEL:
             const modelUpdated = await updateModel(name, moduleConfig);
-            if (modelUpdated) {
+            if (modelUpdated && detailAlreadyExist) {
                 update(elementTypes.DETAIL, name);
             } else {
                 return;
