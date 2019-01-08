@@ -40,7 +40,8 @@ const dynamicTexts = {
     updateMethod: name => [`Would you like to update the Server${name} model automatically using default property name associations or manually map property names?`, ''],
     updateSuccess: (name, typesToImport) => typesToImport && typesToImport.length ? [`\nModel <${name}> updated.\n\nBefore continuing, please verify imports of the following objects in ${name}.ts and Server${name}.ts files: ${typesToImport.join(', ')}.`, 'MAGENTA'] : [`\nModel <${name}> successfully updated.`, 'MAGENTA'],
     configuring: serverType => [`Configuring WDK Angular for ${serverType}...`, 'BLUE'],
-    duplicatePropNamesFound: duplicatesArr => [`\nDuplicate property names found: ${duplicatesArr.join(', ')}. Please use unique names only.`, 'RED'],
+    duplicatePropNamesFound: (key, duplicatesArr) => [`\nDuplicate values found under "${key}" key in elements of array: ${duplicatesArr.join(', ')}. The "${key}" key accepts unique values only.`, 'RED'],
+    exceededKeyCount: (key, count) => [`\nExceeded number of objects with key "${key}" defined. Number of allowed "${key}" key definitions: ${count}`, 'RED'],
     detailNotFound: name => [`\nDetail for ${name} model not found. Aborting...`, 'RED']
 };
 

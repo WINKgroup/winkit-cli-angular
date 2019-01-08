@@ -620,11 +620,16 @@ async function update(elementType, name) {
         console.log(color(dynamicTexts.updateServerModelNotFound(name)[0], dynamicTexts.updateServerModelNotFound(name)[1]));
         return false;
     }
-    const moduleConfig = require(process.cwd() + '/' + getModulePaths(name).config);
-    if (moduleConfig['properties'].length > 1) {
-        const duplicatesArr = getDuplicateValuesByPropName(moduleConfig['properties'], 'name');
-        if (duplicatesArr && duplicatesArr.length) {
-            console.log(color(dynamicTexts.duplicatePropNamesFound(duplicatesArr)[0], dynamicTexts.duplicatePropNamesFound(duplicatesArr)[1]));
+    const moduleProperties = require(process.cwd() + '/' + getModulePaths(name).config)['properties'];
+    if (moduleProperties && moduleProperties.length > 1) {
+        const duplicateNamesList = getDuplicateValuesByPropName(moduleProperties, 'name');
+        const duplicatePrimaryKeyList = getDuplicateValuesByPropName(moduleProperties, 'primaryKey');
+        if (duplicateNamesList && duplicateNamesList.length) {
+            console.log(color(dynamicTexts.duplicatePropNamesFound('name', duplicateNamesList)[0], dynamicTexts.duplicatePropNamesFound('name', duplicateNamesList)[1]));
+            return false;
+        }
+        if (duplicatePrimaryKeyList && duplicatePrimaryKeyList.length) {
+            console.log(color(dynamicTexts.exceededKeyCount('primaryKey', 1)[0], dynamicTexts.duplicatePropNamesFound('primaryKey', 1)[1]));
             return false;
         }
     }
