@@ -65,7 +65,7 @@ function getUserPropMap(userPropNames, configProps) {
  * @returns {Array.<string>} Array of names of detected duplicates.
  */
 function getDuplicateValuesByPropName(configProps, propName) {
-    return configProps.map( el => el[propName] ).reduce((prev, curr, i, arr) => (arr.indexOf(curr) !== i && prev.indexOf(curr) === -1 ? prev.concat(curr) : prev), []);
+    return configProps.map( el => el[propName] ).reduce((prev, curr, i, arr) => (curr !== undefined && arr.indexOf(curr) !== i && prev.indexOf(curr) === -1 ? prev.concat(curr) : prev), []);
 }
 
 
