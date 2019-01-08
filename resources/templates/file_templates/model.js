@@ -74,7 +74,7 @@ export class Server**ThisName** {
 
 `;
 
-const dataFactoryTemplate = `import {FormControlList} from '../../../@core/models/FormControlTypes';
+const dataFactoryTemplate = `import {FormControlList, FormControlType} from '../../../@core/models/FormControlTypes';
 
 export class **ThisName**DataFactory {
   /**
@@ -86,6 +86,7 @@ export class **ThisName**DataFactory {
    */
   static getFormControls = (that, customControlList: FormControlList = []): FormControlList => {
     const generatedFormControls: FormControlList = [
+        {name: 'id', disabled: true, type: FormControlType.TEXT, order: 0, ngIf: !that.isNew}
     ];
     return customControlList.concat(generatedFormControls);
   }

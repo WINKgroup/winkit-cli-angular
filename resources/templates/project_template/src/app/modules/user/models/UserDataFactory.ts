@@ -11,6 +11,7 @@ export class UserDataFactory {
    */
   static getFormControls = (that: any, customControlList: FormControlList = []): FormControlList => {
     const generatedFormControls: FormControlList = [
+      {name: 'id', disabled: true, type: FormControlType.TEXT, order: 0, ngIf: !that.isNew},
       {name: 'userRole', required: true, type: FormControlType.SELECT, options: that.userRoles, disabled: that.loadingList.user, inputFeedbackText: 'Provide valid role', order: 2},
       {name: 'firstName', required: true, type: FormControlType.TEXT, disabled: that.loadingList.user, inputFeedbackText: 'Provide valid first name', order: 3},
       {name: 'lastName', required: true, type: FormControlType.TEXT, disabled: that.loadingList.user, inputFeedbackText: 'Provide valid last name', order: 4},

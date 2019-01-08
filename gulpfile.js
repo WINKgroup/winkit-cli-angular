@@ -506,6 +506,9 @@ function writeNewModelContent(filePath, currentContent, newPropArray, typesToImp
  */
 function writeNewDataFactoryContent(filePath, currentContent, newPropArray) {
     const typesToImport = getTypesToImport(newPropArray, '', /^\b[A-Z]\w*\b/);
+    const defaultIDControl = {name: '\'id\'', disabled: true, type: 'FormControlType.TEXT', order: 0, ngIf: '!that.isNew'};
+    const idFormControl = defaultIDControl; // TODO
+    newPropArray.unshift(idFormControl);
     const newContent = currentContent
         .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
         .replace(REGEXS.formControlList, (_, p1, p2, p3) => newPropArray && newPropArray.length ? (
@@ -629,7 +632,7 @@ async function update(elementType, name) {
     switch (elementType) {
         case elementTypes.MODEL:
             const modelUpdated = await updateModel(name, moduleConfig);
-            if (modelUpdated) {
+            if (modelUpdated && detailAlreadyExist) {
                 update(elementTypes.DETAIL, name);
             } else {
                 return;

@@ -125,12 +125,9 @@ const componentDetailViewTemplate = `<app-toolbar [title]="title" [loading]="loa
       <div class="card col-xs-12 col-sm-12 p-0">
         <div class="card-body">
           <div class="row">
-            <div *ngIf="!isNew" class="col-sm-6 mb-3">
-              <label [for]="id" class="form-label-group">ID:</label>
-              <input #id disabled name="id" class="form-control m-0" [value]="**ThisName.toLowerCase**.id || '--'">
-            </div>
             <ng-container *ngFor="let formControlData of formControlList">
-              <form-element class="{{formControlData.wrapperClass !== undefined ?  formControlData.wrapperClass : 'col-sm-6 mb-3'}}"
+              <form-element *ngIf="formControlData.ngIf !== undefined ? formControlData.ngIf : true"
+                            class="{{formControlData.wrapperClass !== undefined ?  formControlData.wrapperClass : 'col-sm-6 mb-3'}}"
                             [ngStyle]="{order: formControlData.order}"
                             [inputData]="formControlData"
                             [(inputValue)]="**ThisName.toLowerCase()**[formControlData.name]"
