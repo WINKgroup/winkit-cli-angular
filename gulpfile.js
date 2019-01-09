@@ -409,27 +409,26 @@ function deleteModel(name = null) {
  * @param {*[]} [propMap] - Modified newPropArray array with custom 'name' properties of objects.
  */
 function writeNewServerContent(filePath, serverContent, newPropArray, hasCustomPrimaryKey = false, typesToImport = null, propMap = null) {
+    if (!hasCustomPrimaryKey) {
+        newPropArray = newPropArray || [];
+        newPropArray.unshift({name: '_id', type: 'string'}, {name: 'wid', type: 'string'});
+    }
     const newServerContent = serverContent
         .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
         .replace(REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-            if (newPropArray && newPropArray.length) {
-                return p1 + (hasCustomPrimaryKey ? '\n' : p2 + '\n')
-                    + (propMap || newPropArray).map( (prop, i) => {
-                        if (!prop.skipUpdate) {
-                            return `  ${prop.name || newPropArray[i].name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
-                        } else {
-                            const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
-                            return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
-                        }
+               return p1 + (propMap || newPropArray).map( (prop, i) => {
+                    if (!prop.skipUpdate) {
+                        return `  ${prop.name || newPropArray[i].name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
+                    } else {
+                        const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
+                        return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
+                    }
                 }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n')
             + ';';
-            } else {
-                return p1 + p2;
-            }})
-        .replace(REGEXS.serverModelMapMethods, (m, p1, p2, p3, p4, p5) => newPropArray && newPropArray.length ? (
+        })
+        .replace(REGEXS.serverModelMapMethods, (m, p1, p2, p3, p4, p5) => (
              p1 + '\n' + ' '.repeat(4)
-                + (hasCustomPrimaryKey ? '' : p4 + '\n')
                 + newPropArray.map( (prop, i) => {
                         const userPropName = propMap ? propMap[i].name : false;
                         const currPropInitializationsArray = (p5 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
@@ -443,7 +442,7 @@ function writeNewServerContent(filePath, serverContent, newPropArray, hasCustomP
                         }
                     }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n' + ' '.repeat(4))
                 + ';'
-        ) : p1);
+        ));
     fs.writeFileSync(filePath, newServerContent);
 }
 
@@ -456,49 +455,42 @@ function writeNewServerContent(filePath, serverContent, newPropArray, hasCustomP
  * @param {string[]} [typesToImport = null] - Array of typescript type names found in newPropArray.
  */
 function writeNewModelContent(filePath, currentContent, newPropArray, hasCustomPrimaryKey = false, typesToImport = null) {
+    if (!hasCustomPrimaryKey) {
+        newPropArray = newPropArray || [];
+        newPropArray.unshift({name: 'id', type: 'string'}, {name: 'wid', type: 'string'});
+    }
     const newContent = currentContent
         .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.trim()}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
         .replace(REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-            if (newPropArray && newPropArray.length) {
-                return p1 + (hasCustomPrimaryKey ? '\n' : p2 + '\n')
-                    + newPropArray.map( prop => {
-                        if (!prop.skipUpdate) {
-                           return `  ${prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
-                        } else {
-                            const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
-                            return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
-                        }
-                    }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n') + ';';
-            } else {
-                return p1 + p2;
-            }})
+                return p1 + newPropArray.map( prop => {
+                    if (!prop.skipUpdate) {
+                       return `  ${prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
+                    } else {
+                        const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
+                        return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
+                    }
+                }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n') + ';';
+        })
         .replace(REGEXS.modelConstructor, (_, p1, p2, p3, p4, p5, p6) => {
             const currConstructorArgs = (p3 + ',\n').match(/^\s*.+,[\r\n]/gm) || [];
             const currConstructorDeclarations = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-            console.log('modelConstructor', p1, p2, p3, p4, p5, p6)
-            if (newPropArray && newPropArray.length) {
-                return p1 + ( hasCustomPrimaryKey ? '' : (p2.length ? p2 + ',\n' + ' '.repeat(14) : '') )
-                    + newPropArray.map( prop => {
-                            if (!prop.skipUpdate) {
-                                return `${prop.name}?${prop.type && !prop.value ? ': ' + prop.type : ''}`;
-                            } else {
-                                const skippedProp = currConstructorArgs.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
-                                return skippedProp ? skippedProp.trim().replace(/,*$/, '') : '';
-                            }
-                        }).filter(newPropDeclaration => newPropDeclaration.length).join(',\n' + ' '.repeat(14))
-                    + p4 + ( hasCustomPrimaryKey ? '' : (p5.length ? p5 + ',\n' + ' '.repeat(14) : '') )
-                    + newPropArray.map( prop => {
-                            if (!prop.skipUpdate) {
-                                return `this.${prop.name} = typeof ${prop.name} !== 'undefined' ? ${prop.name} : ${prop.value ? prop.value : 'null'}`;
-                            } else {
-                                const skippedProp = currConstructorDeclarations.filter(el => (new RegExp(`^\\s*this.${prop.name}`)).test(el))[0];
-                                return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
-                            }
-                        }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n' + ' '.repeat(4)) + ';';
-            } else {
-                return p1 + p2 + p3 + p4;
-            }
+            return p1 + newPropArray.map( prop => {
+                        if (!prop.skipUpdate) {
+                            return `${prop.name}?${prop.type && !prop.value ? ': ' + prop.type : ''}`;
+                        } else {
+                            const skippedProp = currConstructorArgs.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
+                            return skippedProp ? skippedProp.trim().replace(/,*$/, '') : '';
+                        }
+                    }).filter(newPropDeclaration => newPropDeclaration.length).join(',\n' + ' '.repeat(14))
+                + p4 + newPropArray.map( prop => {
+                        if (!prop.skipUpdate) {
+                            return `this.${prop.name} = typeof ${prop.name} !== 'undefined' ? ${prop.name} : ${prop.value ? prop.value : 'null'}`;
+                        } else {
+                            const skippedProp = currConstructorDeclarations.filter(el => (new RegExp(`^\\s*this.${prop.name}`)).test(el))[0];
+                            return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
+                        }
+                    }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n' + ' '.repeat(4)) + ';';
         });
     fs.writeFileSync(filePath, newContent);
 }
