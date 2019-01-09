@@ -19,13 +19,13 @@ const REGEXS = {
     fileTemplate: /\*\*(.+?)\*\*/gim,
     todoVerifyImports: /\/\/ TODO verify the following imports\: .+?;/g,
     endOfImports: /(import(?:.|\s)*?;\s+)((?:\/\/ TODO verify the following imports\: .+;\s+)*)((?:(?:\/{1,2}\*? ?(?:.|\s)+?(?:\/\/|\*\/|;)\s)+|\@NgModule|export class|export const))/m,
-    modelPropDeclarations: /((?:\s+?[_wu]?id\??\: string\;){1,4})((?:(?:\r|\n|\r\n)\s*\w+\??(?: ?[\:\=] ?.*\;|\;))*)/m,
-    serverModelMapMethods: /(static map(?:Reverse)? ?\((\w+?)\: (?:Server)?\w+\)\: (?:Server)?\w+? \{\s*?const (\w+?) ?\= ?.*?;((?:(?:\r|\n|\r\n)?\s*\3\.[_w]?id ?\= ?.*\2\..+){1,3};))((?:(?:\r|\n|\r\n)?\s*\3\.\w+ ?\= ?.*\2\..+)*)/gm,
+    modelPropDeclarations: /(class .+ (?:implements|extends)? .+ {\s+)((?:[_wu]?id\??\: string\;){0,4})((?:(?:\r|\n|\r\n)?\s*\w+\??(?: ?[\:\=] ?.*\;|\;))*)/m,
+    serverModelMapMethods: /(static map(?:Reverse)? ?\((\w+?)\: (?:Server)?\w+\)\: (?:Server)?\w+? \{\s*?const (\w+?) ?\= ?.*?;)((?:(?:\r|\n|\r\n)?\s*\3\.[_w]?id ?\= ?.*\2\..+){0,3};)((?:(?:\r|\n|\r\n)?\s*\3\.\w+ ?\= ?.*\2\..+)*)/gm,
     modelPropLine: /(\w+?)(\??)((?: ?\: ?.*)|$|(?: ?\= ?(.*)))/,
-    modelConstructor: /(constructor\s?\((?:[_wu]?id\? ?\: ?string\,?){1,3})((?:\s*\w+\??(?: ?\: ?.*\,?|\,|))*?)(\s*\)\s?\{\s*)((?:\s*?this\.[_wu]?id ?\= ?.+;){1,3})((?:\s*?this\.\w+ ?\= ?.*?;)*)/m,
+    modelConstructor: /(constructor\s?\()((?:[_wu]?id\? ?\: ?string){0,3})\,?((?:\s*\w+\??(?: ?\: ?.*\,?|\,|))*?)(\s*\)\s?\{\s*)((?:\s*?this\.[_wu]?id ?\= ?.+;){0,3})((?:\s*?this\.\w+ ?\= ?.*?;)*)/m,
     properNames: /\b[A-Z]\w*\b/gm,
     formControlList: /(const generatedFormControls\: ?FormControlList ?\= ?\[)((?:.|\s)*?)(\];)/
-}
+};
 
 /**
  * Consumes an array of objects and a lookup key.

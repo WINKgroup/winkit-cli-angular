@@ -404,30 +404,32 @@ function deleteModel(name = null) {
  * @param {string} filePath - Path of the ServerModel file.
  * @param {string} serverContent - Current content of the ServerModel file.
  * @param {*[]} newPropArray - Array of objects with data for latest model properties.
+ * @param {boolean} [hasCustomPrimaryKey = false]
  * @param {string[]} [typesToImport] - Array of typescript type names found in newPropArray.
  * @param {*[]} [propMap] - Modified newPropArray array with custom 'name' properties of objects.
  */
-function writeNewServerContent(filePath, serverContent, newPropArray, typesToImport, propMap = null) {
-    // console.log('writeNewServerContent', typesToImport)
+function writeNewServerContent(filePath, serverContent, newPropArray, hasCustomPrimaryKey = false, typesToImport = null, propMap = null) {
     const newServerContent = serverContent
         .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
-        .replace(REGEXS.modelPropDeclarations, (m, p1, p2) => {
-            const currPropDeclarationsArray = (p2 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
+        .replace(REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
+            const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
             if (newPropArray && newPropArray.length) {
-                return p1 + '\n' + (propMap || newPropArray).map( (prop, i) => {
-                    if (!prop.skipUpdate) {
-                        return `  ${prop.name || newPropArray[i].name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
-                    } else {
-                        const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
-                        return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
-                    }
+                return p1 + (hasCustomPrimaryKey ? '\n' : p2 + '\n')
+                    + (propMap || newPropArray).map( (prop, i) => {
+                        if (!prop.skipUpdate) {
+                            return `  ${prop.name || newPropArray[i].name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
+                        } else {
+                            const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
+                            return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
+                        }
                 }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n')
             + ';';
             } else {
-                return p1
+                return p1 + p2;
             }})
         .replace(REGEXS.serverModelMapMethods, (m, p1, p2, p3, p4, p5) => newPropArray && newPropArray.length ? (
-            p1 + '\n' + ' '.repeat(4)
+             p1 + '\n' + ' '.repeat(4)
+                + (hasCustomPrimaryKey ? '' : p4 + '\n')
                 + newPropArray.map( (prop, i) => {
                         const userPropName = propMap ? propMap[i].name : false;
                         const currPropInitializationsArray = (p5 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
@@ -450,15 +452,17 @@ function writeNewServerContent(filePath, serverContent, newPropArray, typesToImp
  * @param {string} filePath - Path of the Model file.
  * @param {string} currentContent - Current content of the Model file.
  * @param {*[]} newPropArray - Array of objects with data for latest model properties.
- * @param {string[]} [typesToImport] - Array of typescript type names found in newPropArray.
+ * @param {boolean} [hasCustomPrimaryKey = false]
+ * @param {string[]} [typesToImport = null] - Array of typescript type names found in newPropArray.
  */
-function writeNewModelContent(filePath, currentContent, newPropArray, typesToImport) {
+function writeNewModelContent(filePath, currentContent, newPropArray, hasCustomPrimaryKey = false, typesToImport = null) {
     const newContent = currentContent
         .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.trim()}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
-        .replace(REGEXS.modelPropDeclarations, (m, p1, p2) => {
-            const currPropDeclarationsArray = (p2 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
+        .replace(REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
+            const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
             if (newPropArray && newPropArray.length) {
-                return p1 + '\n' + newPropArray.map( prop => {
+                return p1 + (hasCustomPrimaryKey ? '\n' : p2 + '\n')
+                    + newPropArray.map( prop => {
                         if (!prop.skipUpdate) {
                            return `  ${prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
                         } else {
@@ -467,13 +471,14 @@ function writeNewModelContent(filePath, currentContent, newPropArray, typesToImp
                         }
                     }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n') + ';';
             } else {
-                return p1;
+                return p1 + p2;
             }})
-        .replace(REGEXS.modelConstructor, (_, p1, p2, p3, p4, p5) => {
-            const currConstructorArgs = (p2 + ',\n').match(/^\s*.+,[\r\n]/gm) || [];
-            const currConstructorDeclarations = (p5 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
+        .replace(REGEXS.modelConstructor, (_, p1, p2, p3, p4, p5, p6) => {
+            const currConstructorArgs = (p3 + ',\n').match(/^\s*.+,[\r\n]/gm) || [];
+            const currConstructorDeclarations = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
+            console.log('modelConstructor', p1, p2, p3, p4, p5, p6)
             if (newPropArray && newPropArray.length) {
-                return p1 + (p1.endsWith(',') ? '\n' : ',\n') + ' '.repeat(14)
+                return p1 + ( hasCustomPrimaryKey ? '' : (p2.length ? p2 + ',\n' + ' '.repeat(14) : '') )
                     + newPropArray.map( prop => {
                             if (!prop.skipUpdate) {
                                 return `${prop.name}?${prop.type && !prop.value ? ': ' + prop.type : ''}`;
@@ -482,7 +487,7 @@ function writeNewModelContent(filePath, currentContent, newPropArray, typesToImp
                                 return skippedProp ? skippedProp.trim().replace(/,*$/, '') : '';
                             }
                         }).filter(newPropDeclaration => newPropDeclaration.length).join(',\n' + ' '.repeat(14))
-                    + p3 + p4 + '\n' + ' '.repeat(4)
+                    + p4 + ( hasCustomPrimaryKey ? '' : (p5.length ? p5 + ',\n' + ' '.repeat(14) : '') )
                     + newPropArray.map( prop => {
                             if (!prop.skipUpdate) {
                                 return `this.${prop.name} = typeof ${prop.name} !== 'undefined' ? ${prop.name} : ${prop.value ? prop.value : 'null'}`;
@@ -492,7 +497,7 @@ function writeNewModelContent(filePath, currentContent, newPropArray, typesToImp
                             }
                         }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n' + ' '.repeat(4)) + ';';
             } else {
-                return (p1.endsWith(',') ? p1.slice(0, -1) : p1) + p3 + p4;
+                return p1 + p2 + p3 + p4;
             }
         });
     fs.writeFileSync(filePath, newContent);
@@ -503,11 +508,11 @@ function writeNewModelContent(filePath, currentContent, newPropArray, typesToImp
  * @param {string} filePath - Path of the Model file.
  * @param {string} currentContent - Current content of the Model file.
  * @param {*[]} newPropArray - Array of objects with data for latest model properties.
+ * @param {boolean} [hasCustomPrimaryKey = false]
  */
-function writeNewDataFactoryContent(filePath, currentContent, newPropArray) {
+function writeNewDataFactoryContent(filePath, currentContent, newPropArray, hasCustomPrimaryKey = false) {
     const typesToImport = getTypesToImport(newPropArray, '', /^\b[A-Z]\w*\b/);
-    const primaryKeyControl = newPropArray.filter(el => el['primaryKey'] === true)[0];
-    if (!primaryKeyControl) {
+    if (!hasCustomPrimaryKey) {
         const idFormControl = {name: '\'id\'', disabled: true, type: 'FormControlType.TEXT', order: 0, ngIf: '!that.isNew'};
         newPropArray.unshift(idFormControl);
     }
@@ -526,9 +531,10 @@ function writeNewDataFactoryContent(filePath, currentContent, newPropArray) {
  * Implements the logic related to updating a Model file.
  * @param {string} name - Model name.
  * @param {{properties: any[], any}} moduleConfig
+ * @param {boolean} [hasCustomPrimaryKey = false]
  * @returns {Promise<boolean>}
  */
-function updateModel(name, moduleConfig) {
+function updateModel(name, moduleConfig, hasCustomPrimaryKey) {
     return new Promise(resolve => {
         console.log(color(dynamicTexts.updating(elementTypes.MODEL, name)[0], dynamicTexts.updating(elementTypes.MODEL, name)[1]));
         const {modelPath, serverModelPath} = getModulePaths(name, true);
@@ -538,13 +544,13 @@ function updateModel(name, moduleConfig) {
             }
             const typesToImport = getTypesToImport(moduleConfig['properties'], 'type');
             const successText = dynamicTexts.updateSuccess(name, typesToImport);
-            writeNewModelContent(modelPath, currentContent, moduleConfig['properties'], typesToImport);
+            writeNewModelContent(modelPath, currentContent, moduleConfig['properties'], typesToImport, hasCustomPrimaryKey);
             fs.readFile(serverModelPath, 'utf8', (err1, serverContent) => {
                 if (err1) {
                     return resolve(false);
                 }
                 if (moduleConfig['properties'].length === 0) {
-                    writeNewServerContent(serverModelPath, serverContent, []);
+                    writeNewServerContent(serverModelPath, serverContent, [], hasCustomPrimaryKey);
                     console.log(color(successText[0], successText[1]));
                     return resolve(true);
                 }
@@ -556,7 +562,7 @@ function updateModel(name, moduleConfig) {
                 }).then(res => {
                     switch (res['serverPropMapping']) {
                         case 'automatic':
-                            writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport);
+                            writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], hasCustomPrimaryKey, typesToImport);
                             console.log(color(successText[0], successText[1]));
                             return resolve(true);
                         case 'manual':
@@ -568,7 +574,7 @@ function updateModel(name, moduleConfig) {
                             prompt(questions).then(res => {
                                 // IMPORTANT: res is an object with keys matching newPropArray prop names
                                 const userPropMap = getUserPropMap(res, moduleConfig['properties']);
-                                writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport, userPropMap);
+                                writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], hasCustomPrimaryKey, typesToImport, userPropMap);
                                 console.log(color(successText[0], successText[1]));
                                 return resolve(true);
                             });
@@ -583,9 +589,10 @@ function updateModel(name, moduleConfig) {
  * Implements the logic related to adding new properties to the model's detail.
  * @param {string} name - Model name.
  * @param {{properties: any[], any}} moduleConfig
+ * @param {boolean} [hasCustomPrimaryKey = false]
  * @returns {Promise<boolean>}
  */
-function updateDetail(name, moduleConfig) {
+function updateDetail(name, moduleConfig, hasCustomPrimaryKey = false) {
     return new Promise(resolve => {
         const {dataFactoryPath} = getModulePaths(name, true);
         const formControlList = moduleConfig['properties']
@@ -602,7 +609,7 @@ function updateDetail(name, moduleConfig) {
             if (err) {
                 return resolve(false)
             };
-            writeNewDataFactoryContent(dataFactoryPath, dataFactoryContent, formControlList);
+            writeNewDataFactoryContent(dataFactoryPath, dataFactoryContent, formControlList, hasCustomPrimaryKey);
             console.log(color(staticTexts.detailUpdated[0], staticTexts.detailUpdated[1]));
             return resolve(true)
         });
@@ -631,22 +638,23 @@ async function update(elementType, name) {
     }
     const moduleConfig = require(process.cwd() + '/' + getModulePaths(name).config);
     const moduleProperties = moduleConfig['properties'];
+    const primaryKeyListLength = moduleProperties.filter( prop => prop['primaryKey'] === true ).length;
     if (moduleProperties && moduleProperties.length > 1) {
         const duplicateNamesList = getDuplicateValuesByPropName(moduleProperties, 'name');
-        const duplicatePrimaryKeyList = getDuplicateValuesByPropName(moduleProperties, 'primaryKey');
         if (duplicateNamesList && duplicateNamesList.length) {
             console.log(color(dynamicTexts.duplicatePropNamesFound('name', duplicateNamesList)[0], dynamicTexts.duplicatePropNamesFound('name', duplicateNamesList)[1]));
             return false;
         }
-        if (duplicatePrimaryKeyList && duplicatePrimaryKeyList.length) {
+        if (primaryKeyListLength > 1) {
             console.log(color(dynamicTexts.exceededKeyCount('primaryKey', 1)[0], dynamicTexts.exceededKeyCount('primaryKey', 1)[1]));
             return false;
         }
     }
     name = name[0].toUpperCase() + name.substr(1);
+    const hasCustomPrimaryKey = primaryKeyListLength === 1;
     switch (elementType) {
         case elementTypes.MODEL:
-            const modelUpdated = await updateModel(name, moduleConfig);
+            const modelUpdated = await updateModel(name, moduleConfig, hasCustomPrimaryKey);
             if (modelUpdated && detailAlreadyExist) {
                 update(elementTypes.DETAIL, name);
             } else {
@@ -658,7 +666,7 @@ async function update(elementType, name) {
                 console.log(color(dynamicTexts.detailNotFound(name)[0], dynamicTexts.detailNotFound(name)[1]));
                 return;
             }
-            updateDetail(name, moduleConfig);
+            updateDetail(name, moduleConfig, hasCustomPrimaryKey);
         default:
             return;
     }
