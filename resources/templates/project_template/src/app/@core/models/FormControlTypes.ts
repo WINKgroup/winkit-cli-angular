@@ -15,6 +15,7 @@ export enum FormControlType {
 export interface BaseFormControl {
   name: string;
   type: FormControlType;
+  primaryKey?: true;
   ngIf?: boolean;
   order?: number;
   labelText?: string;
