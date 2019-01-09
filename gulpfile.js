@@ -506,9 +506,11 @@ function writeNewModelContent(filePath, currentContent, newPropArray, typesToImp
  */
 function writeNewDataFactoryContent(filePath, currentContent, newPropArray) {
     const typesToImport = getTypesToImport(newPropArray, '', /^\b[A-Z]\w*\b/);
-    const defaultIDControl = {name: '\'id\'', disabled: true, type: 'FormControlType.TEXT', order: 0, ngIf: '!that.isNew'};
-    const idFormControl = defaultIDControl; // TODO
-    newPropArray.unshift(idFormControl);
+    const primaryKeyControl = newPropArray.filter(el => el['primaryKey'] === true)[0];
+    if (!primaryKeyControl) {
+        const idFormControl = {name: '\'id\'', disabled: true, type: 'FormControlType.TEXT', order: 0, ngIf: '!that.isNew'};
+        newPropArray.unshift(idFormControl);
+    }
     const newContent = currentContent
         .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
         .replace(REGEXS.formControlList, (_, p1, p2, p3) => newPropArray && newPropArray.length ? (
@@ -586,8 +588,15 @@ function updateModel(name, moduleConfig) {
 function updateDetail(name, moduleConfig) {
     return new Promise(resolve => {
         const {dataFactoryPath} = getModulePaths(name, true);
-        const formControlList = moduleConfig['properties'].filter( el => el.hasOwnProperty('htmlConfig') && !el.skipUpdate )
-                                                          .map( el => ({name: `'${el.name}'`, ...el.htmlConfig}) );
+        const formControlList = moduleConfig['properties']
+            .filter( el => el.hasOwnProperty('htmlConfig') && !el.skipUpdate )
+            .map( el => {
+              let formControl = {name: `'${el.name}'`, ...el.htmlConfig};
+              if (el.primaryKey) {
+                  formControl.primaryKey = el.primaryKey;
+              }
+              return formControl;
+            });
         fs.readFile(dataFactoryPath, 'utf8', (err, dataFactoryContent) => {
             console.log(color(dynamicTexts.updating(name, elementTypes.DETAIL)[0], dynamicTexts.updating(name, elementTypes.DETAIL)[1]));
             if (err) {
@@ -620,7 +629,8 @@ async function update(elementType, name) {
         console.log(color(dynamicTexts.updateServerModelNotFound(name)[0], dynamicTexts.updateServerModelNotFound(name)[1]));
         return false;
     }
-    const moduleProperties = require(process.cwd() + '/' + getModulePaths(name).config)['properties'];
+    const moduleConfig = require(process.cwd() + '/' + getModulePaths(name).config);
+    const moduleProperties = moduleConfig['properties'];
     if (moduleProperties && moduleProperties.length > 1) {
         const duplicateNamesList = getDuplicateValuesByPropName(moduleProperties, 'name');
         const duplicatePrimaryKeyList = getDuplicateValuesByPropName(moduleProperties, 'primaryKey');
@@ -629,7 +639,7 @@ async function update(elementType, name) {
             return false;
         }
         if (duplicatePrimaryKeyList && duplicatePrimaryKeyList.length) {
-            console.log(color(dynamicTexts.exceededKeyCount('primaryKey', 1)[0], dynamicTexts.duplicatePropNamesFound('primaryKey', 1)[1]));
+            console.log(color(dynamicTexts.exceededKeyCount('primaryKey', 1)[0], dynamicTexts.exceededKeyCount('primaryKey', 1)[1]));
             return false;
         }
     }
