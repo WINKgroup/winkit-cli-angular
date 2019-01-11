@@ -8,10 +8,12 @@ const windowKeyList = require('./windowKeysList');
  */
 const elementTypes = {
     MODEL: 'model',
+    SERVER_MODEL: 'serverModel',
+    DATA_FACTORY: 'dataFactory',
     SERVICE: 'service',
     LIST: 'list',
     DETAIL: 'detail',
-}
+};
 
 const nonUpdateableModels = ['authenticationservicemodel', 'baseservicemodel', 'responseerror', 'usermedia', 'userservicemodel'];
 
@@ -144,6 +146,31 @@ function checkAlreadyExist(elementType, name) {
     };
 }
 
+/**
+ *
+ * @param {elementTypes} writeTo
+ * @param {string} primaryKey
+ * @returns {Object[]}
+ */
+function getPrimaryKeysList(writeTo, primaryKey) {
+    switch (writeTo) {
+        case elementTypes.MODEL:
+        case elementTypes.SERVER_MODEL:
+            if (primaryKey && typeof primaryKey === 'string' && primaryKey.length) {
+                return [{name: primaryKey, type: 'string'}];
+            } else {
+                const name = writeTo === 'model' ? 'id' : '_id';
+                return [{name, type: 'string'}, {name: 'wid', relationship: 'id', type: 'string'}];
+            }
+        case elementTypes.DATA_FACTORY:
+            const name = primaryKey && typeof primaryKey === 'string' && primaryKey.length ? `'${primaryKey}'` : '\'id\'';
+            return [{ name, disabled: true, type: 'FormControlType.TEXT', order: 0, ngIf:'!that.isNew' }];
+        default:
+            return [];
+    }
+
+}
+
 module.exports = {
-    elementTypes, getModulePaths, checkAlreadyExist, REGEXS, validateName, nonUpdateableModels, getTypesToImport, getUserPropMap, getDuplicateValuesByPropName
+    elementTypes, getModulePaths, checkAlreadyExist, REGEXS, validateName, nonUpdateableModels, getTypesToImport, getUserPropMap, getDuplicateValuesByPropName, getPrimaryKeysList
 };

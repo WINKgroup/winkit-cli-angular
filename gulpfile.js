@@ -8,8 +8,7 @@ const mkdirp = require('mkdirp');
 const del = require('del');
 const shell = require('gulp-shell');
 
-const { modelTemplate, serverModelTemplate, serviceTemplate, componentDetailViewModelTemplate, componentDetailViewTemplate, componentDetailStyleTemplate, componentListViewModelTemplate, componentListViewTemplate, componentListStyleTemplate, windowKeyList, moduleTemplate, REGEXS, validateName, getModulePaths, elementTypes, checkAlreadyExist, staticTexts, dynamicTexts, nonUpdateableModels, configTemplate, moduleRoutingTemplate, getTypesToImport, getUserPropMap, getDuplicateValuesByPropName, dataFactoryTemplate
-} = require('./resources/index');
+const { modelTemplate, serverModelTemplate, serviceTemplate, componentDetailViewModelTemplate, componentDetailViewTemplate, componentDetailStyleTemplate, componentListViewModelTemplate, componentListViewTemplate, componentListStyleTemplate, moduleTemplate, staticTexts, dynamicTexts, configTemplate, moduleRoutingTemplate, dataFactoryTemplate, getPrimaryKeysList, elementTypes, checkAlreadyExist, getTypesToImport, getUserPropMap, getDuplicateValuesByPropName, nonUpdateableModels, getModulePaths, REGEXS } = require('./resources/index');
 
 let config;
 try {
@@ -48,6 +47,8 @@ function generateContent(match, name) {
  * Recursively triggers the create() method for elements of the taskList array.
  * @param {string} name - Name of model.
  * @param {elementTypes[]} taskList - Array of elementTypes enum members.
+ * @param {number} [counter = 0] - used in reccurence.
+ * @param {[]} [results = []] - used in reccurence.
  * @returns {Promise<boolean>}
  */
 async function parseTasks(name, taskList, counter = 0, results = []) {
@@ -408,13 +409,18 @@ function deleteModel(name = null) {
  * @param {*[]} [propMap] - Modified newPropArray array with custom 'name' properties of objects.
  */
 function writeNewServerContent(filePath, serverContent, newPropArray = [], typesToImport = null, propMap = null) {
+    const primaryKeyList = getPrimaryKeysList(elementTypes.SERVER_MODEL, config.primaryKey);
+    const propArray = primaryKeyList.concat(newPropArray);
+    if (propMap) {
+        propMap.unshift(primaryKeyList);
+    }
     const newServerContent = serverContent
         .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
         .replace(REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-            return p1.trim() + '\n' + (propMap || newPropArray).map( (prop, i) => {
+            return p1.trim() + '\n' + (propMap || propArray).map( (prop, i) => {
                 if (!prop.skipUpdate) {
-                    return `  ${prop.name || newPropArray[i].name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
+                    return `  ${prop.name || propArray[i].name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
                 } else {
                     const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
                     return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
@@ -424,7 +430,7 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
         })
         .replace(REGEXS.serverModelMapMethods, (m, p1, p2, p3, p4, p5) => (
              p1 + '\n' + ' '.repeat(4)
-                + newPropArray.map( (prop, i) => {
+                + propArray.map( (prop, i) => {
                         const userPropName = propMap ? propMap[i].name : false;
                         const currPropInitializationsArray = (p5 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
                         if (!prop.skipUpdate) {
@@ -449,16 +455,13 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
  * @param {string[]} [typesToImport = null] - Array of typescript type names found in newPropArray.
  */
 function writeNewModelContent(filePath, currentContent, newPropArray = [], typesToImport = null) {
-    if (config.primaryKey && typeof config.primaryKey === 'string' && config.primaryKey.length) {
-        newPropArray.unshift({name: config.primaryKey, type: 'string'})
-    } else {
-        newPropArray.unshift({name: 'id', type: 'string'}, {name: 'wid', type: 'string'});
-    }
+    const primaryKeyList = getPrimaryKeysList(elementTypes.MODEL, config.primaryKey);
+    const propArray = primaryKeyList.concat(newPropArray);
     const newContent = currentContent
         .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.trim()}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
         .replace(REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-                return p1.trim() + '\n' + newPropArray.map( prop => {
+                return p1.trim() + '\n' + propArray.map( prop => {
                     if (!prop.skipUpdate) {
                        return `  ${prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
                     } else {
@@ -470,8 +473,8 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
         .replace(REGEXS.modelConstructor, (_, p1, p2, p3, p4, p5, p6) => {
             const currConstructorArgs = (p3 + ',\n').match(/^\s*.+,[\r\n]/gm) || [];
             const currConstructorDeclarations = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-            return p1 + newPropArray.map( prop => {
-                            if (prop.name === 'wid') {
+            return p1 + propArray.map( prop => {
+                            if (prop.relationship) {
                                 return '';
                             } else if (!prop.skipUpdate) {
                                 return `${prop.name}?${prop.type && !prop.value ? ': ' + prop.type : ''}`;
@@ -480,9 +483,9 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
                                 return skippedProp ? skippedProp.trim().replace(/,*$/, '') : '';
                             }
                         }).filter(newPropDeclaration => newPropDeclaration.length).join(',\n' + ' '.repeat(14))
-                    + p4 + newPropArray.map( prop => {
+                    + p4 + propArray.map( prop => {
                             if (!prop.skipUpdate) {
-                                return `this.${prop.name} = typeof ${prop.name} !== 'undefined' ? ${prop.name} : ${prop.value ? prop.value : 'null'}`;
+                                return `this.${prop.name} = typeof ${prop.relationship || prop.name} !== 'undefined' ? ${prop.relationship || prop.name} : ${prop.value ? prop.value : 'null'}`;
                             } else {
                                 const skippedProp = currConstructorDeclarations.filter(el => (new RegExp(`^\\s*this.${prop.name}`)).test(el))[0];
                                 return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
@@ -500,20 +503,13 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
  */
 function writeNewDataFactoryContent(filePath, currentContent, newPropArray = []) {
     const typesToImport = getTypesToImport(newPropArray, '', /^\b[A-Z]\w*\b/);
-    const idFormControl = {
-        name: config.primaryKey && typeof config.primaryKey === 'string' && config.primaryKey.length ? `'${config.primaryKey}'` : '\'id\'',
-        disabled: true,
-        type: 'FormControlType.TEXT',
-        order: 0,
-        ngIf:'!that.isNew'
-    };
-    newPropArray.unshift(idFormControl);
-    // console.log('writeNewDataFactoryContent', newPropArray)
+    const primaryKeyList = getPrimaryKeysList(elementTypes.DATA_FACTORY, config.primaryKey);
+    const propArray = primaryKeyList.concat(newPropArray);
     const newContent = currentContent
         .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
-        .replace(REGEXS.formControlList, (_, p1, p2, p3) => newPropArray && newPropArray.length ? (
+        .replace(REGEXS.formControlList, (_, p1, p2, p3) => propArray && propArray.length ? (
             p1 + '\n' + ' '.repeat(6)
-            + newPropArray.map( prop => '{' + Object.keys(prop).map( k => `${k}: ${prop[k]}` ).join(', ') + '}' )
+            + propArray.map( prop => '{' + Object.keys(prop).map( k => `${k}: ${prop[k]}` ).join(', ') + '}' )
                           .join(',\n' + ' '.repeat(6))
             + '\n' + ' '.repeat(4) + p3
         ): p1 + p3);
