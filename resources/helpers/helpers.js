@@ -19,7 +19,7 @@ const REGEXS = {
     fileTemplate: /\*\*(.+?)\*\*/gim,
     todoVerifyImports: /\/\/ TODO verify the following imports\: .+?;/g,
     endOfImports: /(import(?:.|\s)*?;\s+)((?:\/\/ TODO verify the following imports\: .+;\s+)*)((?:(?:\/{1,2}\*? ?(?:.|\s)+?(?:\/\/|\*\/|;)\s)+|\@NgModule|export class|export const))/m,
-    modelPropDeclarations: /(class .+ (?:implements|extends)? .+ {\s+)((?:[_wu]?id\??\: string\;){0,4})((?:(?:\r|\n|\r\n)?\s*\w+\??(?: ?[\:\=] ?.*\;|\;))*)/m,
+    modelPropDeclarations: /(class \w+ (?:(?:implements|extends) [\w\<\>\[\]]+ )?{\s+)((?:[_wu]?id\??\: string\;){0,4})((?:(?:\r|\n|\r\n)?\s*\w+\??(?: ?[\:\=] ?.*\;|\;))*)/m,
     serverModelMapMethods: /(static map(?:Reverse)? ?\((\w+?)\: (?:Server)?\w+\)\: (?:Server)?\w+? \{\s*?const (\w+?) ?\= ?.*?;)((?:(?:\r|\n|\r\n)?\s*\3\.[_w]?id ?\= ?.*\2\..+){0,3};)((?:(?:\r|\n|\r\n)?\s*\3\.\w+ ?\= ?.*\2\..+)*)/gm,
     modelPropLine: /(\w+?)(\??)((?: ?\: ?.*)|$|(?: ?\= ?(.*)))/,
     modelConstructor: /(constructor\s?\()((?:[_wu]?id\? ?\: ?string){0,3})\,?((?:\s*\w+\??(?: ?\: ?.*\,?|\,|))*?)(\s*\)\s?\{\s*)((?:\s*?this\.[_wu]?id ?\= ?.+;){0,3})((?:\s*?this\.\w+ ?\= ?.*?;)*)/m,
