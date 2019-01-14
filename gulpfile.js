@@ -418,9 +418,10 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
         .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
         .replace(REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-            return p1.trim() + '\n' + (propMap || propArray).map( (prop, i) => {
+            return p1.trim() + '\n' + propArray.map( (prop, i) => {
+                const userPropName = propMap ? propMap[i].name : false;
                 if (!prop.skipUpdate) {
-                    return `  ${prop.name || propArray[i].name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
+                    return `  ${userPropName || prop.serverName || prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
                 } else {
                     const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
                     return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
@@ -435,8 +436,8 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
                         const currPropInitializationsArray = (p5 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
                         if (!prop.skipUpdate) {
                             return p2 === 'serverObject'
-                                ? `${p3}.${prop.mapReverseKey || prop.name} = typeof ${p2}.${prop.mapReverseRelationship || userPropName || prop.name} !== 'undefined' ? ${p2}.${prop.mapReverseRelationship || userPropName || prop.name} : null`
-                                : `${p3}.${userPropName || prop.name} = typeof ${p2}.${prop.relationship || prop.name} !== 'undefined' ? ${p2}.${prop.relationship || prop.name} : null`;
+                                ? `${p3}.${prop.mapReverseKey || prop.name} = typeof ${p2}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} !== 'undefined' ? ${p2}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} : null`
+                                : `${p3}.${userPropName || prop.serverName || prop.name} = typeof ${p2}.${prop.relationship || prop.name} !== 'undefined' ? ${p2}.${prop.relationship || prop.name} : null`;
                         } else {
                             const skippedProp = currPropInitializationsArray.filter(el => (new RegExp(`^\\s*${p3}.${prop.name}`)).test(el))[0];
                             return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
