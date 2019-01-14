@@ -40,9 +40,9 @@ function getTypesToImport(configProps, lookupKey, regex = REGEXS.properNames) {
     return configProps.reduce( (prev, propInfo) => {
         let typeArr;
         if (lookupKey && lookupKey.length) {
-            typeArr = propInfo.hasOwnProperty(lookupKey) ? propInfo[lookupKey].match(regex) : null;
+            typeArr = propInfo.hasOwnProperty(lookupKey) && !propInfo.skipUpdate ? propInfo[lookupKey].match(regex) : null;
         } else {
-            typeArr = Object.keys(propInfo).map( k => propInfo[k].toString().match(regex) ).filter( val => val && val.length );
+            typeArr = Object.keys(propInfo).map( k => !propInfo[k] && propInfo[k].toString().match(regex) ).filter( val => val && val.length );
         }
         return typeArr !== null ? prev.concat(...typeArr) : prev;
     }, [] ).filter( (el, i, arr) => arr.indexOf(el) === i && !windowKeyList.includes(el) && !windowKeyList.includes(el[0].toUpperCase() + el.slice(1)) );
