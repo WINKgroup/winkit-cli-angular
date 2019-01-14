@@ -22,7 +22,7 @@ const REGEXS = {
     todoVerifyImports: /\/\/ TODO verify the following imports\: .+?;/g,
     endOfImports: /(import(?:.|\s)*?;\s+)((?:\/\/ TODO verify the following imports\: .+;\s+)*)((?:(?:\/{1,2}\*? ?(?:.|\s)+?(?:\/\/|\*\/|;)\s)+|\@NgModule|export class|export const))/m,
     modelPropDeclarations: /(class \w+ (?:(?:implements|extends) [\w\<\>\[\]]+ )?{\s+)((?:[_wu]?id\??\: string\;){0,4})((?:(?:\r|\n|\r\n)?\s*\w+\??(?: ?[\:\=] ?.*\;|\;))*)/m,
-    serverModelMapMethods: /(static map(?:Reverse)? ?\((\w+?)\: (?:Server)?\w+\)\: (?:Server)?\w+? \{\s*?const (\w+?) ?\= ?.*?;)((?:(?:\r|\n|\r\n)?\s*\3\.[_w]?id ?\= ?.*\2\..+){0,3};)((?:(?:\r|\n|\r\n)?\s*\3\.\w+ ?\= ?.*\2\..+)*)/gm,
+    serverModelMapMethods: /(static map(?:Reverse)? ?\((\w+?)\: (?:Server)?\w+\)\: (?:Server)?\w+? \{\s*?const (\w+?) ?\= ?.*?;)((?:(?:\r|\n|\r\n)?\s*\3\.[_w]?id ?\= ?.*\2\..+;){0,3})((?:(?:\r|\n|\r\n)?\s*\3\.\w+ ?\= ?.*\2\..+)*)/gm,
     modelPropLine: /(\w+?)(\??)((?: ?\: ?.*)|$|(?: ?\= ?(.*)))/,
     modelConstructor: /(constructor\s?\()((?:[_wu]?id\? ?\: ?string){0,3})\,?((?:\s*\w+\??(?: ?\: ?.*\,?|\,|))*?)(\s*\)\s?\{\s*)((?:\s*?this\.[_wu]?id ?\= ?.+;){0,3})((?:\s*?this\.\w+ ?\= ?.*?;)*)/m,
     properNames: /\b[A-Z]\w*\b/gm,
@@ -158,9 +158,16 @@ function getPrimaryKeysList(writeTo, primaryKey) {
         case elementTypes.SERVER_MODEL:
             if (primaryKey && typeof primaryKey === 'string' && primaryKey.length) {
                 return [{name: primaryKey, type: 'string'}];
+            } else if (writeTo === elementTypes.MODEL) {
+                return [
+                    {name: 'id', type: 'string'},
+                    {name: 'wid', relationship: 'id', type: 'string'}
+                ];
             } else {
-                const name = writeTo === 'model' ? 'id' : '_id';
-                return [{name, type: 'string'}, {name: 'wid', relationship: 'id', type: 'string'}];
+                return [
+                    {name: '_id', relationship: 'id', mapReverseKey: 'id', type: 'string'},
+                    {name: 'wid', relationship: 'id', mapReverseRelationship: '_id', type: 'string'}
+                ];
             }
         case elementTypes.DATA_FACTORY:
             const name = primaryKey && typeof primaryKey === 'string' && primaryKey.length ? `'${primaryKey}'` : '\'id\'';

@@ -412,7 +412,7 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
     const primaryKeyList = getPrimaryKeysList(elementTypes.SERVER_MODEL, config.primaryKey);
     const propArray = primaryKeyList.concat(newPropArray);
     if (propMap) {
-        propMap.unshift(primaryKeyList);
+        propMap.unshift.apply(propMap, primaryKeyList);
     }
     const newServerContent = serverContent
         .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
@@ -435,8 +435,8 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
                         const currPropInitializationsArray = (p5 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
                         if (!prop.skipUpdate) {
                             return p2 === 'serverObject'
-                                ? `${p3}.${prop.name} = typeof ${p2}.${userPropName || prop.name} !== 'undefined' ? ${p2}.${userPropName || prop.name} : null`
-                                : `${p3}.${userPropName || prop.name} = typeof ${p2}.${prop.name} !== 'undefined' ? ${p2}.${prop.name} : null`;
+                                ? `${p3}.${prop.mapReverseKey || prop.name} = typeof ${p2}.${prop.mapReverseRelationship || userPropName || prop.name} !== 'undefined' ? ${p2}.${prop.mapReverseRelationship || userPropName || prop.name} : null`
+                                : `${p3}.${userPropName || prop.name} = typeof ${p2}.${prop.relationship || prop.name} !== 'undefined' ? ${p2}.${prop.relationship || prop.name} : null`;
                         } else {
                             const skippedProp = currPropInitializationsArray.filter(el => (new RegExp(`^\\s*${p3}.${prop.name}`)).test(el))[0];
                             return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
@@ -474,7 +474,7 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
             const currConstructorArgs = (p3 + ',\n').match(/^\s*.+,[\r\n]/gm) || [];
             const currConstructorDeclarations = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
             return p1 + propArray.map( prop => {
-                            if (prop.relationship) {
+                            if (typeof prop.relationship === 'string') {
                                 return '';
                             } else if (!prop.skipUpdate) {
                                 return `${prop.name}?${prop.type && !prop.value ? ': ' + prop.type : ''}`;
