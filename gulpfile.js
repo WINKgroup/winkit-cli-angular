@@ -90,13 +90,16 @@ function addToModuleOrRouting(ngClassName, modulePath, relativeClassPath, arrayP
         return false;
     }
     const endOfImportsRegex = ngClassName ? REGEXS.endOfImports : null;
-    const newContent = moduleContent.replace(endOfImportsRegex, (m, p1, p2, p3) => `${p1.trim()}\nimport {${ngClassName}} from '${relativeClassPath}';\n${p2.replace(/^\s+/,'')}\n${p3.replace(/^\s+/,'')}`)
-                                    .replace(arrayPositionRegex, match => {
-                                        const lastChar = match.slice(-1).trim();
-                                        return match.slice(0, -1).trim() + '\n'
-                                                    + ' '.repeat(indent) + (pushedElement || ngClassName)
-                                                    + ',\n' + (lastChar ? ' '.repeat(indent > 2 ? indent - 2 : 0) + lastChar : lastChar)
-                                    });
+    const newContent = moduleContent
+        .replace(endOfImportsRegex, (m, p1, p2, p3) => {
+            return `${p1.trim()}\nimport {${ngClassName}} from '${relativeClassPath}';\n${p2.replace(/^\s+/,'')}\n${p3.replace(/^\s+/,'')}`
+        })
+        .replace(arrayPositionRegex, match => {
+            const lastChar = match.slice(-1).trim();
+            return match.slice(0, -1).trim() + '\n'
+                        + ' '.repeat(indent) + (pushedElement || ngClassName)
+                        + ',\n' + (lastChar ? ' '.repeat(indent > 2 ? indent - 2 : 0) + lastChar : lastChar)
+        });
     if (newContent) {
         fs.writeFileSync(modulePath, newContent, 'utf8');
     } else {
@@ -676,14 +679,22 @@ async function configure() {
     return new Promise(async resolve => {
         const fileToCheck = 'src/environments/environment.ts';
         if (!fs.existsSync(fileToCheck)) {
-            prompt({
+            const serverTypePrompt = {
                 type: 'list',
                 name: 'serverType',
                 message: staticTexts.selectServer[0],
                 choices: ['strapi', 'firestore']
-            }).then(async (res) => {
+            };
+            const primaryKeyPrompt = {
+                type: 'input',
+                name: 'primaryKey',
+                transformer: val => val.replace(/ /g, ''),
+                message: '[optional] Provide custom primary key which will be used for all models or leave empty to use default key:'
+            };
+            prompt([serverTypePrompt, primaryKeyPrompt]).then(async (res) => {
                 console.log(color(dynamicTexts.configuring(res['serverType'])[0], dynamicTexts.configuring(res['serverType'])[1]));
                 config.selectedServer = res["serverType"];
+                config.primaryKey = res['primaryKey'] && res['primaryKey'].trim().length ? res['primaryKey'].replace(/ /g, '') : 'id';
                 const newConfigContent = JSON.stringify(config, null, 4);
                 fs.writeFileSync('./winkit.conf.json', newConfigContent);
                 Promise.all([
