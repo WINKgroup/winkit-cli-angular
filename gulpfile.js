@@ -694,7 +694,7 @@ async function configure() {
             prompt([serverTypePrompt, primaryKeyPrompt]).then(async (res) => {
                 console.log(color(dynamicTexts.configuring(res['serverType'])[0], dynamicTexts.configuring(res['serverType'])[1]));
                 config.selectedServer = res["serverType"];
-                config.primaryKey = res['primaryKey'] && res['primaryKey'].trim().length ? res['primaryKey'].replace(/ /g, '') : 'id';
+                config.primaryKey = res['primaryKey'] && res['primaryKey'].trim().length < 2 ? res['primaryKey'].replace(/ /g, '') : 'id';
                 const newConfigContent = JSON.stringify(config, null, 4);
                 fs.writeFileSync('./winkit.conf.json', newConfigContent);
                 Promise.all([
