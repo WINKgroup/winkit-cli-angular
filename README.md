@@ -346,7 +346,7 @@ The structure of the **ModelProperty** object is the following:
 * **optional** (`boolean`: _optional_): adds TypeScript's optional class marker to a property ([more info](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#optional-class-properties));
 * **value** (`string`: _optional_): a string containing the default value assigned to the model on initialization. Setting this key results in ignoring the _type_ and _optional_ keys;
 * **skipUpdate** (`boolean`: _optional_): setting this value to `true` results in the model property not being added to the model or updated (if it already exists on the model) when `winkit angular update|u ...` is called;
-* **htmlConfig** (`object`: _optional_): An object containing configuration of a single form control element (used in the detail component of a given model). For more information see [Structure of the htmlConfig object](#structure-of-the-htmlConfig-object) section below;
+* **htmlConfig** (`object`: _optional_): An object containing configuration of a single form control element. It MUST BE SET to display the form control element in the detail component of a given model . For more information see [Structure of the htmlConfig object](#structure-of-the-htmlConfig-object) section below;
 
 NOTE: The _id_, __id_ and _wid_ model properties are not affected by the _\<name\>.conf.json_ configuration.
 
