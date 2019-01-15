@@ -532,11 +532,14 @@ function writeNewDataFactoryContent(filePath, currentContent, newPropArray = [])
  * Implements the logic related to updating a Model file.
  * @param {string} name - Model name.
  * @param {{properties: any[], any}} moduleConfig
+ * @param {boolean} [runSilent = false] - Run update without command line output.
  * @returns {Promise<boolean>}
  */
-function updateModel(name, moduleConfig) {
+function updateModel(name, moduleConfig, runSilent = false) {
     return new Promise(resolve => {
-        console.log(color(dynamicTexts.updating(elementTypes.MODEL, name)[0], dynamicTexts.updating(elementTypes.MODEL, name)[1]));
+        if (!runSilent) {
+            console.log(color(dynamicTexts.updating(elementTypes.MODEL, name)[0], dynamicTexts.updating(elementTypes.MODEL, name)[1]));
+        }
         const {modelPath, serverModelPath} = getModulePaths(name, true);
         fs.readFile(modelPath, 'utf8', (err, currentContent) => {
             if (err) {
@@ -552,6 +555,10 @@ function updateModel(name, moduleConfig) {
                 if (moduleConfig['properties'].length === 0) {
                     writeNewServerContent(serverModelPath, serverContent, []);
                     console.log(color(successText[0], successText[1]));
+                    return resolve(true);
+                }
+                if (runSilent) {
+                    writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport);
                     return resolve(true);
                 }
                 prompt({
@@ -589,10 +596,14 @@ function updateModel(name, moduleConfig) {
  * Implements the logic related to adding new properties to the model's detail.
  * @param {string} name - Model name.
  * @param {{properties: any[], any}} moduleConfig
+ * @param {boolean} [runSilent = false] - Run update without command line output.
  * @returns {Promise<boolean>}
  */
-function updateDetail(name, moduleConfig) {
+function updateDetail(name, moduleConfig, runSilent = false) {
     return new Promise(resolve => {
+        if (!runSilent) {
+            console.log(color(dynamicTexts.updating(name, elementTypes.DETAIL)[0], dynamicTexts.updating(name, elementTypes.DETAIL)[1]));
+        }
         const {dataFactoryPath} = getModulePaths(name, true);
         const formControlList = moduleConfig['properties']
             .filter( el => el.hasOwnProperty('htmlConfig') && !el.skipUpdate )
@@ -604,12 +615,13 @@ function updateDetail(name, moduleConfig) {
               return formControl;
             });
         fs.readFile(dataFactoryPath, 'utf8', (err, dataFactoryContent) => {
-            console.log(color(dynamicTexts.updating(name, elementTypes.DETAIL)[0], dynamicTexts.updating(name, elementTypes.DETAIL)[1]));
             if (err) {
                 return resolve(false)
-            };
+            }
             writeNewDataFactoryContent(dataFactoryPath, dataFactoryContent, formControlList);
-            console.log(color(staticTexts.detailUpdated[0], staticTexts.detailUpdated[1]));
+            if (!runSilent) {
+                console.log(color(staticTexts.detailUpdated[0], staticTexts.detailUpdated[1]));
+            }
             return resolve(true)
         });
     });
@@ -619,9 +631,10 @@ function updateDetail(name, moduleConfig) {
  * Handles the initial logic related to updating elements.
  * @param {elementTypes} elementType - Member of the elementTypes enum.
  * @param {string} name - Model name.
+ * @param {boolean} [runSilent = false] - Run update without command line output.
  * @returns {boolean}
  */
-async function update(elementType, name) {
+async function update(elementType, name, runSilent = false) {
     const {modelAlreadyExists, serverModelAlreadyExists, detailAlreadyExist} = checkAlreadyExist(null, name);
     if (nonUpdateableModels.includes(name.toLowerCase())) {
         console.log(color(dynamicTexts.nonUpdateableModel(name)[0], dynamicTexts.nonUpdateableModel(name)[1]));
@@ -647,9 +660,9 @@ async function update(elementType, name) {
     name = name[0].toUpperCase() + name.substr(1);
     switch (elementType) {
         case elementTypes.MODEL:
-            const modelUpdated = await updateModel(name, moduleConfig);
+            const modelUpdated = await updateModel(name, moduleConfig, runSilent);
             if (modelUpdated && detailAlreadyExist) {
-                update(elementTypes.DETAIL, name);
+                update(elementTypes.DETAIL, name, runSilent);
             } else {
                 return;
             }
@@ -659,7 +672,7 @@ async function update(elementType, name) {
                 console.log(color(dynamicTexts.detailNotFound(name)[0], dynamicTexts.detailNotFound(name)[1]));
                 return;
             }
-            updateDetail(name, moduleConfig);
+            return await updateDetail(name, moduleConfig, runSilent);
         default:
             return;
     }
@@ -733,6 +746,7 @@ async function configure() {
                     })
                 ]).then(() => {
                     del.sync(['implementableServers/**']);
+                    update(elementTypes.MODEL, 'user', true);
                     console.log(color(staticTexts.configured[0], staticTexts.configured[1]));
                     console.log(color(staticTexts.enjoy[0], staticTexts.enjoy[1]));
                     gulp.src('./package.json', {read: false})
