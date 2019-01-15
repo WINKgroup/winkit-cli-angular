@@ -8,7 +8,7 @@ const mkdirp = require('mkdirp');
 const del = require('del');
 const shell = require('gulp-shell');
 
-const { modelTemplate, serverModelTemplate, serviceTemplate, componentDetailViewModelTemplate, componentDetailViewTemplate, componentDetailStyleTemplate, componentListViewModelTemplate, componentListViewTemplate, componentListStyleTemplate, moduleTemplate, staticTexts, dynamicTexts, configTemplate, moduleRoutingTemplate, dataFactoryTemplate, getPrimaryKeysList, elementTypes, checkAlreadyExist, getTypesToImport, getUserPropMap, getDuplicateValuesByPropName, nonUpdateableModels, getModulePaths, REGEXS } = require('./resources/index');
+const { modelTemplate, serverModelTemplate, serviceTemplate, componentDetailViewModelTemplate, componentDetailViewTemplate, componentDetailStyleTemplate, componentListViewModelTemplate, componentListViewTemplate, componentListStyleTemplate, moduleTemplate, staticTexts, dynamicTexts, configTemplate, moduleRoutingTemplate, dataFactoryTemplate, getPrimaryKeysList, elementTypes, checkAlreadyExist, getTypesToImport, getUserPropMap, getDuplicateValuesByPropName, nonUpdateableModels, getModulePaths, REGEXS, mappableTemplate } = require('./resources/index');
 
 let config;
 try {
@@ -23,7 +23,7 @@ try {
  * @param {string} name
  * @returns {string}
  */
-function generateContent(match, name) {
+function generateContent(match, name = null) {
     const dataArr = match.split(',');
     const firstElArr = dataArr[0].split('.');
     switch (firstElArr[0]) {
@@ -33,6 +33,8 @@ function generateContent(match, name) {
             return dataArr[2] === 'correspondingModelPath' ? './../server/models/Server' + name : './interface/Mappable';
         case 'selectedServer':
             return config.selectedServer === dataArr[1] ? dataArr[2] : dataArr[3];
+        case 'config':
+            return config[firstElArr[1]];
         case 'ThisName':
             if (firstElArr[1]) {
                 return name[firstElArr[1].replace(/[^a-z]/gi, '')]();
@@ -250,6 +252,12 @@ function createListFiles(name) {
             };
         });
     });
+}
+
+function createMappableFile(primaryKey) {
+    const content = mappableTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match));
+    fs.writeFileSync('src/app/@core/models/Mappable.ts', content, 'utf-8');
+    return true;
 }
 
 /**
@@ -694,9 +702,10 @@ async function configure() {
             prompt([serverTypePrompt, primaryKeyPrompt]).then(async (res) => {
                 console.log(color(dynamicTexts.configuring(res['serverType'])[0], dynamicTexts.configuring(res['serverType'])[1]));
                 config.selectedServer = res["serverType"];
-                config.primaryKey = res['primaryKey'] && res['primaryKey'].trim().length < 2 ? res['primaryKey'].replace(/ /g, '') : 'id';
+                config.primaryKey = res['primaryKey'] && res['primaryKey'].trim().length >= 2 ? res['primaryKey'].replace(/ /g, '') : 'id';
                 const newConfigContent = JSON.stringify(config, null, 4);
                 fs.writeFileSync('./winkit.conf.json', newConfigContent);
+                createMappableFile(config.primaryKey);
                 Promise.all([
                     new Promise((resolve1, reject1) => {
                         gulp.src(['implementableServers/' + res["serverType"] + '/services/**/*'])

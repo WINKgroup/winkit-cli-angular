@@ -32,6 +32,25 @@ const configTemplate = `{
 }
 `;
 
+
+const mappableTemplate = `export interface Mappable\<T\> {
+  **config.primaryKey**: string;
+
+  /**
+   * map from ReverseObject to Object
+   * @param reverseObject
+   * @returns {T}
+   */
+  map(reverseObject: any): T;
+
+  /**
+   * map from Object to ReverseObject
+   * @returns {any}
+   */
+  mapReverse(): any;
+}
+`;
+
 const moduleRoutingTemplate = `import {UserRole} from '../../@core/services/session.service';
 import {ModuleRouting} from '../../@core/models/ModuleRouting';
 import {AuthGuard} from '../../@core/guards/AuthGuard';
@@ -57,5 +76,5 @@ export const **ThisName.toUpperCase()**_ROUTING: ModuleRouting = {
 `;
 
 module.exports = {
-    moduleTemplate, configTemplate, moduleRoutingTemplate
+    moduleTemplate, configTemplate, moduleRoutingTemplate, mappableTemplate
 };
