@@ -32,8 +32,8 @@
               <input type="checkbox" (click)="onElementChecked(element, $event)" [checked]="element.checked">
             </label>
           </ng-container>
-          <ng-container *ngIf="h.key === 'openDetail' && element.id && h.path">
-            <a routerLink="/{{h.path + element.id}}">
+          <ng-container *ngIf="h.key === 'openDetail' && element[primaryKey] && h.path">
+            <a routerLink="/{{h.path + element[primaryKey]}}">
               <mat-icon>edit</mat-icon>
             </a>
           </ng-container>
