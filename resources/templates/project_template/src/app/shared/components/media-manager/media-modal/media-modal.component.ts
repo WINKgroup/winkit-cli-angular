@@ -7,9 +7,12 @@ import {Subscription} from 'rxjs/index';
 import {SessionService} from '../../../../@core/services/session.service';
 import {Utils} from '../../../../@core/static/Utils';
 import {StorageService} from '../storage.service';
+import config from '../../../../winkit.conf.json';
+
+const primaryKey = config.primaryKey || 'id';
 
 /**
- * menage loggedInUser media, show the already uploaded images, choose frome them or upload a new one!
+ * menage loggedInUser media, show the already uploaded images, choose from them or upload a new one!
  */
 @Component({
   selector: 'media-modal',
@@ -49,7 +52,7 @@ export class MediaModalComponent extends BaseComponent implements OnInit, OnDest
     if (this.allowedTypes.indexOf(MediaType.PDF) > -1) {
       this.accept += this.fullAccept.pdf;
     }
-    this.storageService.getMediaByUserId(SessionService.getLoggedInUser().id).then(s => {
+    this.storageService.getMediaByUserId(SessionService.getLoggedInUser()[primaryKey]).then(s => {
       this.mediaListSubscription = s.subscribe(media => {
         this.mediaList = media;
         this.loading = false;
@@ -99,7 +102,7 @@ export class MediaModalComponent extends BaseComponent implements OnInit, OnDest
     } else {
       const type = this.fullAccept.pdf.indexOf(file.type) > -1 ? MediaType.PDF : MediaType.IMAGE;
       this.loading = true;
-      this.storageService.upload(SessionService.getLoggedInUser().id, file, type, (progress: number) => {
+      this.storageService.upload(SessionService.getLoggedInUser()[primaryKey], file, type, (progress: number) => {
         console.log(progress);
       }).then((media: Media) => {
         console.log('media', media);
