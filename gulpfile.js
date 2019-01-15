@@ -254,6 +254,11 @@ function createListFiles(name) {
     });
 }
 
+/**
+ * Writes a new or overwrites old Mappable.ts model with passed primaryKey;
+ * @param primaryKey
+ * @returns {boolean}
+ */
 function createMappableFile(primaryKey) {
     const content = mappableTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match));
     fs.writeFileSync('src/app/@core/models/Mappable.ts', content, 'utf-8');
