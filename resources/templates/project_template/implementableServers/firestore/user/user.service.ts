@@ -3,6 +3,9 @@ import {User} from '../models/User';
 import * as firebase from 'firebase';
 import {UserServiceModel} from '../../../@core/models/UserServiceModel';
 import {BaseService} from '../../../@core/services/base.service';
+import config from '../../../../../winkit.conf.json';
+
+const primaryKey = config.primaryKey || 'id';
 
 @Injectable()
 
@@ -30,7 +33,7 @@ export class UserService extends BaseService<User> implements UserServiceModel<U
     const password = user.password;
     return firebase.auth().createUserWithEmailAndPassword(user.email, password).then(cUser => {
       console.log('cUser', cUser);
-      user.id = cUser.user.uid;
+      user[primaryKey] = cUser.user.uid;
       user.registeredAt = new Date();
       user.password = null;
       this.setPagination();

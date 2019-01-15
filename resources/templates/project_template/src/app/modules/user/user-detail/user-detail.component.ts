@@ -10,6 +10,9 @@ import {Utils} from '../../../@core/static/Utils';
 import {UserService} from '../service/user.service';
 import {FormControlList} from '../../../@core/models/FormControlTypes';
 import {UserDataFactory} from '../models/UserDataFactory';
+import config from '../../../../../winkit.conf.json';
+
+const primaryKey = config.primaryKey || '';
 
 @Component({
   selector: 'app-user-detail',
@@ -46,7 +49,7 @@ export class UserDetailComponent extends BasePageComponent implements OnInit {
      */
     if (!id) {
       this.isProfile = true;
-      id = this.loggedinUser.id;
+      id = this.loggedinUser[primaryKey];
     }
     /**
      * init user, if exists get it, if not create a new one with empty values
@@ -116,7 +119,7 @@ export class UserDetailComponent extends BasePageComponent implements OnInit {
   async deleteUser() {
     if (await this.askForConfirmation()) {
       this.loadingList.user = true;
-      this.userService.deleteUser(this.user.id).then(() => {
+      this.userService.deleteUser(this.user[primaryKey]).then(() => {
         CustomNotification.showNotification(this.toastr, 'User deleted!', '', CustomNotificationType.SUCCESS, CustomNotificationDuration.SLOW);
         this.loadingList.user = false;
         this.router.navigateByUrl('/user-list');

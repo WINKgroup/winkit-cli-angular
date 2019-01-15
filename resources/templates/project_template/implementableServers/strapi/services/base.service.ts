@@ -5,6 +5,9 @@ import axios from 'axios';
 import {SessionService} from './session.service';
 import {BaseServiceModel} from '../models/BaseServiceModel';
 import {environment} from '../../../environments/environment';
+import config from '../../../../winkit.conf.json';
+
+const primaryKey = config.primaryKey || 'id';
 
 @Injectable()
 export abstract class BaseService<T extends Mappable<T>> implements BaseServiceModel<T> {
@@ -127,7 +130,7 @@ export abstract class BaseService<T extends Mappable<T>> implements BaseServiceM
   }
 
   patchObject(object: T): Promise<boolean> {
-    const completeUrl = this.baseUrl + '/' + object.id;
+    const completeUrl = this.baseUrl + '/' + object[primaryKey];
     return axios.put(completeUrl, object.mapReverse(), this.getHeader())
       .then(response => {
         console.log(response);

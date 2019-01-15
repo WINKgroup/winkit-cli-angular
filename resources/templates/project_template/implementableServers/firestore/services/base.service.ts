@@ -6,6 +6,9 @@ import {BaseServiceModel} from '../models/BaseServiceModel';
 import * as firebase from 'firebase';
 import {SessionService} from './session.service';
 import axios from 'axios';
+import config from '../../../../winkit.conf.json';
+
+const primaryKey = config.primaryKey || 'id';
 
 @Injectable()
 export abstract class BaseService<T extends Mappable<T>> implements BaseServiceModel<T> {
@@ -163,11 +166,11 @@ export abstract class BaseService<T extends Mappable<T>> implements BaseServiceM
   postObject(object: T): Promise<boolean> {
     let o;
     console.log('this.collection', this.collection, this.collection.ref, this.collection.ref.doc());
-    if (!object.id) {
+    if (!object[primaryKey]) {
       o = this.collection.ref.doc();
-      object.id = o.id;
+      object[primaryKey] = o[primaryKey];
     } else {
-      o = this.collection.doc(object.id);
+      o = this.collection.doc(object[primaryKey]);
     }
     return o.set(object.mapReverse()).then(() => {
       return true;
@@ -196,7 +199,7 @@ export abstract class BaseService<T extends Mappable<T>> implements BaseServiceM
 
   patchObject(object: T): Promise<boolean> {
     console.log('body', object);
-    const docRef = this.collection.doc(object.id).ref;
+    const docRef = this.collection.doc(object[primaryKey]).ref;
     return docRef.update(object.mapReverse()).then(() => {
       return true;
     }).catch((error) => {

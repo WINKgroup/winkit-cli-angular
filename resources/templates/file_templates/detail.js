@@ -6,6 +6,9 @@ import {BasePageComponent} from '../../../@core/base-page/base-page.component';
 import {CustomNotification, CustomNotificationDuration, CustomNotificationType} from '../../../@core/models/CustomNotification';
 import {FormControlList} from '../../../@core/models/FormControlTypes';
 import {**ThisName**DataFactory} from '../models/**ThisName**DataFactory';
+import config from '../../../../../winkit.conf.json';
+
+const primaryKey = config.primaryKey || '';
 
 @Component({
   selector: 'app-**ThisName.toLowerCase**-detail',
@@ -89,7 +92,7 @@ export class **ThisName**DetailComponent extends BasePageComponent implements On
   async delete**ThisName**() {
     if (await this.askForConfirmation()) {
       this.loadingList.**ThisName.toLowerCase** = true;
-      this.**ThisName.toLowerCase**Service.delete**ThisName**(this.**ThisName.toLowerCase**.id).then(() => {
+      this.**ThisName.toLowerCase**Service.delete**ThisName**(this.**ThisName.toLowerCase**[primaryKey]).then(() => {
         CustomNotification.showNotification(this.toastr, '**ThisName** deleted!', '', CustomNotificationType.SUCCESS, CustomNotificationDuration.SLOW);
         this.loadingList.**ThisName.toLowerCase** = false;
         this.router.navigateByUrl('/**ThisName.toLowerCase**-list');

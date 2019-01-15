@@ -3,6 +3,9 @@ import {BasePageComponent} from '../../../@core/base-page/base-page.component';
 import {**ThisName**Service} from '../service/**ThisName.toLowerCase**.service';
 import {**ThisName**} from '../models/**ThisName**';
 import {FilterFieldElement, FilterFieldType} from '../../../shared/components/filters/filters.component';
+import config from '../../../../../winkit.conf.json';
+
+const primaryKey = config.primaryKey || '_id';
 
 @Component({
   selector: 'app-**ThisName.toLowerCase**-list',
