@@ -30,6 +30,7 @@ To get help on Winkit Angular commands run `winkit angular --help`
 - [Configure your server](#conf-server)
 - Run `winkit angular init <projectName>`
 - Choose the server you want to work with (**Firestore** or **Strapi / Http**)
+- Provide the primary key you want to use in the project or skip this step to use the default key
 - Enjoy!
 
 <a name="conf-server"></a>
