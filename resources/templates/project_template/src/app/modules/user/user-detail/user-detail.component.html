@@ -6,10 +6,6 @@
       <div class="card col-xs-12 col-sm-12 p-0">
         <div class="card-body">
           <div class="row">
-            <div *ngIf="!isNew" class="col-sm-6 mb-3" style="order: 0">
-              <label [for]="idInput" class="form-label-group">ID:</label>
-              <input #idInput readonly name="idInput" class="form-control m-0" [value]="user.id || '--'">
-            </div>
             <div *ngIf="!isNew" class="col-sm-6 mb-3" style="order: 1">
               <label [for]="registeredAt" class="form-label-group">{{'Registered At' | translate}}:</label>
               <input #registeredAt name="registeredAt" class="form-control m-0" [value]="user.registeredAt?.toLocaleString()" readonly>
@@ -36,17 +32,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div *ngIf="isNew" class="col-sm-6 mb-3" style="order: 10">
-              <label [for]="password" class="form-label-group">{{'Password' | translate}}
-                <small>({{'required' | translate}})</small>
-              </label>
-              <input #password="ngModel" type="password" name="password" [(ngModel)]="user.password" placeholder="{{'Password' | translate}}"
-                     [ngClass]="{'form-control': true,  'is-invalid': detailForm.submitted && detailForm.controls['password'] && detailForm.controls['password'].invalid}"
-                     [disabled]="loadingList.user" required/>
-              <small [hidden]="loadingList.user || password.valid || (password.pristine && !detailForm.submitted)" class="text-danger">
-                {{'Provide valid password' | translate}}
-              </small>
             </div>
           </div>
         </div>
