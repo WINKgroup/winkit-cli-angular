@@ -583,8 +583,9 @@ function updateModel(name, moduleConfig) {
 function updateDetail(name, moduleConfig) {
     return new Promise(resolve => {
         const {dataFactoryPath} = getModulePaths(name, true);
-        const formControlList = moduleConfig['properties'].filter( el => el.hasOwnProperty('htmlConfig') && !el.skipUpdate )
-                                                          .map( el => ({name: `'${el.name}'`, ...el.htmlConfig}) );
+        const formControlList = moduleConfig['properties']
+            .filter( el => el.hasOwnProperty('htmlConfig') && !el.skipUpdate )
+            .map( el => ({name: `'${el.name}'`, type: 'FormControlType.TEXT', ...el.htmlConfig}) );
         fs.readFile(dataFactoryPath, 'utf8', (err, dataFactoryContent) => {
             console.log(color(dynamicTexts.updating(name, elementTypes.DETAIL)[0], dynamicTexts.updating(name, elementTypes.DETAIL)[1]));
             if (err) {
