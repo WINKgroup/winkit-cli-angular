@@ -7,7 +7,7 @@ import {Subscription} from 'rxjs/index';
 import {SessionService} from '../../../../@core/services/session.service';
 import {Utils} from '../../../../@core/static/Utils';
 import {StorageService} from '../storage.service';
-import config from '../../../../winkit.conf.json';
+import config from '../../../../../../winkit.conf.json';
 
 const primaryKey = config.primaryKey || 'id';
 
