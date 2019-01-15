@@ -608,7 +608,7 @@ function updateDetail(name, moduleConfig, runSilent = false) {
         const formControlList = moduleConfig['properties']
             .filter( el => el.hasOwnProperty('htmlConfig') && !el.skipUpdate )
             .map( el => {
-              let formControl = {name: `'${el.name}'`, ...el.htmlConfig};
+              let formControl = {name: `'${el.name}'`, type: 'FormControlType.TEXT', ...el.htmlConfig};
               if (el.primaryKey) {
                   formControl.primaryKey = el.primaryKey;
               }
