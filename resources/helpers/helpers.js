@@ -22,7 +22,7 @@ const REGEXS = {
     todoVerifyImports: /\/\/ TODO verify the following imports\: .+?;/g,
     endOfImports: /(import(?:.|\s)*?;\s+)((?:\/\/ TODO verify the following imports\: .+;\s+)*)((?:(?:\/{1,2}\*? ?(?:.|\s)+?(?:\/\/|\*\/|;)\s)+|\@NgModule|export class|export const))/m,
     modelPropDeclarations: /(class \w+ (?:(?:implements|extends) [\w\<\>\[\]]+ )?{\s+)((?:[_wu]?id\??\: string\;){0,4})((?:(?:\r|\n|\r\n)?\s*\w+\??(?: ?[\:\=] ?.*\;|\;))*)/m,
-    serverModelMapMethods: /(static map(?:Reverse)? ?\((\w+?)\: (?:Server)?\w+\)\: (?:Server)?\w+? \{\s*?const (\w+?) ?\= ?.*?;)((?:(?:\r|\n|\r\n)?\s*\3\.[_w]?id ?\= ?.*\2\..+;){0,3})((?:(?:\r|\n|\r\n)?\s*\3\.\w+ ?\= ?.*\2\..+)*)/gm,
+    serverModelMapMethods: /(static (map(?:Reverse)?) ?\((\w+?)\: (?:Server)?\w+\)\: (?:Server)?\w+? \{\s*?const (\w+?) ?\= ?.*?;)((?:(?:\r|\n|\r\n)?\s*\4\.[_w]?id ?\= ?.*\3\..+;){0,3})((?:(?:\r|\n|\r\n)?\s*\4\.\w+ ?\= ?.*\3\..+)*)/gm,
     modelPropLine: /(\w+?)(\??)((?: ?\: ?.*)|$|(?: ?\= ?(.*)))/,
     modelConstructor: /(constructor\s?\()((?:[_wu]?id\? ?\: ?string){0,3})\,?((?:\s*\w+\??(?: ?\: ?.*\,?|\,|))*?)(\s*\)\s?\{\s*)((?:\s*?this\.[_wu]?id ?\= ?.+;){0,3})((?:\s*?this\.\w+ ?\= ?.*?;)*)/m,
     properNames: /\b[A-Z]\w*\b/gm,
