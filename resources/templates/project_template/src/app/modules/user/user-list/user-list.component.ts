@@ -96,7 +96,7 @@ export class UserListComponent extends BasePageComponent implements OnInit {
             {label: 'Telephone', placeholder: 'Telephone', attrName: 'telephone', type: FilterFieldType.TEXT, section: 'others'},
             {label: 'Email', placeholder: 'Email', attrName: 'email', type: FilterFieldType.TEXT, section: 'others'},
             {label: 'Role', placeholder: 'Role', attrName: 'userRole', type: FilterFieldType.SELECT, list: FiltersComponent.getFilterList(FilterableList.USER_ROLE), section: 'others'},
-            {label: 'ID', placeholder: 'ID', attrName: primaryKey, type: FilterFieldType.TEXT, section: 'others'},
+            {label: primaryKey.toUpperCase(), placeholder: primaryKey.toUpperCase(), attrName: primaryKey, type: FilterFieldType.TEXT, section: 'others'},
         ] as FilterFieldElement[];
     }
 
