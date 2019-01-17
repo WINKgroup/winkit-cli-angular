@@ -557,13 +557,13 @@ function updateModel(name, moduleConfig, runSilent = false) {
                 if (err1) {
                     return resolve(false);
                 }
+                if (runSilent) {
+                    writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport);
+                    return resolve(true);
+                }
                 if (moduleConfig['properties'].length === 0) {
                     writeNewServerContent(serverModelPath, serverContent, []);
                     console.log(color(successText[0], successText[1]));
-                    return resolve(true);
-                }
-                if (runSilent) {
-                    writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport);
                     return resolve(true);
                 }
                 prompt({
