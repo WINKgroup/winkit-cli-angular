@@ -8,7 +8,7 @@ const mkdirp = require('mkdirp');
 const del = require('del');
 const shell = require('gulp-shell');
 
-const { modelTemplate, serverModelTemplate, serviceTemplate, componentDetailViewModelTemplate, componentDetailViewTemplate, componentDetailStyleTemplate, componentListViewModelTemplate, componentListViewTemplate, componentListStyleTemplate, moduleTemplate, staticTexts, dynamicTexts, configTemplate, moduleRoutingTemplate, dataFactoryTemplate, getPrimaryKeysList, elementTypes, checkAlreadyExist, getTypesToImport, getUserPropMap, getDuplicateValuesByPropName, nonUpdateableModels, getModulePaths, REGEXS, mappableTemplate } = require('./resources/index');
+const { modelTemplate, serverModelTemplate, serviceTemplate, componentDetailStyleTemplate, componentDetailViewModelTemplate, componentDetailViewTemplate, componentListStyleTemplate, componentListViewModelTemplate, componentListViewTemplate, moduleTemplate, windowKeyList, REGEXS, checkAlreadyExist, elementTypes, getModulePaths, validateName, staticTexts, dynamicTexts, nonUpdateableModels, configTemplate, moduleRoutingTemplate, getTypesToImport, getUserPropMap, getDuplicateValuesByPropName, dataFactoryTemplate, getPrimaryKeysList, mappableTemplate } = require('./resources/index');
 
 let config;
 try {
