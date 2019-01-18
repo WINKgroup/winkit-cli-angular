@@ -34,6 +34,9 @@ function generateContent(match, name = null) {
         case 'selectedServer':
             return config.selectedServer === dataArr[1] ? dataArr[2] : dataArr[3];
         case 'config':
+            if (firstElArr[1] === 'primaryKey') {
+                return config['primaryKey'] || 'id';
+            }
             return config[firstElArr[1]];
         case 'ThisName':
             if (firstElArr[1]) {
