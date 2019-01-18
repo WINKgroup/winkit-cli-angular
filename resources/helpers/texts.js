@@ -19,7 +19,8 @@ const staticTexts = {
     alreadyInitialized: ['WDK Angular already initialized!', 'MAGENTA'],
     alreadyCloned: ['WDK Angular already cloned!', 'MAGENTA'],
     detailUpdated: ['Detail updated!', 'MAGENTA'],
-    shouldUpdateDetail: ['Update detail automatically? (Y/n)', '']
+    shouldUpdateDetail: ['Update detail automatically? (Y/n)', ''],
+    invalidPrimaryKey: ['\nPrimary key not provided or invalid (e.g. too short). Using default primary key: id\n', 'YELLOW']
 };
 
 const dynamicTexts = {

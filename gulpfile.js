@@ -714,13 +714,17 @@ async function configure() {
             const primaryKeyPrompt = {
                 type: 'input',
                 name: 'primaryKey',
-                transformer: val => val.replace(/ /g, ''),
-                message: '[optional] Provide custom primary key which will be used for all models or leave empty to use default key:'
+                transformer: val => val.replace(/[^\w]/g, ''),
+                message: '[optional] Provide custom primary key (min. 2 characters) which will be used for all models or leave empty to use default key:'
             };
             prompt([serverTypePrompt, primaryKeyPrompt]).then(async (res) => {
                 console.log(color(dynamicTexts.configuring(res['serverType'])[0], dynamicTexts.configuring(res['serverType'])[1]));
                 config.selectedServer = res["serverType"];
-                config.primaryKey = res['primaryKey'] && res['primaryKey'].trim().length >= 2 ? res['primaryKey'].replace(/ /g, '') : 'id';
+                if (res['primaryKey'] && res['primaryKey'].replace(/[^\w]/g, '').length >= 2) {
+                    config.primaryKey = res['primaryKey'].replace(/[^\w]/g, '');
+                } else {
+                    console.log(color(staticTexts.invalidPrimaryKey[0], staticTexts.invalidPrimaryKey[1]));
+                }
                 const newConfigContent = JSON.stringify(config, null, 4);
                 fs.writeFileSync('./winkit.conf.json', newConfigContent);
                 createMappableFile(config.primaryKey);
