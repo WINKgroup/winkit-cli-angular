@@ -5,7 +5,8 @@ import {**ThisName**} from '../models/**ThisName**';
 import {FilterFieldElement, FilterFieldType} from '../../../shared/components/filters/filters.component';
 import config from '../../../../../winkit.conf.json';
 
-const primaryKey = config.primaryKey || '_id';
+const pk = config['primaryKey'];
+const pkLabel = pk ? pk.toUpperCase() : 'ID';
 
 @Component({
   selector: 'app-**ThisName.toLowerCase**-list',
@@ -21,7 +22,7 @@ export class **ThisName**ListComponent extends BasePageComponent implements OnIn
   hasNextPage: boolean = true;
   tableHeaders = [
     {key: 'openDetail', title: '', isCustom: true, path: '**ThisName.toLowerCase**/'},
-    {key: 'id', title: 'ID'}
+    {key: pk || 'id', title: pkLabel}
   ];
   filterFields: FilterFieldElement[] = [];
   filtersFromUrl: any = {};
@@ -33,7 +34,7 @@ export class **ThisName**ListComponent extends BasePageComponent implements OnIn
     this.setTitle('**ThisName** list');
     this.**ThisName.toLowerCase**Service = injector.get(**ThisName**Service);
     this.filterFields = [
-     {label: 'ID', placeholder: 'ID', attrName: 'wid', type: FilterFieldType.TEXT, section: 'others'},
+     {label: pkLabel, placeholder: pkLabel, attrName: pk || 'wid', type: FilterFieldType.TEXT, section: 'others'},
     ] as FilterFieldElement[];
   }
 
@@ -45,7 +46,7 @@ export class **ThisName**ListComponent extends BasePageComponent implements OnIn
       });
     });
     this.filterData = this.filtersFromUrl;
-    this.**ThisName.toLowerCase**Service.setPagination(this.elementsPerPage, this.filterData, '_id');
+    this.**ThisName.toLowerCase**Service.setPagination(this.elementsPerPage, this.filterData, (pk || '_id'));
     this.loadMoreItems();
   }
 
@@ -56,7 +57,7 @@ export class **ThisName**ListComponent extends BasePageComponent implements OnIn
     this.currentPage = 0;
     this.hasNextPage = true;
     this.router.navigate(['/**ThisName.toLowerCase**-list'], {queryParams: this.filterData});
-    this.**ThisName.toLowerCase**Service.setPagination(this.elementsPerPage, this.filterData, '_id');
+    this.**ThisName.toLowerCase**Service.setPagination(this.elementsPerPage, this.filterData, (pk || '_id'));
     this.loadMoreItems();
   }
 

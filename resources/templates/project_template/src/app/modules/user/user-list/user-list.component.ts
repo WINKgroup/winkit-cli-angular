@@ -5,7 +5,8 @@ import {FilterableList, FilterFieldElement, FilterFieldType, FiltersComponent} f
 import {UserService} from '../service/user.service';
 import config from '../../../../../winkit.conf.json';
 
-const primaryKey = config.primaryKey || '_id';
+const pk = config['primaryKey'];
+const pkLabel = pk ? pk.toUpperCase() : 'ID';
 
 @Component({
     selector: 'app-user-list',
@@ -96,7 +97,7 @@ export class UserListComponent extends BasePageComponent implements OnInit {
             {label: 'Telephone', placeholder: 'Telephone', attrName: 'telephone', type: FilterFieldType.TEXT, section: 'others'},
             {label: 'Email', placeholder: 'Email', attrName: 'email', type: FilterFieldType.TEXT, section: 'others'},
             {label: 'Role', placeholder: 'Role', attrName: 'userRole', type: FilterFieldType.SELECT, list: FiltersComponent.getFilterList(FilterableList.USER_ROLE), section: 'others'},
-            {label: primaryKey.toUpperCase(), placeholder: primaryKey.toUpperCase(), attrName: primaryKey, type: FilterFieldType.TEXT, section: 'others'},
+            {label: pkLabel, placeholder: pkLabel, attrName: pk || 'wid', type: FilterFieldType.TEXT, section: 'others'},
         ] as FilterFieldElement[];
     }
 
@@ -114,7 +115,7 @@ export class UserListComponent extends BasePageComponent implements OnInit {
         /**
          * init the pagination
          */
-        this.userService.setPagination(this.elementsPerPage, this.filterData, primaryKey);
+        this.userService.setPagination(this.elementsPerPage, this.filterData, (pk || '_id'));
         this.loadMoreItems();
     }
 
@@ -130,7 +131,7 @@ export class UserListComponent extends BasePageComponent implements OnInit {
         this.currentPage = 0;
         this.hasNextPage = true;
         this.router.navigate(['/user-list'], {queryParams: this.filterData});
-        this.userService.setPagination(this.elementsPerPage, this.filterData, primaryKey);
+        this.userService.setPagination(this.elementsPerPage, this.filterData, (pk || '_id'));
         this.loadMoreItems();
     }
 

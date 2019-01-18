@@ -8,7 +8,7 @@ import {SessionService} from './session.service';
 import axios from 'axios';
 import config from '../../../../winkit.conf.json';
 
-const primaryKey = config.primaryKey || 'id';
+const primaryKey = config['primaryKey'] || 'id';
 
 @Injectable()
 export abstract class BaseService<T extends Mappable<T>> implements BaseServiceModel<T> {
@@ -70,7 +70,7 @@ export abstract class BaseService<T extends Mappable<T>> implements BaseServiceM
     if (filters) {
       this.filters = filters;
     }
-    this.orderByFieldName = orderByFieldName || 'wid';
+    this.orderByFieldName = orderByFieldName || config['primaryKey'] || 'wid';
   }
 
   /**

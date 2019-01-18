@@ -8,7 +8,7 @@ import {FormControlList} from '../../../@core/models/FormControlTypes';
 import {**ThisName**DataFactory} from '../models/**ThisName**DataFactory';
 import config from '../../../../../winkit.conf.json';
 
-const primaryKey = config.primaryKey || '';
+const primaryKey = config['primaryKey'] || 'id';
 
 @Component({
   selector: 'app-**ThisName.toLowerCase**-detail',

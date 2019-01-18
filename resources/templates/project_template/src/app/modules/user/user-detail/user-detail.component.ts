@@ -12,7 +12,7 @@ import {FormControlList} from '../../../@core/models/FormControlTypes';
 import {UserDataFactory} from '../models/UserDataFactory';
 import config from '../../../../../winkit.conf.json';
 
-const primaryKey = config.primaryKey || '';
+const primaryKey = config['primaryKey'] || 'id';
 
 @Component({
   selector: 'app-user-detail',

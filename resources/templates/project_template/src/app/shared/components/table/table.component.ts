@@ -4,7 +4,6 @@ import {environment} from '../../../../environments/environment';
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
 import {TranslateService} from '@ngx-translate/core';
-import config from '../../../../../winkit.conf.json';
 
 declare const require: any;
 
@@ -34,7 +33,6 @@ export class TableComponent implements OnInit {
   utils = Utils;
   environment = environment;
   translateService: TranslateService;
-  primaryKey = config.primaryKey || 'id';
 
   constructor(private injector: Injector) {
     this.translateService = injector.get(TranslateService);

@@ -9,7 +9,7 @@ import {Utils} from '../../../../@core/static/Utils';
 import {StorageService} from '../storage.service';
 import config from '../../../../../../winkit.conf.json';
 
-const primaryKey = config.primaryKey || 'id';
+const primaryKey = config['primaryKey'] || 'id';
 
 /**
  * menage loggedInUser media, show the already uploaded images, choose from them or upload a new one!
