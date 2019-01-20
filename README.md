@@ -7,15 +7,17 @@ IMPORTANT: Before starting a Winkit Angular project, make sure to read about the
 1. [Adding Winkit Angular plugin](#adding-winkit-angular-plugin)
 2. [Getting help](#getting-help)
 3. [Quick start](#quick-start)
-4. [Winkit Angular commands](#commands)
+4. [Server configuration](#conf-server)
+5. [Primary database key](#primary-key)
+6. [Winkit Angular commands](#commands)
     1. [Initializing a project](#init-project)
     2. [Generating a model](#generate-model)
     3. [Generating a service](#generate-service)
     4. [Generating a detail](#generate-detail)
     5. [Generating a list](#generate-list)
     6. [Updating a model](#update-model)
-5. [Known issues](#known-issues)
-6. [What's next?](#whats-next)
+7. [Known issues](#known-issues)
+8. [What's next?](#whats-next)
 
 ## Adding Winkit Angular plugin
 
@@ -29,8 +31,8 @@ To get help on Winkit Angular commands run `winkit angular --help`
 ## Quick start
 - [Configure your server](#conf-server)
 - Run `winkit angular init <projectName>`
-- Choose the server you want to work with (**Firestore** or **Strapi / Http**)
-- Provide the primary key you want to use in the project or skip this step to use the default key
+- Choose the server you want to work with ([Firestore](#conf-server-firestore) or [Strapi / Http](#conf-server-strapi))
+- Provide the [primary key](#primary-key) you want to use in the project (or skip this step to use the default key)
 - Enjoy!
 
 <a name="conf-server"></a>
@@ -166,6 +168,16 @@ If you want to use Winkit with Firestore you must first configure your project i
 8. Open the admin detail and populate the userRole field with the value `ADMIN` then save.
 
 9. Now you can log into Winkit using these user credentials!
+
+<a name="primary-key"></a>
+## Primary database key
+
+In your Winkit project you can either use the default primary database key or configure a custom primary database key.
+
+The default key is 'id' (for the front-end) and '_id' (for the back-end). To use a different key your can
+1. Provide it when prompted for the primary key upon [initializing your project](#init-project);
+2. In the _\<project folder\>/winkit.conf.json_ file add or edit the `primaryKey` key by providing your value (minimum 2 characters).<br/><br/>You will also need to edit the _\<project folder\>/src/app/@core/models/Mappable.ts_ file by providing the name of your primaryKey as the first key of the Mappable interface;
+3. Update all models in your project using the `winkit angular update model ...` command ([more info](#update-model));
 
 ## Commands
 
