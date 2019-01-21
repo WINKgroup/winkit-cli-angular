@@ -199,7 +199,7 @@ export abstract class BaseService<T extends Mappable<T>> implements BaseServiceM
 
   patchObject(object: T): Promise<boolean> {
     console.log('body', object);
-    const docRef = this.collection.doc(object[primaryKey]).ref;
+    const docRef = this.collection.doc(object[pk]).ref;
     return docRef.update(object.mapReverse()).then(() => {
       return true;
     }).catch((error) => {
