@@ -179,7 +179,7 @@ The default key is 'id' (for the front-end) and '_id' (for the back-end). To use
 After initializing the project you can still change the primary key at any point in time by following these steps:
 1. In the _\<project folder\>/winkit.conf.json_ file add or edit the `primaryKey` key by providing your value (minimum 2 characters).
 2. Edit the _\<project folder\>/src/app/@core/models/Mappable.ts_ file by providing the name of your primaryKey as the first key of the Mappable interface;
-2. Update all models in your project using the `winkit angular update model ...` command ([more info](#update-model));
+3. Update all models in your project using the `winkit angular update model ...` command ([more info](#update-model));
 
 
 
