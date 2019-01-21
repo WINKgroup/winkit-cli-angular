@@ -6,7 +6,6 @@ import {FilterFieldElement, FilterFieldType} from '../../../shared/components/fi
 import config from '../../../../../winkit.conf.json';
 
 const pk = config['primaryKey'];
-const pkLabel = pk ? pk.toUpperCase() : 'ID';
 
 @Component({
   selector: 'app-**ThisName.toLowerCase**-list',
@@ -22,7 +21,7 @@ export class **ThisName**ListComponent extends BasePageComponent implements OnIn
   hasNextPage: boolean = true;
   tableHeaders = [
     {key: 'openDetail', title: '', isCustom: true, path: '**ThisName.toLowerCase**/'},
-    {key: pk || 'id', title: pkLabel}
+    {key: pk, title: pk.toUpperCase()}
   ];
   filterFields: FilterFieldElement[] = [];
   filtersFromUrl: any = {};
@@ -34,7 +33,7 @@ export class **ThisName**ListComponent extends BasePageComponent implements OnIn
     this.setTitle('**ThisName** list');
     this.**ThisName.toLowerCase**Service = injector.get(**ThisName**Service);
     this.filterFields = [
-     {label: pkLabel, placeholder: pkLabel, attrName: pk || 'wid', type: FilterFieldType.TEXT, section: 'others'},
+     {label: pk.toUpperCase(), placeholder: pk.toUpperCase(), attrName: (pk === 'id' ? 'wid' : pk), type: FilterFieldType.TEXT, section: 'others'},
     ] as FilterFieldElement[];
   }
 
@@ -46,7 +45,7 @@ export class **ThisName**ListComponent extends BasePageComponent implements OnIn
       });
     });
     this.filterData = this.filtersFromUrl;
-    this.**ThisName.toLowerCase**Service.setPagination(this.elementsPerPage, this.filterData, (pk || '_id'));
+    this.**ThisName.toLowerCase**Service.setPagination(this.elementsPerPage, this.filterData, (pk === 'id' ? '_id' : pk));
     this.loadMoreItems();
   }
 
@@ -57,7 +56,7 @@ export class **ThisName**ListComponent extends BasePageComponent implements OnIn
     this.currentPage = 0;
     this.hasNextPage = true;
     this.router.navigate(['/**ThisName.toLowerCase**-list'], {queryParams: this.filterData});
-    this.**ThisName.toLowerCase**Service.setPagination(this.elementsPerPage, this.filterData, (pk || '_id'));
+    this.**ThisName.toLowerCase**Service.setPagination(this.elementsPerPage, this.filterData, (pk === 'id' ? '_id' : pk));
     this.loadMoreItems();
   }
 

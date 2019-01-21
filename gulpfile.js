@@ -34,9 +34,6 @@ function generateContent(match, name = null) {
         case 'selectedServer':
             return config.selectedServer === dataArr[1] ? dataArr[2] : dataArr[3];
         case 'config':
-            if (firstElArr[1] === 'primaryKey') {
-                return config['primaryKey'] || 'id';
-            }
             return config[firstElArr[1]];
         case 'ThisName':
             if (firstElArr[1]) {
@@ -259,10 +256,9 @@ function createListFiles(name) {
 
 /**
  * Writes a new or overwrites old Mappable.ts model with passed primaryKey;
- * @param primaryKey
  * @returns {boolean}
  */
-function createMappableFile(primaryKey) {
+function createMappableFile() {
     const content = mappableTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match));
     fs.writeFileSync('src/app/@core/models/Mappable.ts', content, 'utf-8');
     return true;
@@ -617,9 +613,7 @@ function updateDetail(name, moduleConfig, runSilent = false) {
             .filter( el => el.hasOwnProperty('htmlConfig') && !el.skipUpdate )
             .map( el => {
               let formControl = {name: `'${el.name}'`, type: 'FormControlType.TEXT', ...el.htmlConfig};
-              if (el.primaryKey) {
-                  formControl.primaryKey = el.primaryKey;
-              }
+              formControl.primaryKey = el.primaryKey;
               return formControl;
             });
         fs.readFile(dataFactoryPath, 'utf8', (err, dataFactoryContent) => {
@@ -727,10 +721,11 @@ async function configure() {
                     config.primaryKey = res['primaryKey'].replace(/[^\w]/g, '');
                 } else {
                     console.log(color(staticTexts.invalidPrimaryKey[0], staticTexts.invalidPrimaryKey[1]));
+                    config.primaryKey = 'id';
                 }
                 const newConfigContent = JSON.stringify(config, null, 4);
                 fs.writeFileSync('./winkit.conf.json', newConfigContent);
-                createMappableFile(config.primaryKey);
+                createMappableFile();
                 Promise.all([
                     new Promise((resolve1, reject1) => {
                         gulp.src(['implementableServers/' + res["serverType"] + '/services/**/*'])

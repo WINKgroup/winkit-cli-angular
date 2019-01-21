@@ -8,7 +8,7 @@ import {SessionService} from './session.service';
 import axios from 'axios';
 import config from '../../../../winkit.conf.json';
 
-const primaryKey = config['primaryKey'] || 'id';
+const pk = config['primaryKey'];
 
 @Injectable()
 export abstract class BaseService<T extends Mappable<T>> implements BaseServiceModel<T> {
@@ -70,7 +70,7 @@ export abstract class BaseService<T extends Mappable<T>> implements BaseServiceM
     if (filters) {
       this.filters = filters;
     }
-    this.orderByFieldName = orderByFieldName || config['primaryKey'] || 'wid';
+    this.orderByFieldName = orderByFieldName || (pk === 'id' ? 'wid' : pk);
   }
 
   /**
@@ -166,11 +166,11 @@ export abstract class BaseService<T extends Mappable<T>> implements BaseServiceM
   postObject(object: T): Promise<boolean> {
     let o;
     console.log('this.collection', this.collection, this.collection.ref, this.collection.ref.doc());
-    if (!object[primaryKey]) {
+    if (!object[pk]) {
       o = this.collection.ref.doc();
-      object[primaryKey] = o[primaryKey];
+      object[pk] = o[pk];
     } else {
-      o = this.collection.doc(object[primaryKey]);
+      o = this.collection.doc(object[pk]);
     }
     return o.set(object.mapReverse()).then(() => {
       return true;

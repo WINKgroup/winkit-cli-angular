@@ -156,7 +156,7 @@ function getPrimaryKeysList(writeTo, primaryKey) {
     switch (writeTo) {
         case elementTypes.MODEL:
         case elementTypes.SERVER_MODEL:
-            if (primaryKey && typeof primaryKey === 'string' && primaryKey.length) {
+            if (primaryKey !== 'id') {
                 return [{name: primaryKey, type: 'string'}];
             } else if (writeTo === elementTypes.MODEL) {
                 return [
@@ -170,7 +170,7 @@ function getPrimaryKeysList(writeTo, primaryKey) {
                 ];
             }
         case elementTypes.DATA_FACTORY:
-            const name = primaryKey && typeof primaryKey === 'string' && primaryKey.length ? `'${primaryKey}'` : '\'id\'';
+            const name = primaryKey !== 'id' ? `'${primaryKey}'` : '\'id\'';
             return [{ name, disabled: true, type: 'FormControlType.TEXT', order: 0, ngIf:'!that.isNew' }];
         default:
             return [];
