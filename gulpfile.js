@@ -338,11 +338,11 @@ function create(elementType, name = null, taskList = null) {
         return Promise.resolve(false);
     }
     return new Promise(async resolve => {
-        const isValidName = validateName(name);
+        const isValidName = UTILS.validateName(name);
         if (isValidName) {
             name = name[0].toUpperCase() + name.substr(1);
         }
-        const { alreadyExists, moduleExists, modelAlreadyExists, serverModelAlreadyExists } = checkAlreadyExist(elementType, name);
+        const { alreadyExists, moduleExists, modelAlreadyExists, serverModelAlreadyExists } = UTILS.checkAlreadyExist(elementType, name);
         let errorMsg;
         let createThisElementFirst;
         let promptName = 'newName';
@@ -366,7 +366,7 @@ function create(elementType, name = null, taskList = null) {
                 taskList = elementType === UTILS.elementTypes.SERVICE ? [elementType.toUpperCase()] : [UTILS.elementTypes.SERVICE.toUpperCase(), elementType.toUpperCase()];
                 break;
             case elementType === UTILS.elementTypes.DETAIL || elementType === UTILS.elementTypes.LIST:
-                const serviceExists = checkAlreadyExist(UTILS.elementTypes.SERVICE, name).alreadyExists;
+                const serviceExists = UTILS.checkAlreadyExist(UTILS.elementTypes.SERVICE, name).alreadyExists;
                 if (!serviceExists) {
                     errorMsg = UTILS.dynamicTexts.nameServiceNotFound(elementType, name);
                     promptName = 'choise';
@@ -424,7 +424,7 @@ function deleteModel(name = null) {
  * @param {*[]} [propMap] - Modified newPropArray array with custom 'name' properties of objects.
  */
 function writeNewServerContent(filePath, serverContent, newPropArray = [], typesToImport = null, propMap = null) {
-    const primaryKeyList = getPrimaryKeysList(UTILS.elementTypes.SERVER_MODEL, config.primaryKey);
+    const primaryKeyList = UTILS.getPrimaryKeysList(UTILS.elementTypes.SERVER_MODEL, config.primaryKey);
     const propArray = primaryKeyList.concat(newPropArray);
     if (propMap) {
         propMap.unshift.apply(propMap, primaryKeyList);
@@ -471,7 +471,7 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
  * @param {string[]} [typesToImport = null] - Array of typescript type names found in newPropArray.
  */
 function writeNewModelContent(filePath, currentContent, newPropArray = [], typesToImport = null) {
-    const primaryKeyList = getPrimaryKeysList(UTILS.elementTypes.MODEL, config.primaryKey);
+    const primaryKeyList = UTILS.getPrimaryKeysList(UTILS.elementTypes.MODEL, config.primaryKey);
     const propArray = primaryKeyList.concat(newPropArray);
     const newContent = currentContent
         .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.trim()}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
@@ -518,8 +518,8 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
  * @param {*[]} newPropArray - Array of objects with data for latest model properties.
  */
 function writeNewDataFactoryContent(filePath, currentContent, newPropArray = []) {
-    const typesToImport = getTypesToImport(newPropArray, '', /^\b[A-Z]\w*\b/);
-    const primaryKeyList = getPrimaryKeysList(UTILS.elementTypes.DATA_FACTORY, config.primaryKey);
+    const typesToImport = UTILS.getTypesToImport(newPropArray, '', /^\b[A-Z]\w*\b/);
+    const primaryKeyList = UTILS.getPrimaryKeysList(UTILS.elementTypes.DATA_FACTORY, config.primaryKey);
     const propArray = primaryKeyList.concat(newPropArray);
     const newContent = currentContent
         .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
@@ -544,12 +544,12 @@ function updateModel(name, moduleConfig, runSilent = false) {
         if (!runSilent) {
             console.log(color(UTILS.dynamicTexts.updating(UTILS.elementTypes.MODEL, name)[0], UTILS.dynamicTexts.updating(UTILS.elementTypes.MODEL, name)[1]));
         }
-        const {modelPath, serverModelPath} = getModulePaths(name, true);
+        const {modelPath, serverModelPath} = UTILS.getModulePaths(name, true);
         fs.readFile(modelPath, 'utf8', (err, currentContent) => {
             if (err) {
                 return resolve(false)
             }
-            const typesToImport = getTypesToImport(moduleConfig['properties'], 'type');
+            const typesToImport = UTILS.getTypesToImport(moduleConfig['properties'], 'type');
             const successText = UTILS.dynamicTexts.updateSuccess(name, typesToImport);
             writeNewModelContent(modelPath, currentContent, moduleConfig['properties'], typesToImport);
             fs.readFile(serverModelPath, 'utf8', (err1, serverContent) => {
@@ -584,7 +584,7 @@ function updateModel(name, moduleConfig, runSilent = false) {
                             }));
                             prompt(questions).then(res => {
                                 // IMPORTANT: res is an object with keys matching newPropArray prop names
-                                const userPropMap = getUserPropMap(res, moduleConfig['properties']);
+                                const userPropMap = UTILS.getUserPropMap(res, moduleConfig['properties']);
                                 writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport, userPropMap);
                                 console.log(color(successText[0], successText[1]));
                                 return resolve(true);
@@ -608,7 +608,7 @@ function updateDetail(name, moduleConfig, runSilent = false) {
         if (!runSilent) {
             console.log(color(UTILS.dynamicTexts.updating(name, UTILS.elementTypes.DETAIL)[0], UTILS.dynamicTexts.updating(name, UTILS.elementTypes.DETAIL)[1]));
         }
-        const {dataFactoryPath} = getModulePaths(name, true);
+        const {dataFactoryPath} = UTILS.getModulePaths(name, true);
         const formControlList = moduleConfig['properties']
             .filter( el => el.hasOwnProperty('htmlConfig') && !el.skipUpdate )
             .map( el => {
@@ -637,7 +637,7 @@ function updateDetail(name, moduleConfig, runSilent = false) {
  * @returns {boolean}
  */
 async function update(elementType, name, runSilent = false) {
-    const {modelAlreadyExists, serverModelAlreadyExists, detailAlreadyExist} = checkAlreadyExist(null, name);
+    const {modelAlreadyExists, serverModelAlreadyExists, detailAlreadyExist} = UTILS.checkAlreadyExist(null, name);
     if (UTILS.nonUpdateableModels.includes(name.toLowerCase())) {
         console.log(color(UTILS.dynamicTexts.nonUpdateableModel(name)[0], UTILS.dynamicTexts.nonUpdateableModel(name)[1]));
         return false;
@@ -650,10 +650,10 @@ async function update(elementType, name, runSilent = false) {
         console.log(color(UTILS.dynamicTexts.updateServerModelNotFound(name)[0], UTILS.dynamicTexts.updateServerModelNotFound(name)[1]));
         return false;
     }
-    const moduleConfig = require(process.cwd() + '/' + getModulePaths(name).config);
+    const moduleConfig = require(process.cwd() + '/' + UTILS.getModulePaths(name).config);
     const moduleProperties = moduleConfig['properties'];
     if (moduleProperties && moduleProperties.length > 1) {
-        const duplicateNamesList = getDuplicateValuesByPropName(moduleProperties, 'name');
+        const duplicateNamesList = UTILS.getDuplicateValuesByPropName(moduleProperties, 'name');
         if (duplicateNamesList && duplicateNamesList.length) {
             console.log(color(UTILS.dynamicTexts.duplicatePropNamesFound('name', duplicateNamesList)[0], UTILS.dynamicTexts.duplicatePropNamesFound('name', duplicateNamesList)[1]));
             return false;
