@@ -7,8 +7,8 @@ const color = require('gulp-color');
 const mkdirp = require('mkdirp');
 const del = require('del');
 const shell = require('gulp-shell');
-
-const { modelTemplate, serverModelTemplate, serviceTemplate, componentDetailStyleTemplate, componentDetailViewModelTemplate, componentDetailViewTemplate, componentListStyleTemplate, componentListViewModelTemplate, componentListViewTemplate, moduleTemplate, windowKeyList, REGEXS, checkAlreadyExist, elementTypes, getModulePaths, validateName, staticTexts, dynamicTexts, nonUpdateableModels, configTemplate, moduleRoutingTemplate, getTypesToImport, getUserPropMap, getDuplicateValuesByPropName, dataFactoryTemplate, getPrimaryKeysList, mappableTemplate } = require('./resources/index');
+const TEMPLATES = require('./resources/templates/file_templates/index');
+const UTILS = require('./resources/helpers/index');
 
 let config;
 try {
@@ -56,14 +56,14 @@ function generateContent(match, name = null) {
 async function parseTasks(name, taskList, counter = 0, results = []) {
     if (taskList && taskList.length) {
       switch(true) {
-        case taskList[counter].indexOf( elementTypes.SERVICE.toUpperCase() ) > -1:
-          results.push( await create( elementTypes.SERVICE, name ) );
+        case taskList[counter].indexOf( UTILS.elementTypes.SERVICE.toUpperCase() ) > -1:
+          results.push( await create( UTILS.elementTypes.SERVICE, name ) );
           break;
-        case taskList[counter].indexOf( elementTypes.LIST.toUpperCase() ) > -1:
-          results.push( await create( elementTypes.LIST, name ) );
+        case taskList[counter].indexOf( UTILS.elementTypes.LIST.toUpperCase() ) > -1:
+          results.push( await create( UTILS.elementTypes.LIST, name ) );
           break;
-        case taskList[counter].indexOf( elementTypes.DETAIL.toUpperCase() ) > -1:
-          results.push( await create( elementTypes.DETAIL, name ) );
+        case taskList[counter].indexOf( UTILS.elementTypes.DETAIL.toUpperCase() ) > -1:
+          results.push( await create( UTILS.elementTypes.DETAIL, name ) );
           break;
       }
       if (counter + 1 === taskList.length) {
@@ -91,7 +91,7 @@ function addToModuleOrRouting(ngClassName, modulePath, relativeClassPath, arrayP
     if (moduleContent.includes(pushedElement || ngClassName)) {
         return false;
     }
-    const endOfImportsRegex = ngClassName ? REGEXS.endOfImports : null;
+    const endOfImportsRegex = ngClassName ? UTILS.REGEXS.endOfImports : null;
     const newContent = moduleContent
         .replace(endOfImportsRegex, (m, p1, p2, p3) => {
             return `${p1.trim()}\nimport {${ngClassName}} from '${relativeClassPath}';\n${p2.replace(/^\s+/,'')}\n${p3.replace(/^\s+/,'')}`
@@ -121,14 +121,14 @@ function createModelFiles(name) {
             if (err) {
                 resolve(false);
             } else {
-                console.log(dynamicTexts.createModel(name)[0]);
-                const modelContent = modelTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match, name));
-                const serverModelContent = serverModelTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match, name));
-                const dataFactoryContent = dataFactoryTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                console.log(UTILS.dynamicTexts.createModel(name)[0]);
+                const modelContent = TEMPLATES.modelTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                const serverModelContent = TEMPLATES.serverModelTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                const dataFactoryContent = TEMPLATES.dataFactoryTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/models/${name}.ts`, modelContent, 'utf-8');
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/models/Server${name}.ts`, serverModelContent, 'utf-8');
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/models/${name}DataFactory.ts`, dataFactoryContent, 'utf-8');
-                console.log(color(staticTexts.modelCreated[0], staticTexts.modelCreated[1]));
+                console.log(color(UTILS.staticTexts.modelCreated[0], UTILS.staticTexts.modelCreated[1]));
                 resolve(true);
             }
         });
@@ -147,12 +147,12 @@ function createServiceFiles(name) {
             if (err) {
                 resolve(false);
             } else {
-                console.log(dynamicTexts.createService(name)[0]);
+                console.log(UTILS.dynamicTexts.createService(name)[0]);
                 const serviceFileRelative = `service/${nameLowerCase}.service`;
-                const serviceContent = serviceTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                const serviceContent = TEMPLATES.serviceTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/service/${nameLowerCase}.service.ts`, serviceContent, 'utf-8');
                 addToModuleOrRouting(name + 'Service', `src/app/modules/${nameLowerCase}/${nameLowerCase}.module.ts`, './' + serviceFileRelative, /providers\: \[[\w\s\n\,]*\]/m);
-                console.log(color(staticTexts.serviceCreated[0], staticTexts.serviceCreated[1]));
+                console.log(color(UTILS.staticTexts.serviceCreated[0], UTILS.staticTexts.serviceCreated[1]));
                 resolve(true);
             }
         });
@@ -171,13 +171,13 @@ function createDetailFiles(name) {
         if (err) {
           resolve(false);
         } else {
-          console.log(dynamicTexts.createDetail(name)[0]);
+          console.log(UTILS.dynamicTexts.createDetail(name)[0]);
           const detailFileRelative = `${nameLowerCase}-detail/${nameLowerCase}-detail.component`;
-          let content = componentDetailViewModelTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+          let content = TEMPLATES.componentDetailViewModelTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
           fs.writeFileSync(`src/app/modules/${nameLowerCase}/${detailFileRelative}.ts`, content, 'utf-8');
-          content = componentDetailViewTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+          content = TEMPLATES.componentDetailViewTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
           fs.writeFileSync(`src/app/modules/${nameLowerCase}/${detailFileRelative}.html`, content, 'utf-8');
-          content = componentDetailStyleTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+          content = TEMPLATES.componentDetailStyleTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
           fs.writeFileSync(`src/app/modules/${nameLowerCase}/${detailFileRelative}.scss`, content, 'utf-8');
           addToModuleOrRouting(name + 'DetailComponent',
                                `src/app/modules/${nameLowerCase}/${nameLowerCase}.module.ts`,
@@ -188,7 +188,7 @@ function createDetailFiles(name) {
                                `./${detailFileRelative}`,
                                /component\: PlatformLayoutComponent\,(?:(?:.|\s)*?)children:\s*\[(?:\s|.)/m, 8,
                                `{\n${' '.repeat(10)}canActivate: [AdminGuard],\n${' '.repeat(10)}path: '${nameLowerCase}/:id',\n${' '.repeat(10)}component: ${name}DetailComponent\n${' '.repeat(8)}}`);
-          console.log(color(staticTexts.detailCreated[0], staticTexts.detailCreated[1]));
+          console.log(color(UTILS.staticTexts.detailCreated[0], UTILS.staticTexts.detailCreated[1]));
           resolve(true);
         };
       });
@@ -207,13 +207,13 @@ function createListFiles(name) {
             if (err) {
                 resolve(false);
             } else {
-                console.log(dynamicTexts.createList(name)[0]);
+                console.log(UTILS.dynamicTexts.createList(name)[0]);
                 const listFileRelative = `${nameLowerCase}-list/${nameLowerCase}-list.component`;
-                let content = componentListViewModelTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                let content = TEMPLATES.componentListViewModelTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.ts`, content, 'utf-8');
-                content = componentListViewTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                content = TEMPLATES.componentListViewTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.html`, content, 'utf-8');
-                content = componentListStyleTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                content = TEMPLATES.componentListStyleTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.scss`, content, 'utf-8');
                 let arrayPositionRegex = /(declarations|exports): \[[\w\s\n\,]*\]/gm;
                 addToModuleOrRouting(name + 'ListComponent', `src/app/modules/${nameLowerCase}/${nameLowerCase}.module.ts`, './' + listFileRelative, arrayPositionRegex);
@@ -225,13 +225,13 @@ function createListFiles(name) {
                 prompt({
                     type: 'input',
                     name: 'iconName',
-                    message: dynamicTexts.provideIconForList(name)[0]
+                    message: UTILS.dynamicTexts.provideIconForList(name)[0]
                 }).then(res => {
                     let iconName = res['iconName'];
                     if (iconName === null || iconName.length === 0) {
-                        console.log(color(staticTexts.creatingListNoIcon[0], staticTexts.creatingListNoIcon[1]));
+                        console.log(color(UTILS.staticTexts.creatingListNoIcon[0], UTILS.staticTexts.creatingListNoIcon[1]));
                     } else if (!/^[a-z0-9]{2,}(?:_[a-z0-9]{2,})*$/.test(iconName)) {
-                        console.log(color(staticTexts.incorrectIcon[0], staticTexts.incorrectIcon[1]));
+                        console.log(color(UTILS.staticTexts.incorrectIcon[0], UTILS.staticTexts.incorrectIcon[1]));
                         iconName = 'web_asset';
                     } else {
                         console.log(color(`\nCreating list with ${iconName} icon...\n`, 'YELLOW'));
@@ -246,7 +246,7 @@ function createListFiles(name) {
                         `../../modules/${nameLowerCase}/${nameLowerCase}.routing`,
                         /export const SIDEBAR_ROUTES: RouteInfo\[\] \= \[(?:(?:.|\s)*)\]/m, 2,
                         `${name.toUpperCase()}_ROUTING.routeInfo`);
-                    console.log(color(staticTexts.listCreated[0], staticTexts.listCreated[1]));
+                    console.log(color(UTILS.staticTexts.listCreated[0], UTILS.staticTexts.listCreated[1]));
                     resolve(true);
                 });
             };
@@ -259,7 +259,7 @@ function createListFiles(name) {
  * @returns {boolean}
  */
 function createMappableFile() {
-    const content = mappableTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match));
+    const content = TEMPLATES.mappableTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match));
     fs.writeFileSync('src/app/@core/models/Mappable.ts', content, 'utf-8');
     return true;
 }
@@ -270,11 +270,11 @@ function createMappableFile() {
  * @returns {boolean}
  */
 function createModuleFiles(name) {
-    const content = moduleTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+    const content = TEMPLATES.moduleTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
     fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.module.ts`, content, 'utf-8');
-    const routingContent = moduleRoutingTemplate.replace(REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+    const routingContent = TEMPLATES.moduleRoutingTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
     fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.routing.ts`, routingContent, 'utf-8');
-    fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.conf.json`, configTemplate, 'utf-8');
+    fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.conf.json`, TEMPLATES.configTemplate, 'utf-8');
     addToModuleOrRouting(name + 'Module',
         'src/app/modules/modules.module.ts',
         `./${name.toLowerCase()}/${name.toLowerCase()}.module`,
@@ -292,19 +292,19 @@ function createFiles(elementType, name, taskList) {
     console.log('\ncreating files for', elementType);
     const nameLowerCase = name.toLowerCase();
     switch(elementType) {
-      case elementTypes.MODEL:
+      case UTILS.elementTypes.MODEL:
         return createModelFiles(name).then( filesCreated => {
           if (filesCreated) {
             if (!taskList) {
               return prompt({
                   type: 'checkbox',
                   name: 'tasks',
-                  message: dynamicTexts.whichElementsForModel(name),
+                  message: UTILS.dynamicTexts.whichElementsForModel(name),
                   choices: [
-                    `${elementTypes.SERVICE.toUpperCase()} => src/app/modules/${nameLowerCase}/service/${nameLowerCase
+                    `${UTILS.elementTypes.SERVICE.toUpperCase()} => src/app/modules/${nameLowerCase}/service/${nameLowerCase
                   }.service.ts`,
-                    `${elementTypes.LIST.toUpperCase()} => src/app/modules/${nameLowerCase}/${nameLowerCase}-list`,
-                    `${elementTypes.DETAIL.toUpperCase()} => src/app/modules/${nameLowerCase}/${nameLowerCase}-detail`,
+                    `${UTILS.elementTypes.LIST.toUpperCase()} => src/app/modules/${nameLowerCase}/${nameLowerCase}-list`,
+                    `${UTILS.elementTypes.DETAIL.toUpperCase()} => src/app/modules/${nameLowerCase}/${nameLowerCase}-detail`,
                   ],
                 }).then( async res => {
                   return await parseTasks(name, res['tasks']);
@@ -316,11 +316,11 @@ function createFiles(elementType, name, taskList) {
             return Promise.resolve(false);
           }
         });
-      case elementTypes.SERVICE:
+      case UTILS.elementTypes.SERVICE:
         return createServiceFiles(name).then( filesCreated => filesCreated ? parseTasks(name, taskList) : Promise.resolve(false) );
-      case elementTypes.LIST:
+      case UTILS.elementTypes.LIST:
         return createListFiles(name);
-      case elementTypes.DETAIL:
+      case UTILS.elementTypes.DETAIL:
         return createDetailFiles(name);
     }
 }
@@ -334,7 +334,7 @@ function createFiles(elementType, name, taskList) {
  */
 function create(elementType, name = null, taskList = null) {
     if (!config.selectedServer) {
-        console.log(color(staticTexts.notInitiated[0], staticTexts.notInitiated[1]));
+        console.log(color(UTILS.staticTexts.notInitiated[0], UTILS.staticTexts.notInitiated[1]));
         return Promise.resolve(false);
     }
     return new Promise(async resolve => {
@@ -348,29 +348,29 @@ function create(elementType, name = null, taskList = null) {
         let promptName = 'newName';
         switch (true) {
             case !name:
-                errorMsg = staticTexts.provideName;
+                errorMsg = UTILS.staticTexts.provideName;
                 break;
             case name.length < 3:
-                errorMsg = staticTexts.nameTooShort;
+                errorMsg = UTILS.staticTexts.nameTooShort;
                 break;
             case !isValidName:
-                errorMsg = staticTexts.nameIncorrect;
+                errorMsg = UTILS.staticTexts.nameIncorrect;
                 break;
             case alreadyExists:
-                errorMsg = dynamicTexts.nameAlreadyExists(elementType);
+                errorMsg = UTILS.dynamicTexts.nameAlreadyExists(elementType);
                 break;
-            case elementType !== elementTypes.MODEL && !modelAlreadyExists && !serverModelAlreadyExists:
-                errorMsg = dynamicTexts.nameModelNotFound(elementType, name, elementType === elementTypes.SERVICE);
+            case elementType !== UTILS.elementTypes.MODEL && !modelAlreadyExists && !serverModelAlreadyExists:
+                errorMsg = UTILS.dynamicTexts.nameModelNotFound(elementType, name, elementType === UTILS.elementTypes.SERVICE);
                 promptName = 'choise';
-                createThisElementFirst = elementTypes.MODEL;
-                taskList = elementType === elementTypes.SERVICE ? [elementType.toUpperCase()] : [elementTypes.SERVICE.toUpperCase(), elementType.toUpperCase()];
+                createThisElementFirst = UTILS.elementTypes.MODEL;
+                taskList = elementType === UTILS.elementTypes.SERVICE ? [elementType.toUpperCase()] : [UTILS.elementTypes.SERVICE.toUpperCase(), elementType.toUpperCase()];
                 break;
-            case elementType === elementTypes.DETAIL || elementType === elementTypes.LIST:
-                const serviceExists = checkAlreadyExist(elementTypes.SERVICE, name).alreadyExists;
+            case elementType === UTILS.elementTypes.DETAIL || elementType === UTILS.elementTypes.LIST:
+                const serviceExists = checkAlreadyExist(UTILS.elementTypes.SERVICE, name).alreadyExists;
                 if (!serviceExists) {
-                    errorMsg = dynamicTexts.nameServiceNotFound(elementType, name);
+                    errorMsg = UTILS.dynamicTexts.nameServiceNotFound(elementType, name);
                     promptName = 'choise';
-                    createThisElementFirst = elementTypes.SERVICE;
+                    createThisElementFirst = UTILS.elementTypes.SERVICE;
                     taskList = [elementType.toUpperCase()];
                 }
                 break;
@@ -384,10 +384,10 @@ function create(elementType, name = null, taskList = null) {
                 if (promptName === 'newName' && res['newName'] && res['newName'].length) {
                     resolve(await create(elementType, res['newName'], taskList));
                 } else if (promptName === 'choise' && (!res["choise"] || res["choise"].toLowerCase()[0] === 'y')) {
-                    console.log(staticTexts.continuing[0]);
+                    console.log(UTILS.staticTexts.continuing[0]);
                     resolve(await create(createThisElementFirst, name, taskList));
                 } else {
-                    console.log(color(staticTexts.aborting[0], staticTexts.aborting[1]));
+                    console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
                     resolve(false);
                 }
             });
@@ -424,14 +424,14 @@ function deleteModel(name = null) {
  * @param {*[]} [propMap] - Modified newPropArray array with custom 'name' properties of objects.
  */
 function writeNewServerContent(filePath, serverContent, newPropArray = [], typesToImport = null, propMap = null) {
-    const primaryKeyList = getPrimaryKeysList(elementTypes.SERVER_MODEL, config.primaryKey);
+    const primaryKeyList = getPrimaryKeysList(UTILS.elementTypes.SERVER_MODEL, config.primaryKey);
     const propArray = primaryKeyList.concat(newPropArray);
     if (propMap) {
         propMap.unshift.apply(propMap, primaryKeyList);
     }
     const newServerContent = serverContent
-        .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
-        .replace(REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
+        .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
+        .replace(UTILS.REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
             return p1.trim() + '\n' + propArray.map( (prop, i) => {
                 const userPropName = propMap ? propMap[i].name : false;
@@ -444,7 +444,7 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
             }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n')
             + ';';
         })
-        .replace(REGEXS.serverModelMapMethods, (m, p1, p2, p3, p4, p5, p6) => (
+        .replace(UTILS.REGEXS.serverModelMapMethods, (m, p1, p2, p3, p4, p5, p6) => (
              p1 + '\n' + ' '.repeat(4)
                 + propArray.map( (prop, i) => {
                         const userPropName = propMap ? propMap[i].name : false;
@@ -471,11 +471,11 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
  * @param {string[]} [typesToImport = null] - Array of typescript type names found in newPropArray.
  */
 function writeNewModelContent(filePath, currentContent, newPropArray = [], typesToImport = null) {
-    const primaryKeyList = getPrimaryKeysList(elementTypes.MODEL, config.primaryKey);
+    const primaryKeyList = getPrimaryKeysList(UTILS.elementTypes.MODEL, config.primaryKey);
     const propArray = primaryKeyList.concat(newPropArray);
     const newContent = currentContent
-        .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.trim()}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
-        .replace(REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
+        .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.trim()}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
+        .replace(UTILS.REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
                 return p1.trim() + '\n' + propArray.map( prop => {
                     if (!prop.skipUpdate) {
@@ -486,7 +486,7 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
                     }
                 }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n') + ';';
         })
-        .replace(REGEXS.modelConstructor, (_, p1, p2, p3, p4, p5, p6) => {
+        .replace(UTILS.REGEXS.modelConstructor, (_, p1, p2, p3, p4, p5, p6) => {
             const currConstructorArgs = (p3 + ',\n').match(/^\s*.+,[\r\n]/gm) || [];
             const currConstructorDeclarations = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
             return p1 + propArray.map( prop => {
@@ -519,11 +519,11 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
  */
 function writeNewDataFactoryContent(filePath, currentContent, newPropArray = []) {
     const typesToImport = getTypesToImport(newPropArray, '', /^\b[A-Z]\w*\b/);
-    const primaryKeyList = getPrimaryKeysList(elementTypes.DATA_FACTORY, config.primaryKey);
+    const primaryKeyList = getPrimaryKeysList(UTILS.elementTypes.DATA_FACTORY, config.primaryKey);
     const propArray = primaryKeyList.concat(newPropArray);
     const newContent = currentContent
-        .replace(REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
-        .replace(REGEXS.formControlList, (_, p1, p2, p3) => propArray && propArray.length ? (
+        .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
+        .replace(UTILS.REGEXS.formControlList, (_, p1, p2, p3) => propArray && propArray.length ? (
             p1 + '\n' + ' '.repeat(6)
             + propArray.map( prop => '{' + Object.keys(prop).map( k => `${k}: ${prop[k]}` ).join(', ') + '}' )
                           .join(',\n' + ' '.repeat(6))
@@ -542,7 +542,7 @@ function writeNewDataFactoryContent(filePath, currentContent, newPropArray = [])
 function updateModel(name, moduleConfig, runSilent = false) {
     return new Promise(resolve => {
         if (!runSilent) {
-            console.log(color(dynamicTexts.updating(elementTypes.MODEL, name)[0], dynamicTexts.updating(elementTypes.MODEL, name)[1]));
+            console.log(color(UTILS.dynamicTexts.updating(UTILS.elementTypes.MODEL, name)[0], UTILS.dynamicTexts.updating(UTILS.elementTypes.MODEL, name)[1]));
         }
         const {modelPath, serverModelPath} = getModulePaths(name, true);
         fs.readFile(modelPath, 'utf8', (err, currentContent) => {
@@ -550,7 +550,7 @@ function updateModel(name, moduleConfig, runSilent = false) {
                 return resolve(false)
             }
             const typesToImport = getTypesToImport(moduleConfig['properties'], 'type');
-            const successText = dynamicTexts.updateSuccess(name, typesToImport);
+            const successText = UTILS.dynamicTexts.updateSuccess(name, typesToImport);
             writeNewModelContent(modelPath, currentContent, moduleConfig['properties'], typesToImport);
             fs.readFile(serverModelPath, 'utf8', (err1, serverContent) => {
                 if (err1) {
@@ -568,7 +568,7 @@ function updateModel(name, moduleConfig, runSilent = false) {
                 prompt({
                     type: 'list',
                     name: 'serverPropMapping',
-                    message: dynamicTexts.updateMethod(name)[0],
+                    message: UTILS.dynamicTexts.updateMethod(name)[0],
                     choices: ['automatic', 'manual']
                 }).then(res => {
                     switch (res['serverPropMapping']) {
@@ -606,7 +606,7 @@ function updateModel(name, moduleConfig, runSilent = false) {
 function updateDetail(name, moduleConfig, runSilent = false) {
     return new Promise(resolve => {
         if (!runSilent) {
-            console.log(color(dynamicTexts.updating(name, elementTypes.DETAIL)[0], dynamicTexts.updating(name, elementTypes.DETAIL)[1]));
+            console.log(color(UTILS.dynamicTexts.updating(name, UTILS.elementTypes.DETAIL)[0], UTILS.dynamicTexts.updating(name, UTILS.elementTypes.DETAIL)[1]));
         }
         const {dataFactoryPath} = getModulePaths(name, true);
         const formControlList = moduleConfig['properties']
@@ -622,7 +622,7 @@ function updateDetail(name, moduleConfig, runSilent = false) {
             }
             writeNewDataFactoryContent(dataFactoryPath, dataFactoryContent, formControlList);
             if (!runSilent) {
-                console.log(color(staticTexts.detailUpdated[0], staticTexts.detailUpdated[1]));
+                console.log(color(UTILS.staticTexts.detailUpdated[0], UTILS.staticTexts.detailUpdated[1]));
             }
             return resolve(true)
         });
@@ -638,16 +638,16 @@ function updateDetail(name, moduleConfig, runSilent = false) {
  */
 async function update(elementType, name, runSilent = false) {
     const {modelAlreadyExists, serverModelAlreadyExists, detailAlreadyExist} = checkAlreadyExist(null, name);
-    if (nonUpdateableModels.includes(name.toLowerCase())) {
-        console.log(color(dynamicTexts.nonUpdateableModel(name)[0], dynamicTexts.nonUpdateableModel(name)[1]));
+    if (UTILS.nonUpdateableModels.includes(name.toLowerCase())) {
+        console.log(color(UTILS.dynamicTexts.nonUpdateableModel(name)[0], UTILS.dynamicTexts.nonUpdateableModel(name)[1]));
         return false;
     }
     if (!modelAlreadyExists) {
-        console.log(color(dynamicTexts.updateModelNotFound(name)[0], dynamicTexts.updateModelNotFound(name)[1]));
+        console.log(color(UTILS.dynamicTexts.updateModelNotFound(name)[0], UTILS.dynamicTexts.updateModelNotFound(name)[1]));
         return false;
     }
     if (!serverModelAlreadyExists) {
-        console.log(color(dynamicTexts.updateServerModelNotFound(name)[0], dynamicTexts.updateServerModelNotFound(name)[1]));
+        console.log(color(UTILS.dynamicTexts.updateServerModelNotFound(name)[0], UTILS.dynamicTexts.updateServerModelNotFound(name)[1]));
         return false;
     }
     const moduleConfig = require(process.cwd() + '/' + getModulePaths(name).config);
@@ -655,23 +655,23 @@ async function update(elementType, name, runSilent = false) {
     if (moduleProperties && moduleProperties.length > 1) {
         const duplicateNamesList = getDuplicateValuesByPropName(moduleProperties, 'name');
         if (duplicateNamesList && duplicateNamesList.length) {
-            console.log(color(dynamicTexts.duplicatePropNamesFound('name', duplicateNamesList)[0], dynamicTexts.duplicatePropNamesFound('name', duplicateNamesList)[1]));
+            console.log(color(UTILS.dynamicTexts.duplicatePropNamesFound('name', duplicateNamesList)[0], UTILS.dynamicTexts.duplicatePropNamesFound('name', duplicateNamesList)[1]));
             return false;
         }
     }
     name = name[0].toUpperCase() + name.substr(1);
     switch (elementType) {
-        case elementTypes.MODEL:
+        case UTILS.elementTypes.MODEL:
             const modelUpdated = await updateModel(name, moduleConfig, runSilent);
             if (modelUpdated && detailAlreadyExist) {
-                update(elementTypes.DETAIL, name, runSilent);
+                update(UTILS.elementTypes.DETAIL, name, runSilent);
             } else {
                 return;
             }
             break;
-        case elementTypes.DETAIL:
+        case UTILS.elementTypes.DETAIL:
             if (!detailAlreadyExist) {
-                console.log(color(dynamicTexts.detailNotFound(name)[0], dynamicTexts.detailNotFound(name)[1]));
+                console.log(color(UTILS.dynamicTexts.detailNotFound(name)[0], UTILS.dynamicTexts.detailNotFound(name)[1]));
                 return;
             }
             return await updateDetail(name, moduleConfig, runSilent);
@@ -682,7 +682,7 @@ async function update(elementType, name, runSilent = false) {
 
 async function cloneRepo() {
     return new Promise(async resolve => {
-        console.log(color(staticTexts.cloning[0], staticTexts.cloning[1]));
+        console.log(color(UTILS.staticTexts.cloning[0], UTILS.staticTexts.cloning[1]));
 
         function onError(e) {
             console.log(e);
@@ -692,7 +692,7 @@ async function cloneRepo() {
             if (err) {
                 onError(err)
             }
-            console.log(color(staticTexts.cloned[0], staticTexts.cloned[1]));
+            console.log(color(UTILS.staticTexts.cloned[0], UTILS.staticTexts.cloned[1]));
             resolve(true);
         })
     });
@@ -705,7 +705,7 @@ async function configure() {
             const serverTypePrompt = {
                 type: 'list',
                 name: 'serverType',
-                message: staticTexts.selectServer[0],
+                message: UTILS.staticTexts.selectServer[0],
                 choices: ['strapi', 'firestore']
             };
             const primaryKeyPrompt = {
@@ -715,12 +715,12 @@ async function configure() {
                 message: '[optional] Provide custom primary key (min. 2 characters) which will be used for all models or leave empty to use default key:'
             };
             prompt([serverTypePrompt, primaryKeyPrompt]).then(async (res) => {
-                console.log(color(dynamicTexts.configuring(res['serverType'])[0], dynamicTexts.configuring(res['serverType'])[1]));
+                console.log(color(UTILS.dynamicTexts.configuring(res['serverType'])[0], UTILS.dynamicTexts.configuring(res['serverType'])[1]));
                 config.selectedServer = res["serverType"];
                 if (res['primaryKey'] && res['primaryKey'].replace(/[^\w]/g, '').length >= 2) {
                     config.primaryKey = res['primaryKey'].replace(/[^\w]/g, '');
                 } else {
-                    console.log(color(staticTexts.invalidPrimaryKey[0], staticTexts.invalidPrimaryKey[1]));
+                    console.log(color(UTILS.staticTexts.invalidPrimaryKey[0], UTILS.staticTexts.invalidPrimaryKey[1]));
                     config.primaryKey = 'id';
                 }
                 const newConfigContent = JSON.stringify(config, null, 4);
@@ -753,9 +753,9 @@ async function configure() {
                     })
                 ]).then(() => {
                     del.sync(['implementableServers/**']);
-                    update(elementTypes.MODEL, 'user', true);
-                    console.log(color(staticTexts.configured[0], staticTexts.configured[1]));
-                    console.log(color(staticTexts.enjoy[0], staticTexts.enjoy[1]));
+                    update(UTILS.elementTypes.MODEL, 'user', true);
+                    console.log(color(UTILS.staticTexts.configured[0], UTILS.staticTexts.configured[1]));
+                    console.log(color(UTILS.staticTexts.enjoy[0], UTILS.staticTexts.enjoy[1]));
                     gulp.src('./package.json', {read: false})
                         .pipe(shell([
                             'npm run firstRun'
@@ -769,7 +769,7 @@ async function configure() {
                 });
             });
         } else {
-            console.log(color(staticTexts.alreadyInitialized[0], staticTexts.alreadyInitialized[1]));
+            console.log(color(UTILS.staticTexts.alreadyInitialized[0], UTILS.staticTexts.alreadyInitialized[1]));
             resolve(false);
         }
     });
@@ -793,7 +793,7 @@ async function init(projectName) {
                 }
             });
         } else {
-            console.log(color(staticTexts.alreadyCloned[0], staticTexts.alreadyCloned[1]));
+            console.log(color(UTILS.staticTexts.alreadyCloned[0], UTILS.staticTexts.alreadyCloned[1]));
             resolve(await configure());
         }
     });
@@ -804,23 +804,23 @@ gulp.task('init', async () => {
 });
 
 gulp.task('create:model', async () => {
-    return await create(elementTypes.MODEL, null);
+    return await create(UTILS.elementTypes.MODEL, null);
 });
 
 gulp.task('update:model', async () => {
-    return await update(elementTypes.MODEL, null);
+    return await update(UTILS.elementTypes.MODEL, null);
 });
 
 gulp.task('create:service', async () => {
-    return await create(elementTypes.SERVICE, null);
+    return await create(UTILS.elementTypes.SERVICE, null);
 });
 
 gulp.task('create:detail', async () => {
-    return await create(elementTypes.DETAIL, null);
+    return await create(UTILS.elementTypes.DETAIL, null);
 });
 
 gulp.task('create:list', async () => {
-    return await create(elementTypes.LIST, null);
+    return await create(UTILS.elementTypes.LIST, null);
 });
 
 gulp.task('delete:model', async () => {
@@ -831,11 +831,11 @@ gulp.task('delete:model', async () => {
 // Export all methods
 module.exports = {
     init: init,
-    createModel: (name) => create(elementTypes.MODEL, name),
-    createService: (name) => create(elementTypes.SERVICE, name),
-    createList: (name) => create(elementTypes.LIST, name),
-    createDetail: (name) => create(elementTypes.DETAIL, name),
-    updateModel: (name) => update(elementTypes.MODEL, name),
-    updateDetail: (name) => update(elementTypes.DETAIL, name),
+    createModel: (name) => create(UTILS.elementTypes.MODEL, name),
+    createService: (name) => create(UTILS.elementTypes.SERVICE, name),
+    createList: (name) => create(UTILS.elementTypes.LIST, name),
+    createDetail: (name) => create(UTILS.elementTypes.DETAIL, name),
+    updateModel: (name) => update(UTILS.elementTypes.MODEL, name),
+    updateDetail: (name) => update(UTILS.elementTypes.DETAIL, name),
     deleteModel: (name) => deleteModel(name)
 };

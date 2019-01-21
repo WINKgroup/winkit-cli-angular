@@ -1,7 +1,7 @@
 'use strict';
 
 const {init, createModel, createService, createList, createDetail, updateModel, updateDetail, deleteModel} = require('./gulpfile');
-const {elementTypes} = require('./resources/index');
+const {elementTypes} = require('./resources/helpers/index');
 
 const AngularCommands = {
     init: 'init',
