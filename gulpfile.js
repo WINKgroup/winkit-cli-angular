@@ -36,7 +36,7 @@ function generateContent(match, name = null) {
         case 'config':
             return config[firstElArr[1]];
         case 'ThisName':
-            if (firstElArr[1]) {
+            if (firstElArr[1] && name[firstElArr[1].replace(/[^a-z]/gi, '')]) {
                 return name[firstElArr[1].replace(/[^a-z]/gi, '')]();
             }
             return name;
@@ -94,11 +94,13 @@ function addToModuleOrRouting(ngClassName, modulePath, relativeClassPath, arrayP
     const endOfImportsRegex = ngClassName ? UTILS.REGEXS.endOfImports : null;
     const newContent = moduleContent
         .replace(endOfImportsRegex, (m, p1, p2, p3) => {
-            return `${p1.trim()}\nimport {${ngClassName}} from '${relativeClassPath}';\n${p2.replace(/^\s+/,'')}\n${p3.replace(/^\s+/,'')}`
+            return !m.length ? moduleContent
+                : `${p1.trim()}\nimport {${ngClassName}} from '${relativeClassPath}';\n${p2.replace(/^\s+/,'')}\n${p3.replace(/^\s+/,'')}`;
         })
         .replace(arrayPositionRegex, match => {
             const lastChar = match.slice(-1).trim();
-            return match.slice(0, -1).trim() + '\n'
+            return !match.length ? ''
+                : match.slice(0, -1).trim() + '\n'
                         + ' '.repeat(indent) + (pushedElement || ngClassName)
                         + ',\n' + (lastChar ? ' '.repeat(indent > 2 ? indent - 2 : 0) + lastChar : lastChar)
         });
