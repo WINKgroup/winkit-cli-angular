@@ -364,6 +364,9 @@ The structure of the **ModelProperty** object is the following:
 * **value** (`string`: _optional_): a string containing the default value assigned to the model on initialization. Setting this key results in ignoring the _type_ and _optional_ keys;
 * **skipUpdate** (`boolean`: _optional_): setting this value to `true` results in the model property not being added to the model or updated (if it already exists on the model) when `winkit angular update|u ...` is called;
 * **serverName** (`string`: _optional_): name of the corresponding server model property, if different from _ModelProperty.name_;
+* **mapReverseName** (`string`: _optional_): The name of the model property to which the server model property value should be assigned in the mapReverse method of the server model;
+* **relationship** (`string`: _optional_): Maps the value of the provided model property to the current property, e.g. the following configuration: `{"name": "wid", "relationship": "id", ...}` will result in mapping the value of the `id` property to the `wid` property in the model _constructor_ and the server model _map_ method;
+* **mapReverseRelationship** (`string`: _optional_): Maps the value of the provided server model property to the current property, e.g. the following configuration: `{"name": "wid", "mapReverseRelationship": "_id", ...}` will result in mapping the value of the `_id` property to the `wid` property in the server model _mapReverse_ method;
 * **htmlConfig** (`object`: _optional_): An object containing configuration of a single form control element. __Must be set__ for the form control element to be displayed in the detail component of a given model. For more information see [Structure of the htmlConfig object](#structure-of-the-htmlConfig-object) section below;
 
 NOTE: The _id_, __id_ and _wid_ model properties are not affected by the _\<name\>.conf.json_ configuration.
@@ -375,6 +378,7 @@ The structure of `htmlConfig` object mostly reflects [attributes of an HTMLInput
 GENERAL
 
 * **type** (`FormControlType | HTMLInputElement.type`): a [HTMLInputElement type](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types) or one of the special types listed in the [FormControlType](https://github.com/WINKgroup/winkit-cli-angular/blob/master/resources/templates/project_template/src/app/%40core/models/FormControlTypes.ts) enum;
+* **ngIf** (`boolean`: _optional_): sets the value of the angular `ngIf` directive ([more info](https://angular.io/api/common/NgIf)) of the Form Element;
 * **required** (`boolean`: _optional_): sets the `required` attribute of the input element;
 * **disabled** (`boolean`: _optional_): sets the `disabled` attribute of the input element;
 * **readonly** (`boolean`: _optional_): sets the `readonly` attribute of the input element;
