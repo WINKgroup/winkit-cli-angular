@@ -23,7 +23,7 @@
                 <label [for]="dateOfBirthInput" class="control-label full-width">{{'Date of birth' | translate}}</label>
                 <div class="input-group">
                   <input #dateOfBirthInput placeholder="{{'Date of birth' | translate}}"
-                         [ngClass]="{'form-control': true,  'is-invalid': detailForm.submitted && dateOfBirth === undefined}"
+                         [ngClass]="{'form-control': true,  'is-invalid': detailForm.submitted && detailForm.controls['dateOfBirth'] && detailForm.controls['dateOfBirth'].invalid}"
                          name="dateOfBirthInput" [(ngModel)]="dateOfBirth" ngbDatepicker #d="ngbDatepicker" readonly>
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary p-1" (click)="d.toggle()" type="button">

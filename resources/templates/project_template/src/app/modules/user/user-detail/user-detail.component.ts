@@ -89,8 +89,10 @@ export class UserDetailComponent extends BasePageComponent implements OnInit {
    */
   async submit(form: HTMLFormElement, isValid: boolean) {
     if (isValid) {
-      this.user.dateOfBirth = moment.utc(`${this.dateOfBirth.year}-${this.dateOfBirth.month}-${this.dateOfBirth.day}`).toDate();
-      console.log(this.dateOfBirth, this.user.dateOfBirth);
+      if (this.dateOfBirth) {
+          this.user.dateOfBirth = moment.utc(`${this.dateOfBirth.year}-${this.dateOfBirth.month}-${this.dateOfBirth.day}`).toDate();
+          console.log(this.dateOfBirth, this.user.dateOfBirth);
+      }
       if (await this.askForConfirmation()) {
         if (this.isNew) {
           this.user.registeredAt = new Date();
