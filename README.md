@@ -174,10 +174,14 @@ If you want to use Winkit with Firestore you must first configure your project i
 
 In your Winkit project you can either use the default primary database key or configure a custom primary database key.
 
-The default key is 'id' (for the front-end) and '_id' (for the back-end). To use a different key your can
-1. Provide it when prompted for the primary key upon [initializing your project](#init-project);
-2. In the _\<project folder\>/winkit.conf.json_ file add or edit the `primaryKey` key by providing your value (minimum 2 characters).<br/><br/>You will also need to edit the _\<project folder\>/src/app/@core/models/Mappable.ts_ file by providing the name of your primaryKey as the first key of the Mappable interface;
-3. Update all models in your project using the `winkit angular update model ...` command ([more info](#update-model));
+The default key is 'id' (for the front-end) and '_id' (for the back-end). To use a different key provide it when prompted for the primary key upon [initializing your project](#init-project).
+
+After initializing the project you can still change the primary key at any point in time by following these steps:
+1. In the _\<project folder\>/winkit.conf.json_ file add or edit the `primaryKey` key by providing your value (minimum 2 characters).
+2. Edit the _\<project folder\>/src/app/@core/models/Mappable.ts_ file by providing the name of your primaryKey as the first key of the Mappable interface;
+2. Update all models in your project using the `winkit angular update model ...` command ([more info](#update-model));
+
+
 
 ## Commands
 
