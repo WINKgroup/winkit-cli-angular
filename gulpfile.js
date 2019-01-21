@@ -394,6 +394,7 @@ function create(elementType, name = null, taskList = null) {
         } else {
             if (moduleExists) {
                 const filesCreated = await createFiles(elementType, name, taskList);
+                update(elementType, name, true);
                 resolve(filesCreated);
             } else {
                 mkdirp(`src/app/modules/${name.toLowerCase()}/`, async (err) => {
@@ -402,6 +403,7 @@ function create(elementType, name = null, taskList = null) {
                     } else {
                         createModuleFiles(name);
                         const filesCreated = await createFiles(elementType, name, taskList);
+                        update(elementType, name, true);
                         resolve(filesCreated);
                     }
                 });
