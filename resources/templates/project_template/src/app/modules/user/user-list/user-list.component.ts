@@ -6,7 +6,6 @@ import {UserService} from '../service/user.service';
 import config from '../../../../../winkit.conf.json';
 
 const pk = config['primaryKey'];
-const pkLabel = pk ? pk.toUpperCase() : 'ID';
 
 @Component({
     selector: 'app-user-list',
@@ -97,7 +96,7 @@ export class UserListComponent extends BasePageComponent implements OnInit {
             {label: 'Telephone', placeholder: 'Telephone', attrName: 'telephone', type: FilterFieldType.TEXT, section: 'others'},
             {label: 'Email', placeholder: 'Email', attrName: 'email', type: FilterFieldType.TEXT, section: 'others'},
             {label: 'Role', placeholder: 'Role', attrName: 'userRole', type: FilterFieldType.SELECT, list: FiltersComponent.getFilterList(FilterableList.USER_ROLE), section: 'others'},
-            {label: pkLabel, placeholder: pkLabel, attrName: pk || 'wid', type: FilterFieldType.TEXT, section: 'others'},
+            {label: pk.toUpperCase(), placeholder: pk.toUpperCase(), attrName: (pk === 'id' ? 'wid' : pk), type: FilterFieldType.TEXT, section: 'others'},
         ] as FilterFieldElement[];
     }
 
@@ -115,7 +114,7 @@ export class UserListComponent extends BasePageComponent implements OnInit {
         /**
          * init the pagination
          */
-        this.userService.setPagination(this.elementsPerPage, this.filterData, (pk || '_id'));
+        this.userService.setPagination(this.elementsPerPage, this.filterData, (pk === 'id' ? '_id' : pk));
         this.loadMoreItems();
     }
 
@@ -131,7 +130,7 @@ export class UserListComponent extends BasePageComponent implements OnInit {
         this.currentPage = 0;
         this.hasNextPage = true;
         this.router.navigate(['/user-list'], {queryParams: this.filterData});
-        this.userService.setPagination(this.elementsPerPage, this.filterData, (pk || '_id'));
+        this.userService.setPagination(this.elementsPerPage, this.filterData, (pk === 'id' ? '_id' : pk));
         this.loadMoreItems();
     }
 
