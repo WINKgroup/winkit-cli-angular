@@ -165,7 +165,7 @@ function getPrimaryKeysList(writeTo, primaryKey) {
                 ];
             } else {
                 return [
-                    {name: '_id', relationship: 'id', mapReverseKey: 'id', type: 'string'},
+                    {name: '_id', relationship: 'id', mapReverseName: 'id', type: 'string'},
                     {name: 'wid', relationship: 'id', mapReverseRelationship: '_id', type: 'string'}
                 ];
             }

@@ -453,7 +453,7 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
                         const currPropInitializationsArray = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
                         if (!prop.skipUpdate) {
                             return p2 === 'mapReverse'
-                                ? `${p4}.${prop.mapReverseKey || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} : null`
+                                ? `${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} : null`
                                 : `${p4}.${userPropName || prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : null`;
                         } else {
                             const skippedProp = currPropInitializationsArray.filter(el => (new RegExp(`^\\s*${p4}.${prop.name}`)).test(el))[0];
