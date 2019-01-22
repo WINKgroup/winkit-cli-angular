@@ -181,8 +181,6 @@ After initializing the project you can still change the primary key at any point
 2. Edit the _\<project folder\>/src/app/@core/models/Mappable.ts_ file by providing the name of your primaryKey as the first key of the Mappable interface;
 3. Update all models in your project using the `winkit angular update model ...` command ([more info](#update-model));
 
-
-
 ## Commands
 
 <a id="init-project"></a>
@@ -316,15 +314,23 @@ By default the generated route is accessible just by authenticated user with ADM
 ---
 <a id="detail-form"></a>
 NOTE: The model info will be displayed in the detail component inside a `<form>` element. You can manage the form control elements inside the form by:
-* editing the `<modelName>-detail.component.html` file
+* editing the `<modelName>-detail.component.html` file (make sure to add `"skipUpdate": true` to the property's config in _\<model\>.conf.json_)
 * editing the `<modelName>.conf.json` configuration file and updating the model and detail ([more info](#update-model))
-* passing an array of type [FormControlList](https://github.com/WINKgroup/winkit-cli-angular/blob/master/resources/templates/project_template/src/app/%40core/models/FormControlTypes.ts) as the 2nd argument in the `<modelName>DataFactory.getFormControls()` call in `<modelName>-detail.component.ts` and assigning the returned data to the formControlList attribute of the detail component. For example:
+* passing an array of type [FormControlList](https://github.com/WINKgroup/winkit-cli-angular/blob/master/resources/templates/project_template/src/app/%40core/models/FormControlTypes.ts) as the 2nd argument in the `<modelName>DataFactory.getFormControls()` call in `<modelName>-detail.component.ts` (make sure to add `"skipUpdate": true` to the property's config in _\<model\>.conf.json_). For example:
+
+.../_someModel-detail.component.ts_
 ```angularjs
 this.formControlList = ZdueDataFactory.getFormControls(this, [
   {name: 'sometext', type: FormControlType.TEXT}
 ]);
 ```
-
+.../_someModel.conf.json_
+```json5
+"properties": [
+    {"name": "someText", "skipUpdate": true},
+    ...
+]
+```
 <a id="generate-list"></a>
 ### winkit angular generate|g list \<modelName\>
 Generates a new list component for given model, implements its routing and adds the link to the sidebar, so the list is ready to be displayed, including pagination and filtering.
