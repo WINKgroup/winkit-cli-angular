@@ -371,7 +371,7 @@ The structure of the **ModelProperty** object is the following:
 
 NOTE: The _id_, __id_ and _wid_ model properties are not affected by the _\<name\>.conf.json_ configuration.
 
-#### Structure of the `htmlConfig` object
+#### STRUCTURE OF THE `htmlConfig` OBJECT
 
 The structure of `htmlConfig` object mostly reflects [attributes of an HTMLInputElement](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) but also has some additional settings:
 
