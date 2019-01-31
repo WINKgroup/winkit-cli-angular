@@ -281,7 +281,7 @@ function createMappableFile() {
         console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
         return false;
     }
-    fs.writeFileSync('src/app/@core/models/Mappable.ts', content, 'utf-8');
+    fs.writeFileSync('src/app/@core/models/Mappable.ts', tsContent, 'utf-8');
     return true;
 }
 
