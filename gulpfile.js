@@ -55,24 +55,24 @@ function generateContent(match, name = null) {
  */
 async function parseTasks(name, taskList, counter = 0, results = []) {
     if (taskList && taskList.length) {
-      switch(true) {
-        case taskList[counter].indexOf( UTILS.elementTypes.SERVICE.toUpperCase() ) > -1:
-          results.push( await create( UTILS.elementTypes.SERVICE, name ) );
-          break;
-        case taskList[counter].indexOf( UTILS.elementTypes.LIST.toUpperCase() ) > -1:
-          results.push( await create( UTILS.elementTypes.LIST, name ) );
-          break;
-        case taskList[counter].indexOf( UTILS.elementTypes.DETAIL.toUpperCase() ) > -1:
-          results.push( await create( UTILS.elementTypes.DETAIL, name ) );
-          break;
-      }
-      if (counter + 1 === taskList.length) {
-        return Promise.all(results);
-      } else {
-        parseTasks(name, taskList, ++counter, results);
-      }
+        switch(true) {
+            case taskList[counter].indexOf( UTILS.elementTypes.SERVICE.toUpperCase() ) > -1:
+                results.push( await create( UTILS.elementTypes.SERVICE, name ) );
+                break;
+            case taskList[counter].indexOf( UTILS.elementTypes.LIST.toUpperCase() ) > -1:
+                results.push( await create( UTILS.elementTypes.LIST, name ) );
+                break;
+            case taskList[counter].indexOf( UTILS.elementTypes.DETAIL.toUpperCase() ) > -1:
+                results.push( await create( UTILS.elementTypes.DETAIL, name ) );
+                break;
+        }
+        if (counter + 1 === taskList.length) {
+            return Promise.all(results);
+        } else {
+            parseTasks(name, taskList, ++counter, results);
+        }
     } else {
-      return Promise.resolve(true);
+        return Promise.resolve(true);
     }
 }
 
@@ -94,15 +94,13 @@ function addToModuleOrRouting(ngClassName, modulePath, relativeClassPath, arrayP
     const endOfImportsRegex = ngClassName ? UTILS.REGEXS.endOfImports : null;
     const newContent = moduleContent
         .replace(endOfImportsRegex, (m, p1, p2, p3) => {
-            return !m.length ? moduleContent
-                : `${p1.trim()}\nimport {${ngClassName}} from '${relativeClassPath}';\n${p2.replace(/^\s+/,'')}\n${p3.replace(/^\s+/,'')}`;
+            return `${p1.trim()}\nimport {${ngClassName}} from '${relativeClassPath}';\n${p2.replace(/^\s+/,'')}\n${p3.replace(/^\s+/,'')}`;
         })
         .replace(arrayPositionRegex, match => {
             const lastChar = match.slice(-1).trim();
-            return !match.length ? ''
-                : match.slice(0, -1).trim() + '\n'
-                        + ' '.repeat(indent) + (pushedElement || ngClassName)
-                        + ',\n' + (lastChar ? ' '.repeat(indent > 2 ? indent - 2 : 0) + lastChar : lastChar)
+            return match.slice(0, -1).trim() + '\n'
+                + ' '.repeat(indent) + (pushedElement || ngClassName)
+                + ',\n' + (lastChar ? ' '.repeat(indent > 2 ? indent - 2 : 0) + lastChar : lastChar)
         });
     if (newContent) {
         fs.writeFileSync(modulePath, newContent, 'utf8');
@@ -127,6 +125,10 @@ function createModelFiles(name) {
                 const modelContent = TEMPLATES.modelTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
                 const serverModelContent = TEMPLATES.serverModelTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
                 const dataFactoryContent = TEMPLATES.dataFactoryTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                if (!modelContent || !serverModelContent || !dataFactoryContent) {
+                    console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
+                    resolve(false);
+                }
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/models/${name}.ts`, modelContent, 'utf-8');
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/models/Server${name}.ts`, serverModelContent, 'utf-8');
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/models/${name}DataFactory.ts`, dataFactoryContent, 'utf-8');
@@ -152,6 +154,10 @@ function createServiceFiles(name) {
                 console.log(UTILS.dynamicTexts.createService(name)[0]);
                 const serviceFileRelative = `service/${nameLowerCase}.service`;
                 const serviceContent = TEMPLATES.serviceTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                if (!serviceContent) {
+                    console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
+                    resolve(false);
+                }
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/service/${nameLowerCase}.service.ts`, serviceContent, 'utf-8');
                 addToModuleOrRouting(name + 'Service', `src/app/modules/${nameLowerCase}/${nameLowerCase}.module.ts`, './' + serviceFileRelative, /providers\: \[[\w\s\n\,]*\]/m);
                 console.log(color(UTILS.staticTexts.serviceCreated[0], UTILS.staticTexts.serviceCreated[1]));
@@ -169,31 +175,35 @@ function createServiceFiles(name) {
 function createDetailFiles(name) {
     const nameLowerCase = name.toLowerCase();
     return new Promise(resolve => {
-      mkdirp(`src/app/modules/${nameLowerCase}/${nameLowerCase}-detail/`, (err) => {
-        if (err) {
-          resolve(false);
-        } else {
-          console.log(UTILS.dynamicTexts.createDetail(name)[0]);
-          const detailFileRelative = `${nameLowerCase}-detail/${nameLowerCase}-detail.component`;
-          let content = TEMPLATES.componentDetailViewModelTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
-          fs.writeFileSync(`src/app/modules/${nameLowerCase}/${detailFileRelative}.ts`, content, 'utf-8');
-          content = TEMPLATES.componentDetailViewTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
-          fs.writeFileSync(`src/app/modules/${nameLowerCase}/${detailFileRelative}.html`, content, 'utf-8');
-          content = TEMPLATES.componentDetailStyleTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
-          fs.writeFileSync(`src/app/modules/${nameLowerCase}/${detailFileRelative}.scss`, content, 'utf-8');
-          addToModuleOrRouting(name + 'DetailComponent',
-                               `src/app/modules/${nameLowerCase}/${nameLowerCase}.module.ts`,
-                               './' + detailFileRelative,
-                               /(declarations|exports): \[[\w\s\n\,]*\]/gm);
-          addToModuleOrRouting(name + 'DetailComponent',
-                               `src/app/modules/${nameLowerCase}/${nameLowerCase}.routing.ts`,
-                               `./${detailFileRelative}`,
-                               /component\: PlatformLayoutComponent\,(?:(?:.|\s)*?)children:\s*\[(?:\s|.)/m, 8,
-                               `{\n${' '.repeat(10)}canActivate: [AdminGuard],\n${' '.repeat(10)}path: '${nameLowerCase}/:id',\n${' '.repeat(10)}component: ${name}DetailComponent\n${' '.repeat(8)}}`);
-          console.log(color(UTILS.staticTexts.detailCreated[0], UTILS.staticTexts.detailCreated[1]));
-          resolve(true);
-        };
-      });
+        mkdirp(`src/app/modules/${nameLowerCase}/${nameLowerCase}-detail/`, (err) => {
+            if (err) {
+                resolve(false);
+            } else {
+                console.log(UTILS.dynamicTexts.createDetail(name)[0]);
+                const detailFileRelative = `${nameLowerCase}-detail/${nameLowerCase}-detail.component`;
+                const detailTScontent = TEMPLATES.componentDetailViewModelTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                const detailHTMLcontent = TEMPLATES.componentDetailViewTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                const detailSCSScontent = TEMPLATES.componentDetailStyleTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                if (!detailTScontent || !detailHTMLcontent || !detailSCSScontent) {
+                    console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
+                    resolve(false);
+                }
+                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${detailFileRelative}.ts`, detailTScontent, 'utf-8');
+                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${detailFileRelative}.html`, detailHTMLcontent, 'utf-8');
+                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${detailFileRelative}.scss`, detailSCSScontent, 'utf-8');
+                addToModuleOrRouting(name + 'DetailComponent',
+                    `src/app/modules/${nameLowerCase}/${nameLowerCase}.module.ts`,
+                    './' + detailFileRelative,
+                    /(declarations|exports): \[[\w\s\n\,]*\]/gm);
+                addToModuleOrRouting(name + 'DetailComponent',
+                    `src/app/modules/${nameLowerCase}/${nameLowerCase}.routing.ts`,
+                    `./${detailFileRelative}`,
+                    /component\: PlatformLayoutComponent\,(?:(?:.|\s)*?)children:\s*\[(?:\s|.)/m, 8,
+                    `{\n${' '.repeat(10)}canActivate: [AdminGuard],\n${' '.repeat(10)}path: '${nameLowerCase}/:id',\n${' '.repeat(10)}component: ${name}DetailComponent\n${' '.repeat(8)}}`);
+                console.log(color(UTILS.staticTexts.detailCreated[0], UTILS.staticTexts.detailCreated[1]));
+                resolve(true);
+            };
+        });
     });
 }
 
@@ -211,11 +221,15 @@ function createListFiles(name) {
             } else {
                 console.log(UTILS.dynamicTexts.createList(name)[0]);
                 const listFileRelative = `${nameLowerCase}-list/${nameLowerCase}-list.component`;
-                let content = TEMPLATES.componentListViewModelTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                const tsContent = TEMPLATES.componentListViewModelTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                const htmlContent = TEMPLATES.componentListViewTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                const scssContent = TEMPLATES.componentListStyleTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+                if (!tsContent || !htmlContent || !scssContent) {
+                    console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
+                    resolve(false);
+                }
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.ts`, content, 'utf-8');
-                content = TEMPLATES.componentListViewTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.html`, content, 'utf-8');
-                content = TEMPLATES.componentListStyleTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
                 fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.scss`, content, 'utf-8');
                 let arrayPositionRegex = /(declarations|exports): \[[\w\s\n\,]*\]/gm;
                 addToModuleOrRouting(name + 'ListComponent', `src/app/modules/${nameLowerCase}/${nameLowerCase}.module.ts`, './' + listFileRelative, arrayPositionRegex);
@@ -261,8 +275,12 @@ function createListFiles(name) {
  * @returns {boolean}
  */
 function createMappableFile() {
-    const content = TEMPLATES.mappableTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match));
-    fs.writeFileSync('src/app/@core/models/Mappable.ts', content, 'utf-8');
+    const tsContent = TEMPLATES.mappableTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match));
+    if (!tsContent) {
+        console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
+        return false;
+    }
+    fs.writeFileSync('src/app/@core/models/Mappable.ts', tsContent, 'utf-8');
     return true;
 }
 
@@ -272,9 +290,13 @@ function createMappableFile() {
  * @returns {boolean}
  */
 function createModuleFiles(name) {
-    const content = TEMPLATES.moduleTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
-    fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.module.ts`, content, 'utf-8');
+    const moduleContent = TEMPLATES.moduleTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
     const routingContent = TEMPLATES.moduleRoutingTemplate.replace(UTILS.REGEXS.fileTemplate, (_, match) => generateContent(match, name));
+    if (!moduleContent || !routingContent) {
+        console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
+        return false;
+    }
+    fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.module.ts`, content, 'utf-8');
     fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.routing.ts`, routingContent, 'utf-8');
     fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.conf.json`, TEMPLATES.configTemplate, 'utf-8');
     addToModuleOrRouting(name + 'Module',
@@ -294,36 +316,36 @@ function createFiles(elementType, name, taskList) {
     console.log('\ncreating files for', elementType);
     const nameLowerCase = name.toLowerCase();
     switch(elementType) {
-      case UTILS.elementTypes.MODEL:
-        return createModelFiles(name).then( filesCreated => {
-          if (filesCreated) {
-            if (!taskList) {
-              return prompt({
-                  type: 'checkbox',
-                  name: 'tasks',
-                  message: UTILS.dynamicTexts.whichElementsForModel(name),
-                  choices: [
-                    `${UTILS.elementTypes.SERVICE.toUpperCase()} => src/app/modules/${nameLowerCase}/service/${nameLowerCase
-                  }.service.ts`,
-                    `${UTILS.elementTypes.LIST.toUpperCase()} => src/app/modules/${nameLowerCase}/${nameLowerCase}-list`,
-                    `${UTILS.elementTypes.DETAIL.toUpperCase()} => src/app/modules/${nameLowerCase}/${nameLowerCase}-detail`,
-                  ],
-                }).then( async res => {
-                  return await parseTasks(name, res['tasks']);
-                });
-            } else {
-              return parseTasks(name, taskList);
-            }
-          } else {
-            return Promise.resolve(false);
-          }
-        });
-      case UTILS.elementTypes.SERVICE:
-        return createServiceFiles(name).then( filesCreated => filesCreated ? parseTasks(name, taskList) : Promise.resolve(false) );
-      case UTILS.elementTypes.LIST:
-        return createListFiles(name);
-      case UTILS.elementTypes.DETAIL:
-        return createDetailFiles(name);
+        case UTILS.elementTypes.MODEL:
+            return createModelFiles(name).then( filesCreated => {
+                if (filesCreated) {
+                    if (!taskList) {
+                        return prompt({
+                            type: 'checkbox',
+                            name: 'tasks',
+                            message: UTILS.dynamicTexts.whichElementsForModel(name),
+                            choices: [
+                                `${UTILS.elementTypes.SERVICE.toUpperCase()} => src/app/modules/${nameLowerCase}/service/${nameLowerCase
+                                    }.service.ts`,
+                                `${UTILS.elementTypes.LIST.toUpperCase()} => src/app/modules/${nameLowerCase}/${nameLowerCase}-list`,
+                                `${UTILS.elementTypes.DETAIL.toUpperCase()} => src/app/modules/${nameLowerCase}/${nameLowerCase}-detail`,
+                            ],
+                        }).then( async res => {
+                            return await parseTasks(name, res['tasks']);
+                        });
+                    } else {
+                        return parseTasks(name, taskList);
+                    }
+                } else {
+                    return Promise.resolve(false);
+                }
+            });
+        case UTILS.elementTypes.SERVICE:
+            return createServiceFiles(name).then( filesCreated => filesCreated ? parseTasks(name, taskList) : Promise.resolve(false) );
+        case UTILS.elementTypes.LIST:
+            return createListFiles(name);
+        case UTILS.elementTypes.DETAIL:
+            return createDetailFiles(name);
     }
 }
 
@@ -438,32 +460,36 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
         .replace(UTILS.REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
             return p1.trim() + '\n' + propArray.map( (prop, i) => {
-                const userPropName = propMap ? propMap[i].name : false;
-                if (!prop.skipUpdate) {
-                    return `  ${userPropName || prop.serverName || prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
-                } else {
-                    const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
-                    return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
-                }
-            }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n')
-            + ';';
+                    const userPropName = propMap ? propMap[i].name : false;
+                    if (!prop.skipUpdate) {
+                        return `  ${userPropName || prop.serverName || prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
+                    } else {
+                        const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
+                        return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
+                    }
+                }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n')
+                + ';';
         })
         .replace(UTILS.REGEXS.serverModelMapMethods, (m, p1, p2, p3, p4, p5, p6) => (
-             p1 + '\n' + ' '.repeat(4)
-                + propArray.map( (prop, i) => {
-                        const userPropName = propMap ? propMap[i].name : false;
-                        const currPropInitializationsArray = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-                        if (!prop.skipUpdate) {
-                            return p2 === 'mapReverse'
-                                ? `${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} : null`
-                                : `${p4}.${userPropName || prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : null`;
-                        } else {
-                            const skippedProp = currPropInitializationsArray.filter(el => (new RegExp(`^\\s*${p4}.${prop.name}`)).test(el))[0];
-                            return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
-                        }
-                    }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n' + ' '.repeat(4))
-                + ';'
+            p1 + '\n' + ' '.repeat(4)
+            + propArray.map( (prop, i) => {
+                const userPropName = propMap ? propMap[i].name : false;
+                const currPropInitializationsArray = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
+                if (!prop.skipUpdate) {
+                    return p2 === 'mapReverse'
+                        ? `${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} : null`
+                        : `${p4}.${userPropName || prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : null`;
+                } else {
+                    const skippedProp = currPropInitializationsArray.filter(el => (new RegExp(`^\\s*${p4}.${prop.name}`)).test(el))[0];
+                    return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
+                }
+            }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n' + ' '.repeat(4))
+            + ';'
         ));
+    if (!newServerContent) {
+        console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
+        return false;
+    }
     fs.writeFileSync(filePath, newServerContent);
 }
 
@@ -481,37 +507,41 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
         .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.trim()}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
         .replace(UTILS.REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-                return p1.trim() + '\n' + propArray.map( prop => {
-                    if (!prop.skipUpdate) {
-                       return `  ${prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
-                    } else {
-                        const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
-                        return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
-                    }
-                }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n') + ';';
+            return p1.trim() + '\n' + propArray.map( prop => {
+                if (!prop.skipUpdate) {
+                    return `  ${prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
+                } else {
+                    const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
+                    return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
+                }
+            }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n') + ';';
         })
         .replace(UTILS.REGEXS.modelConstructor, (_, p1, p2, p3, p4, p5, p6) => {
             const currConstructorArgs = (p3 + ',\n').match(/^\s*.+,[\r\n]/gm) || [];
             const currConstructorDeclarations = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
             return p1 + propArray.map( prop => {
-                            if (typeof prop.relationship === 'string') {
-                                return '';
-                            } else if (!prop.skipUpdate) {
-                                return `${prop.name}?${prop.type && !prop.value ? ': ' + prop.type : ''}`;
-                            } else {
-                                const skippedProp = currConstructorArgs.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
-                                return skippedProp ? skippedProp.trim().replace(/,*$/, '') : '';
-                            }
-                        }).filter(newPropDeclaration => newPropDeclaration.length).join(',\n' + ' '.repeat(14))
-                    + p4 + propArray.map( prop => {
-                            if (!prop.skipUpdate) {
-                                return `this.${prop.name} = typeof ${prop.relationship || prop.name} !== 'undefined' ? ${prop.relationship || prop.name} : ${prop.value ? prop.value : 'null'}`;
-                            } else {
-                                const skippedProp = currConstructorDeclarations.filter(el => (new RegExp(`^\\s*this.${prop.name}`)).test(el))[0];
-                                return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
-                            }
-                        }).filter(newPropDeclaration => newPropDeclaration && newPropDeclaration.length).join(';\n' + ' '.repeat(4)) + ';';
+                    if (typeof prop.relationship === 'string') {
+                        return '';
+                    } else if (!prop.skipUpdate) {
+                        return `${prop.name}?${prop.type && !prop.value ? ': ' + prop.type : ''}`;
+                    } else {
+                        const skippedProp = currConstructorArgs.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
+                        return skippedProp ? skippedProp.trim().replace(/,*$/, '') : '';
+                    }
+                }).filter(newPropDeclaration => newPropDeclaration.length).join(',\n' + ' '.repeat(14))
+                + p4 + propArray.map( prop => {
+                    if (!prop.skipUpdate) {
+                        return `this.${prop.name} = typeof ${prop.relationship || prop.name} !== 'undefined' ? ${prop.relationship || prop.name} : ${prop.value ? prop.value : 'null'}`;
+                    } else {
+                        const skippedProp = currConstructorDeclarations.filter(el => (new RegExp(`^\\s*this.${prop.name}`)).test(el))[0];
+                        return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
+                    }
+                }).filter(newPropDeclaration => newPropDeclaration && newPropDeclaration.length).join(';\n' + ' '.repeat(4)) + ';';
         });
+    if (!newContent) {
+        console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
+        return false;
+    }
     fs.writeFileSync(filePath, newContent);
 }
 
@@ -530,9 +560,13 @@ function writeNewDataFactoryContent(filePath, currentContent, newPropArray = [])
         .replace(UTILS.REGEXS.formControlList, (_, p1, p2, p3) => propArray && propArray.length ? (
             p1 + '\n' + ' '.repeat(6)
             + propArray.map( prop => '{' + Object.keys(prop).map( k => `${k}: ${prop[k]}` ).join(', ') + '}' )
-                          .join(',\n' + ' '.repeat(6))
+                       .join(',\n' + ' '.repeat(6))
             + '\n' + ' '.repeat(4) + p3
         ): p1 + p3);
+    if (!newContent) {
+        console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
+        return false;
+    }
     fs.writeFileSync(filePath, newContent);
 }
 
