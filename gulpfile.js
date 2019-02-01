@@ -463,7 +463,7 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
             return p1.trim() + '\n' + propArray.map( (prop, i) => {
                     const userPropName = propMap ? propMap[i].name : false;
                     if (!prop.skipUpdate) {
-                        return `  ${userPropName || prop.serverName || prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
+                        return `  ${userPropName || prop.serverName || prop.name}${prop.optional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + prop.type : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`
                     } else {
                         const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
                         return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
@@ -478,8 +478,13 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
                 const currPropInitializationsArray = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
                 if (!prop.skipUpdate) {
                     return p2 === 'mapReverse'
+<<<<<<< HEAD
                         ? `${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} : null`
                         : `${p4}.${userPropName || prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : null`;
+=======
+                        ? `    ${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`
+                        : `    ${p4}.${userPropName || prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`;
+>>>>>>> implemented handling non-stringified modelProperty.value
                 } else {
                     const skippedProp = currPropInitializationsArray.filter(el => (new RegExp(`^\\s*${p4}.${prop.name}`)).test(el))[0];
                     return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
@@ -510,7 +515,7 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
             return p1.trim() + '\n' + propArray.map( prop => {
                 if (!prop.skipUpdate) {
-                    return `  ${prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
+                    return `  ${prop.name}${prop.optional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + prop.type : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`
                 } else {
                     const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
                     return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
@@ -524,7 +529,7 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
                     if (typeof prop.relationship === 'string') {
                         return '';
                     } else if (!prop.skipUpdate) {
-                        return `${prop.name}?${prop.type && !prop.value ? ': ' + prop.type : ''}`;
+                        return `${prop.name}?${prop.type && !prop.hasOwnProperty('value') ? ': ' + prop.type : ''}`;
                     } else {
                         const skippedProp = currConstructorArgs.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
                         return skippedProp ? skippedProp.trim().replace(/,*$/, '') : '';
@@ -532,7 +537,7 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
                 }).filter(newPropDeclaration => newPropDeclaration.length).join(',\n' + ' '.repeat(14))
                 + p4 + propArray.map( prop => {
                     if (!prop.skipUpdate) {
-                        return `this.${prop.name} = typeof ${prop.relationship || prop.name} !== 'undefined' ? ${prop.relationship || prop.name} : ${prop.value ? prop.value : 'null'}`;
+                        return `this.${prop.name} = typeof ${prop.relationship || prop.name} !== 'undefined' ? ${prop.relationship || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : 'null'}`;
                     } else {
                         const skippedProp = currConstructorDeclarations.filter(el => (new RegExp(`^\\s*this.${prop.name}`)).test(el))[0];
                         return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
