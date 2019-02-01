@@ -60,11 +60,11 @@ export class UserDetailComponent extends BasePageComponent implements OnInit {
         this.user = await this.userService.getUserById(id);
         console.log('user', this.user);
         this.userFields = Object.keys(this.user);
-        this.dateOfBirth = {
-          day: this.user.dateOfBirth.getDate(),
-          month: this.user.dateOfBirth.getMonth() + 1,
-          year: this.user.dateOfBirth.getFullYear()
-        };
+        this.dateOfBirth = this.user.dateOfBirth ? {
+            day: this.user.dateOfBirth.getDate(),
+            month: this.user.dateOfBirth.getMonth() + 1,
+            year: this.user.dateOfBirth.getFullYear()
+        } : {};
         console.log('User', this.user);
       } catch (e) {
         console.log(e);
