@@ -479,11 +479,14 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
                 : `    ${p4}.${prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`;
             }) + ';'
         ))
-        .replace(UTILS.REGEXS.serverModelAttrGetters, (m, p1, p2, p3) => (
-            p1 + newPropArray
-                .filter( el => p2 === 'getMappedAttribute' ? el.hasOwnProperty('map') : el.hasOwnProperty('mapReverse') )
-                .map( el => `\n${' '.repeat(12)}case '${el.name}':\n${' '.repeat(16)}return ${el.map || el.mapReverse}`)
-        ));
+        .replace(UTILS.REGEXS.serverModelAttrGetters, (m, p1, p2, p3) => {
+            const isReverse = p2 === 'getReverseMappedAttribute';
+            return p1 + newPropArray
+                .filter(el => isReverse ? el.hasOwnProperty('mapReverse') : el.hasOwnProperty('map'))
+                .map(el => `\n${' '.repeat(12)}case '${el.name}':\n${' '.repeat(16)}return ${isReverse ? el.mapReverse : el.map};`)
+                .join('')
+            + `\n${' '.repeat(12)}default:\n${' '.repeat(16)}return typeof ${p2 === 'getMappedAttribute' ? 'model[localName] !== \'undefined\' ? model[localName]' : 'serverObject[serverName] !== \'undefined\' ? serverObject[serverName]'} : defaultValue;`
+        });
     if (!newServerContent) {
         console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
         return false;
@@ -601,32 +604,35 @@ function updateModel(name, moduleConfig, runSilent = false) {
                     console.log(color(successText[0], successText[1]));
                     return resolve(true);
                 }
-                prompt({
-                    type: 'list',
-                    name: 'serverPropMapping',
-                    message: UTILS.dynamicTexts.updateMethod(name)[0],
-                    choices: ['automatic', 'manual']
-                }).then(res => {
-                    switch (res['serverPropMapping']) {
-                        case 'automatic':
-                            writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport);
-                            console.log(color(successText[0], successText[1]));
-                            return resolve(true);
-                        case 'manual':
-                            const questions = moduleConfig['properties'].map(el => ({
-                                type: 'input',
-                                name: el.name,
-                                message: el.name + ': '
-                            }));
-                            prompt(questions).then(res => {
-                                // IMPORTANT: res is an object with keys matching newPropArray prop names
-                                const userPropMap = UTILS.getUserPropMap(res, moduleConfig['properties']);
-                                writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport, userPropMap);
-                                console.log(color(successText[0], successText[1]));
-                                return resolve(true);
-                            });
-                    }
-                });
+                writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport);
+                console.log(color(successText[0], successText[1]));
+                return resolve(true);
+                // prompt({
+                //     type: 'list',
+                //     name: 'serverPropMapping',
+                //     message: UTILS.dynamicTexts.updateMethod(name)[0],
+                //     choices: ['automatic', 'manual']
+                // }).then(res => {
+                //     switch (res['serverPropMapping']) {
+                //         case 'automatic':
+                //             writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport);
+                //             console.log(color(successText[0], successText[1]));
+                //             return resolve(true);
+                //         case 'manual':
+                //             const questions = moduleConfig['properties'].map(el => ({
+                //                 type: 'input',
+                //                 name: el.name,
+                //                 message: el.name + ': '
+                //             }));
+                //             prompt(questions).then(res => {
+                //                 // IMPORTANT: res is an object with keys matching newPropArray prop names
+                //                 const userPropMap = UTILS.getUserPropMap(res, moduleConfig['properties']);
+                //                 writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport, userPropMap);
+                //                 console.log(color(successText[0], successText[1]));
+                //                 return resolve(true);
+                //             });
+                //     }
+                // });
             });
         });
     });
