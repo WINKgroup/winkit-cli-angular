@@ -59,10 +59,11 @@ export class ServerUser {
         const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
         switch (prop.name) {
             case 'dateOfBirth':
+                return model.dateOfBirth ? model.dateOfBirth.getTime() : defaultValue;
             case 'registeredAt':
-                return model[localName] ? model[localName].getTime() : defaultValue;
+                return model.registeredAt ? model.registeredAt.getTime() : defaultValue;
             case 'userRole':
-                return typeof model[localName] !== 'undefined' ? model[localName].toString() : defaultValue;
+                return typeof model.userRole !== 'undefined' ? model.userRole.toString() : defaultValue;
             default:
                 return typeof model[localName] !== 'undefined' ? model[localName] : defaultValue;
         }
@@ -73,8 +74,9 @@ export class ServerUser {
         const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
         switch (prop.name) {
             case 'dateOfBirth':
+                return serverObject.dateOfBirth ? new Date(serverObject.dateOfBirth) : defaultValue;
             case 'registeredAt':
-                return serverObject[serverName] ? new Date(serverObject[serverName]) : defaultValue;
+                return serverObject.registeredAt ? new Date(serverObject.registeredAt) : defaultValue;
             case 'userRole':
                 return typeof serverObject.userRole !== 'undefined' ? UserRole[serverObject.userRole.toUpperCase()] : defaultValue;
             case 'fullName':
