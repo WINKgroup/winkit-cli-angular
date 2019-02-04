@@ -40,6 +40,7 @@ export class **ThisName** implements Mappable<**ThisName**> {
 `;
 
 const serverModelTemplate = `import {**ThisName**} from './**ThisName**';
+import {Server**ThisName**} from './Server**ThisName**';
 import config from '../**ThisName.toLowerCase()**.conf.json';
 
 export class Server**ThisName** {
@@ -77,28 +78,28 @@ export class Server**ThisName** {
     for (let k in config.properties) {
         const prop = config.properties[k];
         const localName = prop.mapReverseName || prop.name;
-        o[localName] = this.getReverseMappedAttribute(obj, prop);
+        o[localName] = this.getReverseMappedAttribute(serverObject, prop);
     }
     return o;
   }
-}
-
-private static getMappedAttribute(model: **ThisName**, prop: any) {
+  
+  private static getMappedAttribute(model: **ThisName**, prop: any) {
     const localName = prop.relationship || prop.name;
     const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
     switch (prop.name) {
         default:
             return typeof model[localName] !== 'undefined' ? model[localName] : defaultValue;
     }
-}
-
-private static getReverseMappedAttribute(serverObject: **ThisName**User, prop: any) {
+  }
+    
+  private static getReverseMappedAttribute(serverObject: Server**ThisName**, prop: any) {
     const serverName = prop.mapReverseRelationship || prop.serverName || prop.name;
     const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
     switch (prop.name) {
         default:
             return typeof serverObject[serverName] !== 'undefined' ? serverObject[serverName] : defaultValue;
     }
+  }
 }
 
 `;
