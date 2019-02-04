@@ -1,0 +1,12 @@
+{
+  "name": "winkit-cli-angular",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Wink S.r.l.",
+  "license": "MIT",
+  "preferGlobal": true,
+  "bin": "index.js",
+  "scripts": {
+    "release": "npm patch"
+  }
+}
