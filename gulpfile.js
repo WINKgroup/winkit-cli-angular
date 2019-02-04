@@ -9,6 +9,7 @@ const del = require('del');
 const shell = require('gulp-shell');
 const TEMPLATES = require('./resources/templates/file_templates/index');
 const UTILS = require('./resources/helpers/index');
+const {version} = require('./package.json');
 
 let config;
 try {
@@ -729,6 +730,7 @@ async function configure() {
                 }
                 const newConfigContent = JSON.stringify(config, null, 4);
                 fs.writeFileSync('./winkit.conf.json', newConfigContent);
+                fs.writeFileSync('./.winkitrc', `v${version}`);
                 createMappableFile();
                 Promise.all([
                     new Promise((resolve1, reject1) => {
