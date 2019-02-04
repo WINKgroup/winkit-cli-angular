@@ -229,9 +229,9 @@ function createListFiles(name) {
                     console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
                     resolve(false);
                 }
-                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.ts`, content, 'utf-8');
-                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.html`, content, 'utf-8');
-                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.scss`, content, 'utf-8');
+                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.ts`, tsContent, 'utf-8');
+                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.html`, htmlContent, 'utf-8');
+                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.scss`, scssContent, 'utf-8');
                 let arrayPositionRegex = /(declarations|exports): \[[\w\s\n\,]*\]/gm;
                 addToModuleOrRouting(name + 'ListComponent', `src/app/modules/${nameLowerCase}/${nameLowerCase}.module.ts`, './' + listFileRelative, arrayPositionRegex);
                 addToModuleOrRouting(name + 'ListComponent',
@@ -297,7 +297,7 @@ function createModuleFiles(name) {
         console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
         return false;
     }
-    fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.module.ts`, content, 'utf-8');
+    fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.module.ts`, moduleContent, 'utf-8');
     fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.routing.ts`, routingContent, 'utf-8');
     fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.conf.json`, TEMPLATES.configTemplate, 'utf-8');
     addToModuleOrRouting(name + 'Module',
