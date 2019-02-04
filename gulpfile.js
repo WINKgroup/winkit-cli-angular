@@ -477,6 +477,11 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
                 ? `    ${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || prop.serverName || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`
                 : `    ${p4}.${prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`;
             }) + ';'
+        ))
+        .replace(UTILS.REGEXS.serverModelAttrGetters, (m, p1, p2, p3) => (
+            p1 + newPropArray
+                .filter( el => p2 === 'getMappedAttribute' ? el.hasOwnProperty('map') : el.hasOwnProperty('mapReverse') )
+                .map( el => `\n${' '.repeat(12)}case '${el.name}':\n${' '.repeat(16)}return ${el.map || el.mapReverse}`)
         ));
     if (!newServerContent) {
         console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
