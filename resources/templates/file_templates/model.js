@@ -40,6 +40,7 @@ export class **ThisName** implements Mappable<**ThisName**> {
 `;
 
 const serverModelTemplate = `import {**ThisName**} from './**ThisName**';
+import config from '../**ThisName.toLowerCase()**.conf.json';
 
 export class Server**ThisName** {
   _id?: string;
@@ -55,6 +56,10 @@ export class Server**ThisName** {
     const o = {} as Server**ThisName**;
     o._id = typeof obj.id !== 'undefined' ? obj.id : null;
     o.wid = typeof obj.id !== 'undefined' ? obj.id : null;
+    for (let k in config.properties) {
+        const prop = config.properties[k];
+        o[prop.name] = this.getMappedAttribute(obj, prop.name, prop.hasOwnProperty('value') ? prop.value : null)
+    }
     return o;
   }
 
@@ -68,8 +73,26 @@ export class Server**ThisName** {
     const o = {} as **ThisName**;
     o.id = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
     o.wid = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
+    for (let k in config.properties) {
+        const prop = config.properties[k];
+        o[prop.name] = this.getMappedAttribute(obj, prop.name, prop.hasOwnProperty('value') ? prop.value : null)
+    }
     return o;
   }
+}
+
+private static getMappedAttribute(model: **ThisName**, attributeName: string, defaultValue: any = null) {
+    switch (attributeName) {
+        default:
+            return typeof model[attributeName] !== 'undefined' ? model[attributeName] : defaultValue;
+    }
+}
+
+private static getReverseMappedAttribute(serverObject: **ThisName**User, attributeName: string, defaultValue: any = null) {
+    switch (attributeName) {
+        default:
+            return typeof serverObject[attributeName] !== 'undefined' ? serverObject[attributeName] : defaultValue;
+    }
 }
 
 `;
