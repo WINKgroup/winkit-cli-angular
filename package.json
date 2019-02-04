@@ -6,7 +6,7 @@
   "preferGlobal": true,
   "scripts": {
     "start": "",
-    "release": "npm version patch"
+    "release": "npm version patch && git push"
   },
   "dependencies": {}
 }
