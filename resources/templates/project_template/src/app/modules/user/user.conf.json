@@ -1,6 +1,6 @@
 {
   "properties": [
-    {"name": "userRole", "type": "UserRole", "optional": true, "skipUpdate": true, "htmlConfig": {
+    {"name": "userRole", "type": "UserRole", "optional": true, "skipUpdate": true, "map": "typeof model.userRole !== 'undefined' ? model.userRole.toString() : defaultValue", "mapReverse": "typeof serverObject.userRole !== 'undefined' ? UserRole[serverObject.userRole.toUpperCase()] : defaultValue", "htmlConfig": {
       "type": "FormControlType.SELECT", "options": "that.userRoles", "disabled": "that.loadingList.user", "inputFeedbackText": "'Provide valid role'", "order": 2
     }},
     {"name": "firstName", "type": "string", "optional": true, "htmlConfig": {
@@ -21,15 +21,15 @@
     {"name": "password", "type": "string", "optional": true, "htmlConfig": {
       "ngIf": "that.isNew", "required": true, "type": "FormControlType.PASSWORD", "disabled": "that.loadingList.user", "inputFeedbackText": "'Provide valid password'", "order": 10
     }},
-    {"name": "dateOfBirth", "type": "Date", "optional": true, "skipUpdate": true},
-    {"name": "registeredAt", "type": "Date", "optional": true, "skipUpdate": true},
+    {"name": "dateOfBirth", "type": "Date", "optional": true, "skipUpdate": true, "map": "model.dateOfBirth ? model.dateOfBirth.getTime() : defaultValue", "mapReverse": "serverObject.dateOfBirth ? new Date(serverObject.dateOfBirth) : defaultValue"},
+    {"name": "registeredAt", "type": "Date", "optional": true, "skipUpdate": true, "map": "model.registeredAt ? model.registeredAt.getTime() : defaultValue", "mapReverse": "serverObject.registeredAt ? new Date(serverObject.registeredAt) : defaultValue"},
     {"name": "profileImg", "type": "string", "optional": true, "htmlConfig": {
       "type": "FormControlType.MEDIA", "allowedTypes": "that.imageAllowedTypes", "disabled": "that.loadingList.user", "wrapperClass": "'col-sm-12 mb-3'", "order": -1
     }},
-    {"name": "fullName", "type": "string", "optional": true, "skipUpdate": true},
+    {"name": "fullName", "type": "string", "optional": true, "skipUpdate": true, "mapReverse": "(serverObject.lastName || '') + (serverObject.lastName && serverObject.firstName ? ' ' : '') + (serverObject.firstName || '')"},
     {"name": "isMale", "type": "boolean", "optional": true, "htmlConfig": {
       "labelText": "'Gender'", "type": "FormControlType.SELECT", "options": "that.genders", "disabled": "that.loadingList.user", "wrapperClass": "'col-sm-12 col-md-6 mb-3'", "innerWrapperClass": "'full-width padding0'", "inputFeedbackText": "'Provide valid gender'", "order": 5
     }},
-    {"name": "media", "type": "any[]", "optional": true}
+    {"name": "media", "type": "any[]", "optional": true, "value": []}
   ]
 }
