@@ -58,7 +58,8 @@ export class Server**ThisName** {
     o.wid = typeof obj.id !== 'undefined' ? obj.id : null;
     for (let k in config.properties) {
         const prop = config.properties[k];
-        o[prop.name] = this.getMappedAttribute(obj, prop.name, prop.hasOwnProperty('value') ? prop.value : null)
+        const serverName = prop.serverName || prop.name;
+        o[serverName] = this.getMappedAttribute(obj, prop);
     }
     return o;
   }
@@ -75,23 +76,28 @@ export class Server**ThisName** {
     o.wid = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
     for (let k in config.properties) {
         const prop = config.properties[k];
-        o[prop.name] = this.getMappedAttribute(obj, prop.name, prop.hasOwnProperty('value') ? prop.value : null)
+        const localName = prop.mapReverseName || prop.name;
+        o[localName] = this.getReverseMappedAttribute(obj, prop);
     }
     return o;
   }
 }
 
-private static getMappedAttribute(model: **ThisName**, attributeName: string, defaultValue: any = null) {
-    switch (attributeName) {
+private static getMappedAttribute(model: **ThisName**, prop: any) {
+    const localName = prop.relationship || prop.name;
+    const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
+    switch (prop.name) {
         default:
-            return typeof model[attributeName] !== 'undefined' ? model[attributeName] : defaultValue;
+            return typeof model[localName] !== 'undefined' ? model[localName] : defaultValue;
     }
 }
 
-private static getReverseMappedAttribute(serverObject: **ThisName**User, attributeName: string, defaultValue: any = null) {
-    switch (attributeName) {
+private static getReverseMappedAttribute(serverObject: **ThisName**User, prop: any) {
+    const serverName = prop.mapReverseRelationship || prop.serverName || prop.name;
+    const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
+    switch (prop.name) {
         default:
-            return typeof serverObject[attributeName] !== 'undefined' ? serverObject[attributeName] : defaultValue;
+            return typeof serverObject[serverName] !== 'undefined' ? serverObject[serverName] : defaultValue;
     }
 }
 

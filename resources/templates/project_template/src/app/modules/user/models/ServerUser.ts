@@ -3,8 +3,8 @@ import {UserRole} from '../../../@core/services/session.service';
 import config from '../user.conf.json';
 
 export class ServerUser {
-    _id?: string;
-    wid?: string;
+    _id: string;
+    wid: string;
     userRole?: string;
     firstName?: string;
     lastName?: string;
@@ -30,7 +30,8 @@ export class ServerUser {
         u.wid = typeof obj.id !== 'undefined' ? obj.id : null;
         for (let k in config.properties) {
             const prop = config.properties[k];
-            u[prop.name] = this.getMappedAttribute(obj, prop.name, prop.hasOwnProperty('value') ? prop.value : null)
+            const serverName = prop.serverName || prop.name;
+            u[serverName] = this.getMappedAttribute(obj, prop);
         }
         return u;
     }
@@ -47,34 +48,39 @@ export class ServerUser {
         u.wid = typeof obj._id !== 'undefined' ? obj._id : null;
         for (let k in config.properties) {
             const prop = config.properties[k];
-            u[prop.name] = this.getReverseMappedAttribute(obj, prop.name, prop.hasOwnProperty('value') ? prop.value : null)
+            const localName = prop.mapReverseName || prop.name;
+            u[localName] = this.getReverseMappedAttribute(obj, prop);
         }
         return u;
     }
 
-    private static getMappedAttribute(model: User, attributeName: string, defaultValue: any = null) {
-        switch (attributeName) {
+    private static getMappedAttribute(model: User, prop: any) {
+        const localName = prop.relationship || prop.name;
+        const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
+        switch (prop.name) {
             case 'dateOfBirth':
             case 'registeredAt':
-                return model[attributeName] ? model[attributeName].getTime() : defaultValue;
+                return model[localName] ? model[localName].getTime() : defaultValue;
             case 'userRole':
-                return typeof model[attributeName] !== 'undefined' ? model[attributeName].toString() : defaultValue;
+                return typeof model[localName] !== 'undefined' ? model[localName].toString() : defaultValue;
             default:
-                return typeof model[attributeName] !== 'undefined' ? model[attributeName] : defaultValue;
+                return typeof model[localName] !== 'undefined' ? model[localName] : defaultValue;
         }
     }
 
-    private static getReverseMappedAttribute(serverObject: ServerUser, attributeName: string, defaultValue: any = null) {
-        switch (attributeName) {
+    private static getReverseMappedAttribute(serverObject: ServerUser, prop: any) {
+        const serverName = prop.mapReverseRelationship || prop.serverName || prop.name;
+        const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
+        switch (prop.name) {
             case 'dateOfBirth':
             case 'registeredAt':
-                return serverObject[attributeName] ? new Date(serverObject[attributeName]) : defaultValue;
+                return serverObject[serverName] ? new Date(serverObject[serverName]) : defaultValue;
             case 'userRole':
                 return typeof serverObject.userRole !== 'undefined' ? UserRole[serverObject.userRole.toUpperCase()] : defaultValue;
             case 'fullName':
                 return (serverObject.lastName || '') + (serverObject.lastName && serverObject.firstName ? ' ' : '') + (serverObject.firstName || '');
             default:
-                return typeof serverObject[attributeName] !== 'undefined' ? serverObject[attributeName] : defaultValue;
+                return typeof serverObject[serverName] !== 'undefined' ? serverObject[serverName] : defaultValue;
         }
     }
 }
