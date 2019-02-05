@@ -41,6 +41,7 @@ export class **ThisName** implements Mappable<**ThisName**> {
 
 const serverModelTemplate = `import {**ThisName**} from './**ThisName**';
 import {Server**ThisName**} from './Server**ThisName**';
+import {ModelProperty} from '../../../@core/models/ModelConfig';
 import config from '../**ThisName.toLowerCase()**.conf.json';
 
 export class Server**ThisName** {
@@ -58,7 +59,7 @@ export class Server**ThisName** {
         o._id = typeof obj.id !== 'undefined' ? obj.id : null;
         o.wid = typeof obj.id !== 'undefined' ? obj.id : null;
         for (let k in config.properties) {
-            const prop = config.properties[k];
+            const prop: ModelProperty = config.properties[k];
             if (!prop.skipUpdate) {
                 const serverName = prop.serverName || prop.name;
                 o[serverName] = this.getMappedAttribute(obj, prop);   
@@ -78,7 +79,7 @@ export class Server**ThisName** {
         o.id = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
         o.wid = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
         for (let k in config.properties) {
-            const prop = config.properties[k];
+            const prop: ModelProperty = config.properties[k];
             if (!prop.skipUpdate) {
                 const localName = prop.mapReverseName || prop.name;
                 o[localName] = this.getReverseMappedAttribute(serverObject, prop);
@@ -87,7 +88,7 @@ export class Server**ThisName** {
         return o;
     }
 
-    private static getMappedAttribute(model: **ThisName**, prop: any) {
+    private static getMappedAttribute(model: **ThisName**, prop: ModelProperty): string {
         const localName = prop.relationship || prop.name;
         const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
         switch (prop.name) {
@@ -96,7 +97,7 @@ export class Server**ThisName** {
         }
     }
 
-    private static getReverseMappedAttribute(serverObject: Server**ThisName**, prop: any) {
+    private static getReverseMappedAttribute(serverObject: Server**ThisName**, prop: ModelProperty): string {
         const serverName = prop.mapReverseRelationship || prop.serverName || prop.name;
         const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
         switch (prop.name) {
