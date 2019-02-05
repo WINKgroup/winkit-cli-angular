@@ -587,6 +587,7 @@ function updateModel(name, moduleConfig, runSilent = false) {
                 return resolve(false)
             }
             const typesToImport = UTILS.getTypesToImport(moduleConfig['properties'], 'type');
+            const serverTypesToImport = UTILS.getTypesToImport(moduleConfig['properties'], 'serverType');
             const successText = UTILS.dynamicTexts.updateSuccess(name, typesToImport);
             writeNewModelContent(modelPath, currentContent, moduleConfig['properties'], typesToImport);
             fs.readFile(serverModelPath, 'utf8', (err1, serverContent) => {
@@ -594,7 +595,7 @@ function updateModel(name, moduleConfig, runSilent = false) {
                     return resolve(false);
                 }
                 if (runSilent) {
-                    writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport);
+                    writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], serverTypesToImport);
                     return resolve(true);
                 }
                 if (moduleConfig['properties'].length === 0) {
@@ -602,7 +603,7 @@ function updateModel(name, moduleConfig, runSilent = false) {
                     console.log(color(successText[0], successText[1]));
                     return resolve(true);
                 }
-                writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport);
+                writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], serverTypesToImport);
                 console.log(color(successText[0], successText[1]));
                 return resolve(true);
                 // prompt({
