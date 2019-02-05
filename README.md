@@ -368,7 +368,7 @@ The structure of the **ModelProperty** object is the following:
 * **name** (`string`: _required_): the name of the model property;
 * **type** (`string`: _optional_): a string containing a typescript type ([more info](https://www.typescriptlang.org/docs/handbook/basic-types.html));
 * **optional** (`boolean`: _optional_): adds TypeScript's optional class marker to a property ([more info](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#optional-class-properties));
-* **value** (`string`: _optional_): a string containing the default value assigned to the model on initialization. Setting this key results in ignoring the _type_ and _optional_ keys;
+* **value** (`any`: _optional_): the default value assigned to the model on initialization. Setting this key results in ignoring the _type_ and _optional_ keys;
 * **skipUpdate** (`boolean`: _optional_): setting this value to `true` results in the model property not being added to the model or, if it already exists on the model, skipped when the model is updated using `winkit angular update|u ...`. This also means that the property will not be added to the model detail. For info on rectifying this, see [this section](#detail-form);
 * **serverName** (`string`: _optional_): name of the corresponding server model property, if different from _ModelProperty.name_;
 * **mapReverseName** (`string`: _optional_): The name of the model property to which the server model property value should be assigned in the mapReverse method of the server model;
