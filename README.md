@@ -233,14 +233,34 @@ Ex. const serverFoo = foo.mapReverse();
 ##### 2. src/app/modules/foo/models/ServerFoo.ts
 _static map(obj: Foo): ServerFoo_ : this method is called by the model _mapReverse_ function.
 
-Edit this method to manage the mapping as you need.
+If you want to initialize an attribute directly inside this method, make sure to set it's `skipUpdate` attribute in the _\<model\>.conf.json_ file to `true`.
+
+[Learn more about model configuration](#model-property-structure)
+
+Then provide the initialization logic, e.g.:
 ```
 Ex.
 const o = {} as ServerFoo;
-o.first_name = obj.firstName || null;
+o.your_attribute = obj.your_attribute || null;
 ```
 
 _static mapReverse(serverObject: ServerUser): User_ : this method is called by the  model _map_ function.
+
+Edit this method to manage the mapping as you need.
+```
+Ex.
+const o = {} as Foo;
+o.firstName = serverObject.first_name || null;
+```
+_private static getMappedAttribute(model: User, prop: ModelProperty): string_ : this method is called by the  server model _map_ function.
+
+Edit this method to manage the mapping as you need.
+```
+Ex.
+const o = {} as Foo;
+o.firstName = serverObject.first_name || null;
+```
+_private static getReverseMappedAttribute(serverObject: ServerUser, prop: ModelProperty): string_ : this method is called by the  model _map_ function.
 
 Edit this method to manage the mapping as you need.
 ```
@@ -364,6 +384,7 @@ The schema of the the _\<name\>.conf.json_ configuration file is the following:
 
 **IMPORTANT**: To exclude a ModelProperty from being updated by Winkit (ex. because you want to something custom with it), set its `skipUpdate` property to `true` (see below for more info);
 
+<a id="model-property-structure"></a>
 The structure of the **ModelProperty** object is the following:
 * **name** (`string`: _required_): the name of the model property;
 * **type** (`string`: _optional_): a string containing a typescript type ([more info](https://www.typescriptlang.org/docs/handbook/basic-types.html));
