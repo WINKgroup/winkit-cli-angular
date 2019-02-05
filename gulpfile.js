@@ -463,7 +463,7 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
             return p1.trim() + '\n' + propArray.map( (prop, i) => {
                     const userPropName = propMap ? propMap[i].name : false;
                     if (!prop.skipUpdate) {
-                        return `  ${userPropName || prop.serverName || prop.name}${prop.optional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + prop.type : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`
+                        return `  ${userPropName || prop.serverName || prop.name}${prop.optional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + (prop.serverType || prop.type) : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`
                     } else {
                         const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
                         return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
