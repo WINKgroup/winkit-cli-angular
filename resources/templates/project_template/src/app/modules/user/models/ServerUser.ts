@@ -1,5 +1,6 @@
 import {User} from './User';
 import {UserRole} from '../../../@core/services/session.service';
+import {ModelProperty} from '../../../@core/models/ModelConfig';
 import config from '../user.conf.json';
 
 export class ServerUser {
@@ -29,7 +30,7 @@ export class ServerUser {
         u._id = typeof obj.id !== 'undefined' ? obj.id : null;
         u.wid = typeof obj.id !== 'undefined' ? obj.id : null;
         for (let k in config.properties) {
-            const prop = config.properties[k];
+            const prop: ModelProperty = config.properties[k];
             if (!prop.skipUpdate) {
                 const serverName = prop.serverName || prop.name;
                 u[serverName] = this.getMappedAttribute(obj, prop);
@@ -49,7 +50,7 @@ export class ServerUser {
         u.id = typeof obj._id !== 'undefined' ? obj._id : null;
         u.wid = typeof obj._id !== 'undefined' ? obj._id : null;
         for (let k in config.properties) {
-            const prop = config.properties[k];
+            const prop: ModelProperty = config.properties[k];
             if (!prop.skipUpdate) {
                 const localName = prop.mapReverseName || prop.name;
                 u[localName] = this.getReverseMappedAttribute(obj, prop);
@@ -58,7 +59,7 @@ export class ServerUser {
         return u;
     }
 
-    private static getMappedAttribute(model: User, prop: any) {
+    private static getMappedAttribute(model: User, prop: ModelProperty) {
         const localName = prop.relationship || prop.name;
         const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
         switch (prop.name) {
@@ -73,7 +74,7 @@ export class ServerUser {
         }
     }
 
-    private static getReverseMappedAttribute(serverObject: ServerUser, prop: any) {
+    private static getReverseMappedAttribute(serverObject: ServerUser, prop: ModelProperty) {
         const serverName = prop.mapReverseRelationship || prop.serverName || prop.name;
         const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
         switch (prop.name) {
