@@ -59,7 +59,7 @@ export class ServerUser {
         return u;
     }
 
-    private static getMappedAttribute(model: User, prop: ModelProperty) {
+    private static getMappedAttribute(model: User, prop: ModelProperty): string {
         const localName = prop.relationship || prop.name;
         const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
         switch (prop.name) {
@@ -74,7 +74,7 @@ export class ServerUser {
         }
     }
 
-    private static getReverseMappedAttribute(serverObject: ServerUser, prop: ModelProperty) {
+    private static getReverseMappedAttribute(serverObject: ServerUser, prop: ModelProperty): string {
         const serverName = prop.mapReverseRelationship || prop.serverName || prop.name;
         const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
         switch (prop.name) {
