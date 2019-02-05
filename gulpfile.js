@@ -473,8 +473,8 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
         .replace(UTILS.REGEXS.serverModelMapMethods, (m, p1, p2, p3, p4, p5) => (
             p1 + '\n' + primaryKeyList.map( (prop, i) => {
                     return p2 === 'mapReverse'
-                        ? `    ${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || prop.serverName || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`
-                        : `    ${p4}.${prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`;
+                        ? `${' '.repeat(8)}${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || prop.serverName || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`
+                        : `${' '.repeat(8)}${p4}.${prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`;
                 }).join(';\n') + ';'
         ))
         .replace(UTILS.REGEXS.serverModelAttrGetters, (m, p1, p2, p3) => {
