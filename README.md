@@ -490,7 +490,6 @@ static mapReverse(serverObject: ServerZuno): Zuno {
 }
 ...
 ```
-NOTE: Before the server model is generated, you are prompted to choose the update method. Choosing `automatic` will result in using the property names provided in the configuration file. Choosing the `manual` option triggers a simple property mapping tool, where you can provide new names for server-side properties.
 
 ##### 3. src/app/modules/foo/models/FooDataFactory.ts
 
