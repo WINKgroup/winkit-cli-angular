@@ -46,7 +46,7 @@ import config from '../**ThisName.toLowerCase()**.conf.json';
 export class Server**ThisName** {
   _id?: string;
   wid?: string;
-  
+
   /**
    * call this method to map the **ThisName** to Server**ThisName**
    *
@@ -82,7 +82,7 @@ export class Server**ThisName** {
     }
     return o;
   }
-  
+
   private static getMappedAttribute(model: **ThisName**, prop: any) {
     const localName = prop.relationship || prop.name;
     const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
@@ -91,7 +91,7 @@ export class Server**ThisName** {
             return typeof model[localName] !== 'undefined' ? model[localName] : defaultValue;
     }
   }
-    
+
   private static getReverseMappedAttribute(serverObject: Server**ThisName**, prop: any) {
     const serverName = prop.mapReverseRelationship || prop.serverName || prop.name;
     const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
