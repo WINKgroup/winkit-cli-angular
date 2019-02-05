@@ -30,8 +30,10 @@ export class ServerUser {
         u.wid = typeof obj.id !== 'undefined' ? obj.id : null;
         for (let k in config.properties) {
             const prop = config.properties[k];
-            const serverName = prop.serverName || prop.name;
-            u[serverName] = this.getMappedAttribute(obj, prop);
+            if (!prop.skipUpdate) {
+                const serverName = prop.serverName || prop.name;
+                u[serverName] = this.getMappedAttribute(obj, prop);
+            }
         }
         return u;
     }
@@ -48,8 +50,10 @@ export class ServerUser {
         u.wid = typeof obj._id !== 'undefined' ? obj._id : null;
         for (let k in config.properties) {
             const prop = config.properties[k];
-            const localName = prop.mapReverseName || prop.name;
-            u[localName] = this.getReverseMappedAttribute(obj, prop);
+            if (!prop.skipUpdate) {
+                const localName = prop.mapReverseName || prop.name;
+                u[localName] = this.getReverseMappedAttribute(obj, prop);
+            }
         }
         return u;
     }
