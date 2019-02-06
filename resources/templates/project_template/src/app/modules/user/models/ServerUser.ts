@@ -22,7 +22,7 @@ export class ServerUser {
     /**
      * call this method to map the User to ServerUser
      *
-     * @param {} obj
+     * @param {User} obj
      * @returns {ServerUser}
      */
     static map(obj: User): ServerUser {
@@ -43,7 +43,7 @@ export class ServerUser {
      * call this method to map the ServerUser to User
      *
      * @param {ServerUser} obj
-     * @returns {}
+     * @returns {User}
      */
     static mapReverse(obj: ServerUser): User {
         const u = {} as User;
@@ -60,7 +60,7 @@ export class ServerUser {
     }
 
     /**
-     * Computes the value of the ServerUser object based on the User object
+     * Computes the value of a given ServerUser object attribute based on the User object
      *
      * @param {User} model
      * @param {ModelProperty} prop
@@ -81,7 +81,7 @@ export class ServerUser {
     }
 
     /**
-     * Computes the value of the User object based on the ServerUser object
+     * Computes the value of a given User object attribute based on the ServerUser object
      *
      * @param {ServerUser} serverObject
      * @param {ModelProperty} prop
