@@ -221,53 +221,35 @@ This command will generate the following file structure in the _src/app/modules/
 NOTE: The _foo/_ directory and the _foo.conf.json_, _foo.module.ts_ and _foo.routing.ts_ files are only generated if they don't exist yet.
 
 ##### 1. src/app/modules/foo/models/Foo.ts
-_map(obj: ServerFoo): Foo_ : maps the model starting from its server model.
-```
-Ex. const foo = new Foo().map(serverFoo);
-```
+* _map(obj: ServerFoo): Foo_ : maps the model starting from its server model.
+    ```
+    Ex. const foo = new Foo().map(serverFoo);
+    ```
 
-_mapReverse(): ServerFoo_ : maps the model starting from its server model.
-```
-Ex. const serverFoo = foo.mapReverse();
-```
+* _mapReverse(): ServerFoo_ : maps the model starting from its server model.
+    ```
+    Ex. const serverFoo = foo.mapReverse();
+    ```
 ##### 2. src/app/modules/foo/models/ServerFoo.ts
-_static map(obj: Foo): ServerFoo_ : this method is called by the model _mapReverse_ function.
+* _static map(obj: Foo): ServerFoo_ : this method is called by the model _mapReverse_ function.
 
-If you want to initialize an attribute directly inside this method, make sure to set it's `skipUpdate` attribute in the _\<model\>.conf.json_ file to `true`.
+    If you want to initialize an attribute directly inside this method, make sure to set it's `skipUpdate` attribute in the _\<model\>.conf.json_ file to `true`.
+    
+    [Learn more about model configuration](#model-property-structure)
+    
+    Then provide the initialization logic, e.g.:
+    ```
+    Ex.
+    const o = {} as ServerFoo;
+    o.your_attribute = obj.your_attribute || null;
+    ```
 
-[Learn more about model configuration](#model-property-structure)
+* _static mapReverse(serverObject: ServerUser): User_ : this method is called by the  model _map_ function. Same provisions apply as for the _map_ method (see above).
 
-Then provide the initialization logic, e.g.:
-```
-Ex.
-const o = {} as ServerFoo;
-o.your_attribute = obj.your_attribute || null;
-```
+* _private static getMappedAttribute(model: User, prop: ModelProperty): string_ : this method is used in the server model _map_ function to compute the value of the model attribute.
 
-_static mapReverse(serverObject: ServerUser): User_ : this method is called by the  model _map_ function.
+* _private static getReverseMappedAttribute(serverObject: ServerUser, prop: ModelProperty): string_ : this method is called by the server model _mapReverse_ function to compute the value of the server model attribute.
 
-Edit this method to manage the mapping as you need.
-```
-Ex.
-const o = {} as Foo;
-o.firstName = serverObject.first_name || null;
-```
-_private static getMappedAttribute(model: User, prop: ModelProperty): string_ : this method is called by the  server model _map_ function.
-
-Edit this method to manage the mapping as you need.
-```
-Ex.
-const o = {} as Foo;
-o.firstName = serverObject.first_name || null;
-```
-_private static getReverseMappedAttribute(serverObject: ServerUser, prop: ModelProperty): string_ : this method is called by the  model _map_ function.
-
-Edit this method to manage the mapping as you need.
-```
-Ex.
-const o = {} as Foo;
-o.firstName = serverObject.first_name || null;
-```
 ##### 3. src/app/modules/foo/models/FooDataFactory.ts
 File providing data used by the model's components. This file is updated by Winkit Angular.
 
