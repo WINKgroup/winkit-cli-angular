@@ -378,12 +378,12 @@ Updates a model based on the configuration in the _\<name\>.conf.json_ file.
 ([example configuration file](https://github.com/WINKgroup/winkit-cli-angular/blob/master/resources/templates/project_template/src/app/modules/user/user.conf.json))
 
 The schema of the _\<name\>.conf.json_ configuration file is the following:
-* **"properties"** (`Array<ModelProperty>`): an array of ModelProperty objects.
+* **"properties"** (`Array<ModelProperty>`): an array of [ModelProperty](https://github.com/WINKgroup/winkit-cli-angular/tree/master/resources/templates/project_template/src/app/@core/models/ModelConfig.ts) objects.
 
-**IMPORTANT**: To exclude a ModelProperty from being updated by Winkit (ex. because you want to something custom with it), set its `skipUpdate` property to `true` (see below for more info);
+**IMPORTANT**: To exclude a [ModelProperty](https://github.com/WINKgroup/winkit-cli-angular/tree/master/resources/templates/project_template/src/app/@core/models/ModelConfig.ts) from being updated by Winkit (ex. because you want to something custom with it), set its `skipUpdate` property to `true` (see below for more info);
 
 <a id="model-property-structure"></a>
-The structure of the **ModelProperty** object is the following:
+The structure of the [ModelProperty](https://github.com/WINKgroup/winkit-cli-angular/tree/master/resources/templates/project_template/src/app/@core/models/ModelConfig.ts) object is the following:
 * **name** (`string`: _required_): the name of the model property;
 * **type** (`string`: _optional_): a string containing a typescript type ([more info](https://www.typescriptlang.org/docs/handbook/basic-types.html));
 * **optional** (`boolean`: _optional_): adds TypeScript's optional class marker to a property ([more info](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#optional-class-properties));
