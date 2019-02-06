@@ -377,7 +377,7 @@ Updates a model based on the configuration in the _\<name\>.conf.json_ file.
 
 ([example configuration file](https://github.com/WINKgroup/winkit-cli-angular/blob/master/resources/templates/project_template/src/app/modules/user/user.conf.json))
 
-The schema of the the _\<name\>.conf.json_ configuration file is the following:
+The schema of the _\<name\>.conf.json_ configuration file is the following:
 * **"properties"** (`Array<ModelProperty>`): an array of ModelProperty objects.
 
 **IMPORTANT**: To exclude a ModelProperty from being updated by Winkit (ex. because you want to something custom with it), set its `skipUpdate` property to `true` (see below for more info);
