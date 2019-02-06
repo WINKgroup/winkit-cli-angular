@@ -230,6 +230,8 @@ NOTE: The _foo/_ directory and the _foo.conf.json_, _foo.module.ts_ and _foo.rou
     ```
     Ex. const serverFoo = foo.mapReverse();
     ```
+
+<a id="generate-model-server"></a>
 ##### 2. src/app/modules/foo/models/ServerFoo.ts
 * _static map(obj: Foo): ServerFoo_ : this method is called by the model _mapReverse_ function.
 
@@ -246,9 +248,21 @@ NOTE: The _foo/_ directory and the _foo.conf.json_, _foo.module.ts_ and _foo.rou
 
 * _static mapReverse(serverObject: ServerUser): User_ : this method is called by the  model _map_ function. Same provisions apply as for the _map_ method (see above).
 
-* _private static getMappedAttribute(model: User, prop: ModelProperty): string_ : this method is used in the server model _map_ function to compute the value of the model attribute.
+* _private static getMappedAttribute(model: User, prop: ModelProperty): string_ : this method is used in the server model _map_ function to compute the value of the server model attribute.
+    
+    The default logic is:
+    ```angularjs
+    typeof model[localName] !== 'undefined' ? model[localName] : defaultValue
+    ```
+    To provide your own logic, use the `"map"` attribute of the [ModelProperty object](#update-model) in _\<model\>.conf.json_
 
-* _private static getReverseMappedAttribute(serverObject: ServerUser, prop: ModelProperty): string_ : this method is called by the server model _mapReverse_ function to compute the value of the server model attribute.
+* _private static getReverseMappedAttribute(serverObject: ServerUser, prop: ModelProperty): string_ : this method is called by the server model _mapReverse_ function to compute the value of the model attribute.
+
+    The default logic is:
+    ```angularjs
+    typeof serverObject[serverName] !== 'undefined' ? serverObject[serverName] : defaultValue
+    ```
+    To provide your own logic, use the `"mapReverse"` attribute of the [ModelProperty object](#update-model) in _\<model\>.conf.json_
 
 ##### 3. src/app/modules/foo/models/FooDataFactory.ts
 File providing data used by the model's components. This file is updated by Winkit Angular.
@@ -377,9 +391,11 @@ The structure of the **ModelProperty** object is the following:
 * **mapReverseName** (`string`: _optional_): The name of the model property to which the server model property value should be assigned in the mapReverse method of the server model;
 * **relationship** (`string`: _optional_): Maps the value of the provided model property to the current property, e.g. the following configuration: `{"name": "wid", "relationship": "id", ...}` will result in mapping the value of the `id` property to the `wid` property in the model _constructor_ and the server model _map_ method;
 * **mapReverseRelationship** (`string`: _optional_): Maps the value of the provided server model property to the current property, e.g. the following configuration: `{"name": "wid", "mapReverseRelationship": "_id", ...}` will result in mapping the value of the `_id` property to the `wid` property in the server model _mapReverse_ method;
+* **map** (`string`: _optional_): Contains the logic used to assign a value to the server model property inside the [Server\<Model\>.map method](#generate-model-server);
+* **mapReverse** (`string`: _optional_): Contains the logic used to assign a value to the model property inside the [Server\<Model\>.mapReverse method](#generate-model-server);
 * **htmlConfig** (`object`: _optional_): An object containing configuration of a single form control element. __Must be set__ for the form control element to be displayed in the detail component of a given model. For more information see [Structure of the htmlConfig object](#structure-of-the-htmlConfig-object) section below;
 
-NOTE: The _id_, __id_ and _wid_ model properties are not affected by the _\<name\>.conf.json_ configuration.
+NOTE: The primary key property settings are not affected by the _\<name\>.conf.json_ configuration.
 
 #### STRUCTURE OF THE `htmlConfig` OBJECT
 
