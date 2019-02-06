@@ -87,7 +87,13 @@ export class Server**ThisName** {
         }
         return o;
     }
-
+    
+    /**
+     * Computes the value of a given Server**ThisName** object attribute based on the **ThisName** object
+     *
+     * @param {**ThisName**} model
+     * @param {ModelProperty} prop
+     */
     private static getMappedAttribute(model: **ThisName**, prop: ModelProperty): string {
         const localName = prop.relationship || prop.name;
         const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
@@ -96,7 +102,13 @@ export class Server**ThisName** {
                 return typeof model[localName] !== 'undefined' ? model[localName] : defaultValue;
         }
     }
-
+    
+    /**
+     * Computes the value of a given **ThisName** object attribute based on the Server**ThisName** object
+     *
+     * @param {Server**ThisName**} serverObject
+     * @param {ModelProperty} prop
+     */
     private static getReverseMappedAttribute(serverObject: Server**ThisName**, prop: ModelProperty): string {
         const serverName = prop.mapReverseRelationship || prop.serverName || prop.name;
         const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
