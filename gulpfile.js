@@ -462,7 +462,7 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
             return p1.trim() + '\n' + propArray.map( (prop, i) => {
                     const userPropName = propMap ? propMap[i].name : false;
                     if (!prop.skipUpdate) {
-                        return `    ${userPropName || prop.serverName || prop.name}${prop.optional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + (prop.serverType || prop.type) : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`
+                        return `    ${userPropName || prop.serverName || prop.name}${prop.isOptional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + (prop.serverType || prop.type) : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`
                     } else {
                         const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
                         return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
@@ -508,7 +508,7 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
             return p1.trim() + '\n' + propArray.map( prop => {
                 if (!prop.skipUpdate) {
-                    return `  ${prop.name}${prop.optional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + prop.type : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`
+                    return `  ${prop.name}${prop.isOptional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + prop.type : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`
                 } else {
                     const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
                     return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';

@@ -6,7 +6,7 @@ import {
 export interface ModelProperty {
     name: string;
     type?: string;
-    optional?: boolean;
+    isOptional?: boolean;
     value?: any;
     skipUpdate?: boolean;
     serverName?: string;
