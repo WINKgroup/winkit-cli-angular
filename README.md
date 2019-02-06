@@ -265,7 +265,9 @@ NOTE: The _foo/_ directory and the _foo.conf.json_, _foo.module.ts_ and _foo.rou
     To provide your own logic, use the `"mapReverse"` attribute of the [ModelProperty object](#update-model) in _\<model\>.conf.json_
 
 ##### 3. src/app/modules/foo/models/FooDataFactory.ts
-File providing data used by the model's components. This file is updated by Winkit Angular.
+File providing data used by the model's components. This file is updated by Winkit Angular based on the `htmlConfig` configuration in model properties.
+* [updating Winkit models](#update-model)
+* [htmlConfig object structure](#html-config-structure)
 
 ##### 4. src/app/modules/foo/foo.conf.json
 The model configuration file. For more information on using the file, see the [update model](#update-model) documentation.
@@ -397,6 +399,7 @@ The structure of the **ModelProperty** object is the following:
 
 NOTE: The primary key property settings are not affected by the _\<name\>.conf.json_ configuration.
 
+<a id="html-config-structure"></a>
 #### STRUCTURE OF THE `htmlConfig` OBJECT
 
 The structure of `htmlConfig` object mostly reflects [attributes of an HTMLInputElement](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) but also has some additional settings:
