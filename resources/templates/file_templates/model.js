@@ -40,7 +40,6 @@ export class **ThisName** implements Mappable<**ThisName**> {
 `;
 
 const serverModelTemplate = `import {**ThisName**} from './**ThisName**';
-import {Server**ThisName**} from './Server**ThisName**';
 import {ModelProperty} from '../../../@core/models/ModelConfig';
 import config from '../**ThisName.toLowerCase()**.conf.json';
 
