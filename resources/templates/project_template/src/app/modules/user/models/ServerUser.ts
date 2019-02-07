@@ -29,13 +29,12 @@ export class ServerUser {
         const u = {} as ServerUser;
         u._id = typeof obj.id !== 'undefined' ? obj.id : null;
         u.wid = typeof obj.id !== 'undefined' ? obj.id : null;
-        for (let k in config.properties) {
-            const prop: ModelProperty = config.properties[k];
+        config.properties.forEach((prop: ModelProperty) => {
             if (prop.existsOnServer !== false) {
                 const serverName = prop.serverName || prop.name;
                 u[serverName] = this.getMappedAttribute(obj, prop);
             }
-        }
+        });
         return u;
     }
 
@@ -49,13 +48,12 @@ export class ServerUser {
         const u = {} as User;
         u.id = typeof obj._id !== 'undefined' ? obj._id : null;
         u.wid = typeof obj._id !== 'undefined' ? obj._id : null;
-        for (let k in config.properties) {
-            const prop: ModelProperty = config.properties[k];
+        config.properties.forEach((prop: ModelProperty) => {
             if (prop.existsOnModel !== false) {
                 const localName = prop.mapReverseName || prop.name;
                 u[localName] = this.getReverseMappedAttribute(obj, prop);
             }
-        }
+        });
         return u;
     }
 
