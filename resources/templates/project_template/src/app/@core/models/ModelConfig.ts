@@ -11,8 +11,8 @@ export interface ModelProperty {
     isManuallyUpdated?: boolean;
     serverName?: string;
     serverType?: string;
-    existsOnServer?: boolean;
-    existsOnModel?: boolean;
+    existsOnServerOnly?: boolean;
+    existsOnModelOnly?: boolean;
     mapReverseName?: string;
     relationship?: string;
     mapReverseRelationship?: string;
