@@ -606,32 +606,6 @@ function updateModel(name, moduleConfig, runSilent = false) {
                 writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], serverTypesToImport);
                 console.log(color(successText[0], successText[1]));
                 return resolve(true);
-                // prompt({
-                //     type: 'list',
-                //     name: 'serverPropMapping',
-                //     message: UTILS.dynamicTexts.updateMethod(name)[0],
-                //     choices: ['automatic', 'manual']
-                // }).then(res => {
-                //     switch (res['serverPropMapping']) {
-                //         case 'automatic':
-                //             writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport);
-                //             console.log(color(successText[0], successText[1]));
-                //             return resolve(true);
-                //         case 'manual':
-                //             const questions = moduleConfig['properties'].map(el => ({
-                //                 type: 'input',
-                //                 name: el.name,
-                //                 message: el.name + ': '
-                //             }));
-                //             prompt(questions).then(res => {
-                //                 // IMPORTANT: res is an object with keys matching newPropArray prop names
-                //                 const userPropMap = UTILS.getUserPropMap(res, moduleConfig['properties']);
-                //                 writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport, userPropMap);
-                //                 console.log(color(successText[0], successText[1]));
-                //                 return resolve(true);
-                //             });
-                //     }
-                // });
             });
         });
     });
