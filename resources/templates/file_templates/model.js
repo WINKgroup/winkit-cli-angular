@@ -61,7 +61,7 @@ export class Server**ThisName** {
             const prop: ModelProperty = config.properties[k];
             if (!prop.skipUpdate) {
                 const serverName = prop.serverName || prop.name;
-                o[serverName] = this.getMappedAttribute(obj, prop);   
+                o[serverName] = this.getMappedAttribute(obj, prop);
             }
         }
         return o;
