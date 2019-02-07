@@ -31,7 +31,7 @@ export class ServerUser {
         u.wid = typeof obj.id !== 'undefined' ? obj.id : null;
         for (let k in config.properties) {
             const prop: ModelProperty = config.properties[k];
-            if (!prop.skipUpdate) {
+            if (prop.existsOnServer !== false) {
                 const serverName = prop.serverName || prop.name;
                 u[serverName] = this.getMappedAttribute(obj, prop);
             }
@@ -51,7 +51,7 @@ export class ServerUser {
         u.wid = typeof obj._id !== 'undefined' ? obj._id : null;
         for (let k in config.properties) {
             const prop: ModelProperty = config.properties[k];
-            if (!prop.skipUpdate) {
+            if (prop.existsOnModel !== false) {
                 const localName = prop.mapReverseName || prop.name;
                 u[localName] = this.getReverseMappedAttribute(obj, prop);
             }

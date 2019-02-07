@@ -26,7 +26,7 @@
     {"name": "profileImg", "type": "string", "isOptional": true, "htmlConfig": {
       "type": "FormControlType.MEDIA", "allowedTypes": "that.imageAllowedTypes", "disabled": "that.loadingList.user", "wrapperClass": "'col-sm-12 mb-3'", "order": -1
     }},
-    {"name": "fullName", "type": "string", "isOptional": true},
+    {"name": "fullName", "type": "string", "isOptional": true, "isManuallyUpdated": true, "existsOnServer": false},
     {"name": "isMale", "type": "boolean", "isOptional": true, "htmlConfig": {
       "labelText": "'Gender'", "type": "FormControlType.SELECT", "options": "that.genders", "disabled": "that.loadingList.user", "wrapperClass": "'col-sm-12 col-md-6 mb-3'", "innerWrapperClass": "'full-width padding0'", "inputFeedbackText": "'Provide valid gender'", "order": 5
     }},
