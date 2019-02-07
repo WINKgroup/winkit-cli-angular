@@ -86,7 +86,7 @@ export class Server**ThisName** {
         }
         return o;
     }
-    
+
     /**
      * Computes the value of a given Server**ThisName** object attribute based on the **ThisName** object
      *
@@ -101,7 +101,7 @@ export class Server**ThisName** {
                 return typeof model[localName] !== 'undefined' ? model[localName] : defaultValue;
         }
     }
-    
+
     /**
      * Computes the value of a given **ThisName** object attribute based on the Server**ThisName** object
      *
