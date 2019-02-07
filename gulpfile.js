@@ -477,15 +477,7 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
                         ? `${' '.repeat(8)}${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || prop.serverName || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`
                         : `${' '.repeat(8)}${p4}.${prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`;
                 }).join(';\n') + ';'
-        ))
-        .replace(UTILS.REGEXS.serverModelAttrGetters, (m, p1, p2, p3) => {
-            const isReverse = p2 === 'getReverseMappedAttribute';
-            return p1 + newPropArray
-                .filter(el => isReverse ? el.hasOwnProperty('mapReverse') : el.hasOwnProperty('map'))
-                .map(el => `\n${' '.repeat(12)}case '${el.name}':\n${' '.repeat(16)}return ${isReverse ? el.mapReverse : el.map};`)
-                .join('')
-            + `\n${' '.repeat(12)}default:\n${' '.repeat(16)}return typeof ${p2 === 'getMappedAttribute' ? 'model[localName] !== \'undefined\' ? model[localName]' : 'serverObject[serverName] !== \'undefined\' ? serverObject[serverName]'} : defaultValue;`
-        });
+        ));
     if (!newServerContent) {
         console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
         return false;
