@@ -14,8 +14,6 @@ export interface ModelProperty {
     mapReverseName?: string;
     relationship?: string;
     mapReverseRelationship?: string;
-    map?: string;
-    mapReverse?: string;
     htmlConfig?: FormControlGeneric | FormControlSelect | FormControlMedia | FormControlTextArea;
 }
 
