@@ -462,7 +462,7 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
             return p1.trim() + '\n' + propArray.map( (prop, i) => {
                     const userPropName = propMap ? propMap[i].name : false;
-                    if (!prop.skipUpdate) {
+                    if (!prop.isManuallyUpdated) {
                         return `    ${userPropName || prop.serverName || prop.name}${prop.isOptional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + (prop.serverType || prop.type) : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`
                     } else {
                         const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
@@ -500,7 +500,7 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
         .replace(UTILS.REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
             return p1.trim() + '\n' + propArray.map( prop => {
-                if (!prop.skipUpdate) {
+                if (!prop.isManuallyUpdated) {
                     return `  ${prop.name}${prop.isOptional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + prop.type : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`
                 } else {
                     const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
@@ -514,7 +514,7 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
             return p1 + propArray.map( prop => {
                     if (typeof prop.relationship === 'string') {
                         return '';
-                    } else if (!prop.skipUpdate) {
+                    } else if (!prop.isManuallyUpdated) {
                         return `${prop.name}?${prop.type && !prop.hasOwnProperty('value') ? ': ' + prop.type : ''}`;
                     } else {
                         const skippedProp = currConstructorArgs.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
@@ -522,7 +522,7 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
                     }
                 }).filter(newPropDeclaration => newPropDeclaration.length).join(',\n' + ' '.repeat(14))
                 + p4 + propArray.map( prop => {
-                    if (!prop.skipUpdate) {
+                    if (!prop.isManuallyUpdated) {
                         return `this.${prop.name} = typeof ${prop.relationship || prop.name} !== 'undefined' ? ${prop.relationship || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : 'null'}`;
                     } else {
                         const skippedProp = currConstructorDeclarations.filter(el => (new RegExp(`^\\s*this.${prop.name}`)).test(el))[0];
@@ -618,7 +618,7 @@ function updateDetail(name, moduleConfig, runSilent = false) {
         }
         const {dataFactoryPath} = UTILS.getModulePaths(name, true);
         const formControlList = moduleConfig['properties']
-            .filter( el => el.hasOwnProperty('htmlConfig') && !el.skipUpdate )
+            .filter( el => el.hasOwnProperty('htmlConfig') && !el.isManuallyUpdated )
             .map( el => {
               let formControl = {name: `'${el.name}'`, type: 'FormControlType.TEXT', ...el.htmlConfig};
               formControl.primaryKey = el.primaryKey;

@@ -8,9 +8,11 @@ export interface ModelProperty {
     type?: string;
     isOptional?: boolean;
     value?: any;
-    skipUpdate?: boolean;
+    isManuallyUpdated?: boolean;
     serverName?: string;
     serverType?: string;
+    existsOnServer?: boolean;
+    existsOnModel?: boolean;
     mapReverseName?: string;
     relationship?: string;
     mapReverseRelationship?: string;
