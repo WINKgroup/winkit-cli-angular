@@ -58,7 +58,7 @@ export class Server**ThisName** {
         o._id = typeof obj.id !== 'undefined' ? obj.id : null;
         o.wid = typeof obj.id !== 'undefined' ? obj.id : null;
         config.properties.forEach((prop: ModelProperty) => {
-            if (prop.existsOnServer !== false) {
+            if (!prop.existsOnModelOnly) {
                 const serverName = prop.serverName || prop.name;
                 o[serverName] = this.getMappedAttribute(obj, prop);
             }
@@ -77,7 +77,7 @@ export class Server**ThisName** {
         o.id = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
         o.wid = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
         config.properties.forEach((prop: ModelProperty) => {
-            if (prop.existsOnModel !== false) {
+            if (!prop.existsOnServerOnly) {
                 const localName = prop.mapReverseName || prop.name;
                 o[localName] = this.getReverseMappedAttribute(obj, prop);
             }
