@@ -91,7 +91,7 @@ export class Server**ThisName** {
      * @param {**ThisName**} model
      * @param {ModelProperty} prop
      */
-    private static getMappedAttribute(model: **ThisName**, prop: ModelProperty): string {
+    private static getMappedAttribute(model: **ThisName**, prop: ModelProperty): any {
         const localName = prop.relationship || prop.name;
         const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
         switch (prop.name) {
@@ -106,7 +106,7 @@ export class Server**ThisName** {
      * @param {Server**ThisName**} serverObject
      * @param {ModelProperty} prop
      */
-    private static getReverseMappedAttribute(serverObject: Server**ThisName**, prop: ModelProperty): string {
+    private static getReverseMappedAttribute(serverObject: Server**ThisName**, prop: ModelProperty): any {
         const serverName = prop.mapReverseRelationship || prop.serverName || prop.name;
         const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
         switch (prop.name) {
