@@ -1,4 +1,5 @@
 'use strict';
+const {version} = require('./package.json');
 
 const {init, createModel, createService, createList, createDetail, updateModel, updateDetail, deleteModel} = require('./gulpfile');
 const {elementTypes} = require('./resources/helpers/index');
@@ -15,8 +16,6 @@ const AngularCommands = {
     help: 'help',
     version: 'version'
 };
-
-const version = '0.0.1';
 
 const command = {
     command: 'angular <command>',

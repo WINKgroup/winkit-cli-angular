@@ -9,6 +9,7 @@ const del = require('del');
 const shell = require('gulp-shell');
 const TEMPLATES = require('./resources/templates/file_templates/index');
 const UTILS = require('./resources/helpers/index');
+const {version} = require('./package.json');
 
 let config;
 try {
@@ -477,8 +478,8 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
                 const currPropInitializationsArray = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
                 if (!prop.skipUpdate) {
                     return p2 === 'mapReverse'
-                        ? `${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} : null`
-                        : `${p4}.${userPropName || prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : null`;
+                        ? `    ${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} : null`
+                        : `    ${p4}.${userPropName || prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : null`;
                 } else {
                     const skippedProp = currPropInitializationsArray.filter(el => (new RegExp(`^\\s*${p4}.${prop.name}`)).test(el))[0];
                     return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
@@ -763,6 +764,7 @@ async function configure() {
                 }
                 const newConfigContent = JSON.stringify(config, null, 4);
                 fs.writeFileSync('./winkit.conf.json', newConfigContent);
+                fs.writeFileSync('./.winkitrc', `v${version}`);
                 createMappableFile();
                 Promise.all([
                     new Promise((resolve1, reject1) => {
