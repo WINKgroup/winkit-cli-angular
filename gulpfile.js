@@ -460,23 +460,39 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
         .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.trim()}\n\/\/ TODO verify the following imports: ${typesToImport.filter(type => RegExp(`\\b${type}\\b`).test(p1)).join(', ')};\n\n${p3.trim()}` : p1.trim() + '\n\n' + p3)
         .replace(UTILS.REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-            return p1.trim() + '\n' + propArray.map( (prop, i) => {
-                    const userPropName = propMap ? propMap[i].name : false;
-                    if (!prop.isManuallyUpdated) {
-                        return `    ${userPropName || prop.serverName || prop.name}${prop.isOptional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + (prop.serverType || prop.type) : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`
-                    } else {
-                        const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
-                        return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
-                    }
-                }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n')
-                + ';';
+            return p1.trim() + '\n' + propArray
+                    .map( (prop, i) => {
+                        const userPropName = propMap ? propMap[i].name : false;
+                        if (!prop.isManuallyUpdated) {
+                            return `    ${userPropName || prop.serverName || prop.name}${prop.isOptional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + (prop.serverType || prop.type) : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`
+                        } else {
+                            const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
+                            return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
+                        }
+                    })
+                    .filter(newPropDeclaration => newPropDeclaration.length).join(';\n')
+                    + ';';
         })
         .replace(UTILS.REGEXS.serverModelMapMethods, (m, p1, p2, p3, p4, p5) => (
-            p1 + '\n' + primaryKeyList.map( (prop, i) => {
+            p1 + '\n' + primaryKeyList
+                .map( (prop, i) => {
                     return p2 === 'mapReverse'
                         ? `${' '.repeat(8)}${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || prop.serverName || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`
                         : `${' '.repeat(8)}${p4}.${prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`;
-                }).join(';\n') + ';'
+                })
+                .join(';\n')
+                + ';'
+        ))
+        .replace(UTILS.REGEXS.serverModelAttrGetters, (m, p1, p2, p3, p4) => (
+            p1 + '\n' + p3 + '\n' + newPropArray
+                .filter(el => (
+                    p3.indexOf(`case '${el.name}':`) === -1
+                    && el.isManuallyUpdated
+                    && ((p2 === 'getMappedAttribute' && !el.existsOnModelOnly) || (p2 === 'getReverseMappedAttribute' && !el.existsOnServerOnly))
+                ))
+                .map(el => `case '${el.name}':\n// TODO provide logic for returning value of ${el.name}`)
+                .join(';\n')
+                + '\n' + p4 + ';'
         ));
     if (!newServerContent) {
         console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));

@@ -28,7 +28,7 @@ const REGEXS = {
     modelConstructor: /(constructor\s?\()((?:[_wu]?id\? ?\: ?string){0,3})\,?((?:\s*\w+\??(?: ?\: ?.*\,?|\,|))*?)(\s*\)\s?\{\s*)((?:\s*?this\.[_wu]?id ?\= ?.+;){0,3})((?:\s*?this\.\w+ ?\= ?.*?;)*)/m,
     properNames: /\b[A-Z]\w*\b/gm,
     formControlList: /(const generatedFormControls\: ?FormControlList ?\= ?\[)((?:.|\s)*?)(\];)/,
-    serverModelAttrGetters: /(static (get(?:Reverse)?MappedAttribute)\(.*?\) ?: any ?\{(?:\s|.)*?switch ?\(.*\) ?{)((?:\s*(?:case|default)(?: '\w*?')?:\s*(?:return .*;)?)*)/gm
+    serverModelAttrGetters: /(static (get(?:Reverse)?MappedAttribute)\(.*?\) ?: any ?\{(?:\s|.)*?switch ?\(.*\) ?{)((?:\s*case(?: '\w*?')?:\s*(?:return .*;)?)*)((?:\s*default(?: '\w*?')?:\s*(?:return .*;)?)*)/gm
 };
 
 /**
