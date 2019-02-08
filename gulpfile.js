@@ -483,17 +483,18 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
                 .join(';\n')
                 + ';'
         ))
-        .replace(UTILS.REGEXS.serverModelAttrGetters, (m, p1, p2, p3, p4) => (
-            p1 + '\n' + p3 + '\n' + newPropArray
-                .filter(el => (
-                    p3.indexOf(`case '${el.name}':`) === -1
-                    && el.isManuallyUpdated
-                    && ((p2 === 'getMappedAttribute' && !el.existsOnModelOnly) || (p2 === 'getReverseMappedAttribute' && !el.existsOnServerOnly))
-                ))
-                .map(el => `case '${el.name}':\n// TODO provide logic for returning value of ${el.name}`)
-                .join(';\n')
-                + '\n' + p4 + ';'
-        ));
+        .replace(UTILS.REGEXS.serverModelAttrGetters, (m, p1, p2, p3, p4) => {
+            const mappingTODOList = newPropArray.filter(el => (
+                p3.indexOf(`case '${el.name}':`) === -1
+                && el.isManuallyUpdated
+                && ((p2 === 'getMappedAttribute' && !el.existsOnModelOnly) || (p2 === 'getReverseMappedAttribute' && !el.existsOnServerOnly))
+            ));
+            return p1 + (p3 && p3.length ? '\n' + ' '.repeat(12) + p3.trim() : '')
+            + (mappingTODOList.length ? '\n' + mappingTODOList
+                .map(el => `${' '.repeat(12)}case '${el.name}':\n${' '.repeat(16)}// TODO provide logic for returning value of ${el.name};\n${' '.repeat(16)}throw new Error('Initialization logic for ${el.name} not provided!')`)
+                .join(';\n') + ';' : '')
+            + p4
+        });
     if (!newServerContent) {
         console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
         return false;
