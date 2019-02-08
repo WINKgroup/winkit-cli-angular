@@ -555,7 +555,7 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
                             return propDeclaration;
                         } else {
                             const skippedProp = currConstructorDeclarations.filter(el => (new RegExp(`^\\s*this.${prop.name}`)).test(el))[0];
-                            return skippedProp ? skippedProp.trim().replace(/;*$/, '') : propDeclaration;
+                            return skippedProp ? skippedProp.trim().replace(/;*$/, '') : `this.${prop.name} = null`;
                         }
                     })
                     .join(';\n' + ' '.repeat(4)) + ';';
