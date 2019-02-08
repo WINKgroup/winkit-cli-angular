@@ -79,7 +79,7 @@ export class Server**ThisName** {
         config.properties.forEach((prop: ModelProperty) => {
             if (!prop.existsOnServerOnly) {
                 const localName = prop.mapReverseName || prop.name;
-                o[localName] = this.getReverseMappedAttribute(obj, prop);
+                o[localName] = this.getReverseMappedAttribute(serverObject, prop);
             }
         });
         return o;
