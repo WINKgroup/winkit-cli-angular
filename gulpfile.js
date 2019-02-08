@@ -229,9 +229,9 @@ function createListFiles(name) {
                     console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
                     resolve(false);
                 }
-                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.ts`, content, 'utf-8');
-                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.html`, content, 'utf-8');
-                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.scss`, content, 'utf-8');
+                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.ts`, tsContent, 'utf-8');
+                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.html`, htmlContent, 'utf-8');
+                fs.writeFileSync(`src/app/modules/${nameLowerCase}/${listFileRelative}.scss`, scssContent, 'utf-8');
                 let arrayPositionRegex = /(declarations|exports): \[[\w\s\n\,]*\]/gm;
                 addToModuleOrRouting(name + 'ListComponent', `src/app/modules/${nameLowerCase}/${nameLowerCase}.module.ts`, './' + listFileRelative, arrayPositionRegex);
                 addToModuleOrRouting(name + 'ListComponent',
@@ -297,7 +297,7 @@ function createModuleFiles(name) {
         console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
         return false;
     }
-    fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.module.ts`, content, 'utf-8');
+    fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.module.ts`, moduleContent, 'utf-8');
     fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.routing.ts`, routingContent, 'utf-8');
     fs.writeFileSync(`src/app/modules/${name.toLowerCase()}/${name.toLowerCase()}.conf.json`, TEMPLATES.configTemplate, 'utf-8');
     addToModuleOrRouting(name + 'Module',
@@ -457,36 +457,46 @@ function writeNewServerContent(filePath, serverContent, newPropArray = [], types
         propMap.unshift.apply(propMap, primaryKeyList);
     }
     const newServerContent = serverContent
-        .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
+        .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.trim()}\n\/\/ TODO verify the following imports: ${typesToImport.filter(type => RegExp(`\\b${type}\\b`).test(p1)).join(', ')};\n\n${p3.trim()}` : p1.trim() + '\n\n' + p3)
         .replace(UTILS.REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-            return p1.trim() + '\n' + propArray.map( (prop, i) => {
-                    const userPropName = propMap ? propMap[i].name : false;
-                    if (!prop.skipUpdate) {
-                        return `  ${userPropName || prop.serverName || prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
-                    } else {
-                        const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
-                        return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
-                    }
-                }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n')
-                + ';';
+            return p1.trim() + '\n' + propArray
+                    .filter(prop => !prop.existsOnModelOnly)
+                    .map( (prop, i) => {
+                        const userPropName = propMap ? propMap[i].name : false;
+                        const propDeclaration = `    ${userPropName || prop.serverName || prop.name}${prop.isOptional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + (prop.serverType || prop.type) : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`;
+                        if (!prop.isManuallyUpdated) {
+                            return propDeclaration;
+                        } else {
+                            const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
+                            return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : propDeclaration;
+                        }
+                    })
+                    .join(';\n')
+                    + ';';
         })
-        .replace(UTILS.REGEXS.serverModelMapMethods, (m, p1, p2, p3, p4, p5, p6) => (
-            p1 + '\n' + ' '.repeat(4)
-            + propArray.map( (prop, i) => {
-                const userPropName = propMap ? propMap[i].name : false;
-                const currPropInitializationsArray = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-                if (!prop.skipUpdate) {
+        .replace(UTILS.REGEXS.serverModelMapMethods, (m, p1, p2, p3, p4, p5) => (
+            p1 + '\n' + primaryKeyList
+                .map( (prop, i) => {
                     return p2 === 'mapReverse'
-                        ? `    ${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || userPropName || prop.serverName || prop.name} : null`
-                        : `    ${p4}.${userPropName || prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : null`;
-                } else {
-                    const skippedProp = currPropInitializationsArray.filter(el => (new RegExp(`^\\s*${p4}.${prop.name}`)).test(el))[0];
-                    return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
-                }
-            }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n' + ' '.repeat(4))
-            + ';'
-        ));
+                        ? `${' '.repeat(8)}${p4}.${prop.mapReverseName || prop.name} = typeof ${p3}.${prop.mapReverseRelationship || prop.serverName || prop.name} !== 'undefined' ? ${p3}.${prop.mapReverseRelationship || prop.serverName || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`
+                        : `${' '.repeat(8)}${p4}.${prop.serverName || prop.name} = typeof ${p3}.${prop.relationship || prop.name} !== 'undefined' ? ${p3}.${prop.relationship || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : null}`;
+                })
+                .join(';\n')
+                + ';'
+        ))
+        .replace(UTILS.REGEXS.serverModelAttrGetters, (m, p1, p2, p3, p4) => {
+            const mappingTODOList = newPropArray.filter(el => (
+                p3.indexOf(`case '${el.name}':`) === -1
+                && el.isManuallyUpdated
+                && ((p2 === 'getMappedAttribute' && !el.existsOnModelOnly) || (p2 === 'getReverseMappedAttribute' && !el.existsOnServerOnly))
+            ));
+            return p1 + (p3 && p3.length ? '\n' + ' '.repeat(12) + p3.trim() : '')
+            + (mappingTODOList.length ? '\n' + mappingTODOList
+                .map(el => `${' '.repeat(12)}case '${el.name}':\n${' '.repeat(16)}// TODO provide logic for returning value of ${el.name};\n${' '.repeat(16)}throw new Error('Initialization logic for ${el.name} not provided!')`)
+                .join(';\n') + ';' : '')
+            + p4
+        });
     if (!newServerContent) {
         console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
         return false;
@@ -505,39 +515,50 @@ function writeNewModelContent(filePath, currentContent, newPropArray = [], types
     const primaryKeyList = UTILS.getPrimaryKeysList(UTILS.elementTypes.MODEL, config.primaryKey);
     const propArray = primaryKeyList.concat(newPropArray);
     const newContent = currentContent
-        .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.trim()}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
+        .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.trim()}\n\/\/ TODO verify the following imports: ${typesToImport.filter(type => RegExp(`\\b${type}\\b`).test(p1)).join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
         .replace(UTILS.REGEXS.modelPropDeclarations, (m, p1, p2, p3) => {
             const currPropDeclarationsArray = (p3 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-            return p1.trim() + '\n' + propArray.map( prop => {
-                if (!prop.skipUpdate) {
-                    return `  ${prop.name}${prop.optional && !prop.value ? '?' : ''}${prop.type && !prop.value ? ': ' + prop.type : ''}${prop.value ? ' = ' + prop.value : ''}`
-                } else {
-                    const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
-                    return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : '';
-                }
-            }).filter(newPropDeclaration => newPropDeclaration.length).join(';\n') + ';';
+            return p1.trim() + '\n' + propArray
+                .filter(prop => !prop.existsOnServerOnly)
+                .map( prop => {
+                    const propDeclaration = `  ${prop.name}${prop.isOptional && !prop.hasOwnProperty('value') ? '?' : ''}${prop.type && !prop.hasOwnProperty('value') ? ': ' + prop.type : ''}${prop.hasOwnProperty('value') ? ' = ' + JSON.stringify(prop.value) : ''}`;
+                    if (!prop.isManuallyUpdated) {
+                        return propDeclaration;
+                    } else {
+                        const skippedProp = currPropDeclarationsArray.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
+                        return skippedProp ? '  ' + skippedProp.trim().replace(/;*$/, '') : propDeclaration;
+                    }
+                })
+                .join(';\n') + ';';
         })
         .replace(UTILS.REGEXS.modelConstructor, (_, p1, p2, p3, p4, p5, p6) => {
             const currConstructorArgs = (p3 + ',\n').match(/^\s*.+,[\r\n]/gm) || [];
             const currConstructorDeclarations = (p6 + '\n').match(/^\s*.+;[\r\n]/gm) || [];
-            return p1 + propArray.map( prop => {
-                    if (typeof prop.relationship === 'string') {
-                        return '';
-                    } else if (!prop.skipUpdate) {
-                        return `${prop.name}?${prop.type && !prop.value ? ': ' + prop.type : ''}`;
-                    } else {
-                        const skippedProp = currConstructorArgs.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
-                        return skippedProp ? skippedProp.trim().replace(/,*$/, '') : '';
-                    }
-                }).filter(newPropDeclaration => newPropDeclaration.length).join(',\n' + ' '.repeat(14))
-                + p4 + propArray.map( prop => {
-                    if (!prop.skipUpdate) {
-                        return `this.${prop.name} = typeof ${prop.relationship || prop.name} !== 'undefined' ? ${prop.relationship || prop.name} : ${prop.value ? prop.value : 'null'}`;
-                    } else {
-                        const skippedProp = currConstructorDeclarations.filter(el => (new RegExp(`^\\s*this.${prop.name}`)).test(el))[0];
-                        return skippedProp ? skippedProp.trim().replace(/;*$/, '') : '';
-                    }
-                }).filter(newPropDeclaration => newPropDeclaration && newPropDeclaration.length).join(';\n' + ' '.repeat(4)) + ';';
+            return p1 + propArray
+                    .map( prop => {
+                        if (typeof prop.relationship === 'string' || prop.existsOnServerOnly) {
+                            return '';
+                        } else if (!prop.isManuallyUpdated) {
+                            return `${prop.name}?${prop.type && !prop.hasOwnProperty('value') ? ': ' + prop.type : ''}`;
+                        } else {
+                            const skippedProp = currConstructorArgs.filter(el => (new RegExp(`^\\s*${prop.name}[?:]`)).test(el))[0];
+                            return skippedProp ? skippedProp.trim().replace(/,*$/, '') : '';
+                        }
+                    })
+                    .filter(newPropDeclaration => newPropDeclaration.length)
+                    .join(',\n' + ' '.repeat(14))
+                + p4 + propArray
+                    .filter(prop => !prop.existsOnServerOnly)
+                    .map( prop => {
+                        const propDeclaration = `this.${prop.name} = typeof ${prop.relationship || prop.name} !== 'undefined' ? ${prop.relationship || prop.name} : ${prop.hasOwnProperty('value') ? JSON.stringify(prop.value) : 'null'}`;
+                        if (!prop.isManuallyUpdated) {
+                            return propDeclaration;
+                        } else {
+                            const skippedProp = currConstructorDeclarations.filter(el => (new RegExp(`^\\s*this.${prop.name}`)).test(el))[0];
+                            return skippedProp ? skippedProp.trim().replace(/;*$/, '') : `this.${prop.name} = null`;
+                        }
+                    })
+                    .join(';\n' + ' '.repeat(4)) + ';';
         });
     if (!newContent) {
         console.log(color(UTILS.staticTexts.aborting[0], UTILS.staticTexts.aborting[1]));
@@ -557,7 +578,7 @@ function writeNewDataFactoryContent(filePath, currentContent, newPropArray = [])
     const primaryKeyList = UTILS.getPrimaryKeysList(UTILS.elementTypes.DATA_FACTORY, config.primaryKey);
     const propArray = primaryKeyList.concat(newPropArray);
     const newContent = currentContent
-        .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
+        .replace(UTILS.REGEXS.endOfImports, (m, p1, p2, p3) => typesToImport && typesToImport.length ? `${p1.replace(/\s+$/m, '')}\n\/\/ TODO verify the following imports: ${typesToImport.filter(type => RegExp(`\\b${type}\\b`).test(p1)).join(', ')};\n\n${p3.replace(/^\s+/m, '')}` : p1.trim() + '\n\n' + p3)
         .replace(UTILS.REGEXS.formControlList, (_, p1, p2, p3) => propArray && propArray.length ? (
             p1 + '\n' + ' '.repeat(6)
             + propArray.map( prop => '{' + Object.keys(prop).map( k => `${k}: ${prop[k]}` ).join(', ') + '}' )
@@ -589,6 +610,7 @@ function updateModel(name, moduleConfig, runSilent = false) {
                 return resolve(false)
             }
             const typesToImport = UTILS.getTypesToImport(moduleConfig['properties'], 'type');
+            const serverTypesToImport = UTILS.getTypesToImport(moduleConfig['properties'], 'serverType');
             const successText = UTILS.dynamicTexts.updateSuccess(name, typesToImport);
             writeNewModelContent(modelPath, currentContent, moduleConfig['properties'], typesToImport);
             fs.readFile(serverModelPath, 'utf8', (err1, serverContent) => {
@@ -596,7 +618,7 @@ function updateModel(name, moduleConfig, runSilent = false) {
                     return resolve(false);
                 }
                 if (runSilent) {
-                    writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport);
+                    writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], serverTypesToImport);
                     return resolve(true);
                 }
                 if (moduleConfig['properties'].length === 0) {
@@ -604,32 +626,9 @@ function updateModel(name, moduleConfig, runSilent = false) {
                     console.log(color(successText[0], successText[1]));
                     return resolve(true);
                 }
-                prompt({
-                    type: 'list',
-                    name: 'serverPropMapping',
-                    message: UTILS.dynamicTexts.updateMethod(name)[0],
-                    choices: ['automatic', 'manual']
-                }).then(res => {
-                    switch (res['serverPropMapping']) {
-                        case 'automatic':
-                            writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport);
-                            console.log(color(successText[0], successText[1]));
-                            return resolve(true);
-                        case 'manual':
-                            const questions = moduleConfig['properties'].map(el => ({
-                                type: 'input',
-                                name: el.name,
-                                message: el.name + ': '
-                            }));
-                            prompt(questions).then(res => {
-                                // IMPORTANT: res is an object with keys matching newPropArray prop names
-                                const userPropMap = UTILS.getUserPropMap(res, moduleConfig['properties']);
-                                writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], typesToImport, userPropMap);
-                                console.log(color(successText[0], successText[1]));
-                                return resolve(true);
-                            });
-                    }
-                });
+                writeNewServerContent(serverModelPath, serverContent, moduleConfig['properties'], serverTypesToImport);
+                console.log(color(successText[0], successText[1]));
+                return resolve(true);
             });
         });
     });
@@ -649,7 +648,7 @@ function updateDetail(name, moduleConfig, runSilent = false) {
         }
         const {dataFactoryPath} = UTILS.getModulePaths(name, true);
         const formControlList = moduleConfig['properties']
-            .filter( el => el.hasOwnProperty('htmlConfig') && !el.skipUpdate )
+            .filter( el => el.hasOwnProperty('htmlConfig') && !el.isManuallyUpdated )
             .map( el => {
               let formControl = {name: `'${el.name}'`, type: 'FormControlType.TEXT', ...el.htmlConfig};
               formControl.primaryKey = el.primaryKey;

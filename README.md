@@ -221,35 +221,52 @@ This command will generate the following file structure in the _src/app/modules/
 NOTE: The _foo/_ directory and the _foo.conf.json_, _foo.module.ts_ and _foo.routing.ts_ files are only generated if they don't exist yet.
 
 ##### 1. src/app/modules/foo/models/Foo.ts
-_map(obj: ServerFoo): Foo_ : maps the model starting from its server model.
-```
-Ex. const foo = new Foo().map(serverFoo);
-```
+* _map(obj: ServerFoo): Foo_ : maps the model starting from its server model.
+    ```
+    Ex. const foo = new Foo().map(serverFoo);
+    ```
 
-_mapReverse(): ServerFoo_ : maps the model starting from its server model.
-```
-Ex. const serverFoo = foo.mapReverse();
-```
+* _mapReverse(): ServerFoo_ : maps the model starting from its server model.
+    ```
+    Ex. const serverFoo = foo.mapReverse();
+    ```
+
+<a id="generate-model-server"></a>
 ##### 2. src/app/modules/foo/models/ServerFoo.ts
-_static map(obj: Foo): ServerFoo_ : this method is called by the model _mapReverse_ function.
+* _static map(obj: Foo): ServerFoo_ : this method is called by the model _mapReverse_ function.
 
-Edit this method to manage the mapping as you need.
-```
-Ex.
-const o = {} as ServerFoo;
-o.first_name = obj.firstName || null;
-```
+    It returns a server model (in this case `ServerFoo`) with properties initialized using the logic provided in the private `getMappedAttribute` method (see below).
 
-_static mapReverse(serverObject: ServerUser): User_ : this method is called by the  model _map_ function.
+    Model properties which exist on the model only and don't exist on the server should have the `existsOnModelOnly` attribute in the _\<model\>.conf.json_ file set to `true`. This way they will not be initialized on the server model returned by the method.
+    
+    [Learn more about model configuration](#model-property-structure)
 
-Edit this method to manage the mapping as you need.
-```
-Ex.
-const o = {} as Foo;
-o.firstName = serverObject.first_name || null;
-```
+* _static mapReverse(serverObject: ServerUser): User_ : this method is called by the  model _map_ function.
+
+    It returns a model (in this case `Foo`) with properties initialized using the logic provided in the private `getReverseMappedAttribute` method (see below).
+    
+    Model properties which exist on the model only and don't exist on the server should have the `existsOnServerOnly` attribute in the _\<model\>.conf.json_ file set to `true`. This way they will not be initialized on the model returned by the method.
+
+* _private static getMappedAttribute(model: User, prop: ModelProperty): string_ : this method is used in the server model _map_ function to compute the value of the server model attribute.
+    
+    The default logic is:
+    ```angularjs
+    typeof model[localName] !== 'undefined' ? model[localName] : defaultValue
+    ```
+    To provide your own logic, use the `case` clause which corresponds to the attribute.
+
+* _private static getReverseMappedAttribute(serverObject: ServerUser, prop: ModelProperty): string_ : this method is called by the server model _mapReverse_ function to compute the value of the model attribute.
+
+    The default logic is:
+    ```angularjs
+    typeof serverObject[serverName] !== 'undefined' ? serverObject[serverName] : defaultValue
+    ```
+    To provide your own logic, use the `case` clause which corresponds to the attribute.
+
 ##### 3. src/app/modules/foo/models/FooDataFactory.ts
-File providing data used by the model's components. This file is updated by Winkit Angular.
+File providing data used by the model's components. This file is updated by Winkit Angular based on the `htmlConfig` configuration in model properties.
+* [updating Winkit models](#update-model)
+* [htmlConfig object structure](#html-config-structure)
 
 ##### 4. src/app/modules/foo/foo.conf.json
 The model configuration file. For more information on using the file, see the [update model](#update-model) documentation.
@@ -359,25 +376,30 @@ Updates a model based on the configuration in the _\<name\>.conf.json_ file.
 
 ([example configuration file](https://github.com/WINKgroup/winkit-cli-angular/blob/master/resources/templates/project_template/src/app/modules/user/user.conf.json))
 
-The schema of the the _\<name\>.conf.json_ configuration file is the following:
-* **"properties"** (`Array<ModelProperty>`): an array of ModelProperty objects.
+The schema of the _\<name\>.conf.json_ configuration file is the following:
+* **"properties"** (`Array<ModelProperty>`): an array of [ModelProperty](https://github.com/WINKgroup/winkit-cli-angular/tree/master/resources/templates/project_template/src/app/@core/models/ModelConfig.ts) objects.
 
-**IMPORTANT**: To exclude a ModelProperty from being updated by Winkit (ex. because you want to something custom with it), set its `skipUpdate` property to `true` (see below for more info);
+**IMPORTANT**: To exclude a [ModelProperty](https://github.com/WINKgroup/winkit-cli-angular/tree/master/resources/templates/project_template/src/app/@core/models/ModelConfig.ts) from being updated by Winkit (ex. because you want to something custom with it), set its `skipUpdate` property to `true` (see below for more info);
 
-The structure of the **ModelProperty** object is the following:
+<a id="model-property-structure"></a>
+The structure of the [ModelProperty](https://github.com/WINKgroup/winkit-cli-angular/tree/master/resources/templates/project_template/src/app/@core/models/ModelConfig.ts) object is the following:
 * **name** (`string`: _required_): the name of the model property;
-* **type** (`string`: _optional_): a string containing a typescript type ([more info](https://www.typescriptlang.org/docs/handbook/basic-types.html));
-* **optional** (`boolean`: _optional_): adds TypeScript's optional class marker to a property ([more info](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#optional-class-properties));
-* **value** (`string`: _optional_): a string containing the default value assigned to the model on initialization. Setting this key results in ignoring the _type_ and _optional_ keys;
-* **skipUpdate** (`boolean`: _optional_): setting this value to `true` results in the model property not being added to the model or, if it already exists on the model, skipped when the model is updated using `winkit angular update|u ...`. This also means that the property will not be added to the model detail. For info on rectifying this, see [this section](#detail-form);
 * **serverName** (`string`: _optional_): name of the corresponding server model property, if different from _ModelProperty.name_;
+* **isOptional** (`boolean`: _optional_): adds TypeScript's optional class marker to a property ([more info](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#optional-class-properties));
+* **type** (`string`: _optional_): a string containing a typescript type ([more info](https://www.typescriptlang.org/docs/handbook/basic-types.html));
+* **serverType** (`string`: _optional_): name of the corresponding server model type, if different from _ModelProperty.type_;
+* **value** (`any`: _optional_): the default value assigned to the model on initialization. Setting this key results in ignoring the _type_ and _optional_ keys;
+* **isManuallyUpdated** (`boolean`: _optional_): setting this value to `true` results in the model property being skipped if it already exists and is initialized on the model, when the model is updated using `winkit angular update|u ...`. It also results in the property not being added to the model detail. For info on rectifying this, see [this section](#detail-form);
 * **mapReverseName** (`string`: _optional_): The name of the model property to which the server model property value should be assigned in the mapReverse method of the server model;
 * **relationship** (`string`: _optional_): Maps the value of the provided model property to the current property, e.g. the following configuration: `{"name": "wid", "relationship": "id", ...}` will result in mapping the value of the `id` property to the `wid` property in the model _constructor_ and the server model _map_ method;
 * **mapReverseRelationship** (`string`: _optional_): Maps the value of the provided server model property to the current property, e.g. the following configuration: `{"name": "wid", "mapReverseRelationship": "_id", ...}` will result in mapping the value of the `_id` property to the `wid` property in the server model _mapReverse_ method;
+* **existsOnModelOnly** (`boolean`: _optional_): Excludes the model property from being initialized inside the [Server\<Model\>.map method](#generate-model-server);
+* **existsOnServerOnly** (`boolean`: _optional_): Excludes the model property from being initialized inside the [Server\<Model\>.mapReverse method](#generate-model-server);
 * **htmlConfig** (`object`: _optional_): An object containing configuration of a single form control element. __Must be set__ for the form control element to be displayed in the detail component of a given model. For more information see [Structure of the htmlConfig object](#structure-of-the-htmlConfig-object) section below;
 
-NOTE: The _id_, __id_ and _wid_ model properties are not affected by the _\<name\>.conf.json_ configuration.
+NOTE: The primary key property settings are not affected by the _\<name\>.conf.json_ configuration.
 
+<a id="html-config-structure"></a>
 #### STRUCTURE OF THE `htmlConfig` OBJECT
 
 The structure of `htmlConfig` object mostly reflects [attributes of an HTMLInputElement](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) but also has some additional settings:
@@ -490,7 +512,6 @@ static mapReverse(serverObject: ServerZuno): Zuno {
 }
 ...
 ```
-NOTE: Before the server model is generated, you are prompted to choose the update method. Choosing `automatic` will result in using the property names provided in the configuration file. Choosing the `manual` option triggers a simple property mapping tool, where you can provide new names for server-side properties.
 
 ##### 3. src/app/modules/foo/models/FooDataFactory.ts
 

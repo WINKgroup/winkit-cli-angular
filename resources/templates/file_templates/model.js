@@ -40,36 +40,80 @@ export class **ThisName** implements Mappable<**ThisName**> {
 `;
 
 const serverModelTemplate = `import {**ThisName**} from './**ThisName**';
+import {ModelProperty} from '../../../@core/models/ModelConfig';
+import config from '../**ThisName.toLowerCase()**.conf.json';
 
 export class Server**ThisName** {
-  _id?: string;
-  wid?: string;
-  
-  /**
-   * call this method to map the **ThisName** to Server**ThisName**
-   *
-   * @param {**ThisName**} obj
-   * @returns {Server**ThisName**}
-   */
-  static map(obj: **ThisName**): Server**ThisName** {
-    const o = {} as Server**ThisName**;
-    o._id = typeof obj.id !== 'undefined' ? obj.id : null;
-    o.wid = typeof obj.id !== 'undefined' ? obj.id : null;
-    return o;
-  }
+    _id?: string;
+    wid?: string;
 
-  /**
-   * call this method to map the Server**ThisName** to **ThisName**
-   *
-   * @param {Server**ThisName**} serverObject
-   * @returns {**ThisName**}
-   */
-  static mapReverse(serverObject: Server**ThisName**): **ThisName** {
-    const o = {} as **ThisName**;
-    o.id = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
-    o.wid = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
-    return o;
-  }
+    /**
+     * call this method to map the **ThisName** to Server**ThisName**
+     *
+     * @param {**ThisName**} obj
+     * @returns {Server**ThisName**}
+     */
+    static map(obj: **ThisName**): Server**ThisName** {
+        const o = {} as Server**ThisName**;
+        o._id = typeof obj.id !== 'undefined' ? obj.id : null;
+        o.wid = typeof obj.id !== 'undefined' ? obj.id : null;
+        config.properties.forEach((prop: ModelProperty) => {
+            if (!prop.existsOnModelOnly) {
+                const serverName = prop.serverName || prop.name;
+                o[serverName] = this.getMappedAttribute(obj, prop);
+            }
+        });
+        return o;
+    }
+
+    /**
+     * call this method to map the Server**ThisName** to **ThisName**
+     *
+     * @param {Server**ThisName**} serverObject
+     * @returns {**ThisName**}
+     */
+    static mapReverse(serverObject: Server**ThisName**): **ThisName** {
+        const o = {} as **ThisName**;
+        o.id = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
+        o.wid = typeof serverObject._id !== 'undefined' ? serverObject._id : null;
+        config.properties.forEach((prop: ModelProperty) => {
+            if (!prop.existsOnServerOnly) {
+                const localName = prop.mapReverseName || prop.name;
+                o[localName] = this.getReverseMappedAttribute(serverObject, prop);
+            }
+        });
+        return o;
+    }
+
+    /**
+     * Computes the value of a given Server**ThisName** object attribute based on the **ThisName** object
+     *
+     * @param {**ThisName**} model
+     * @param {ModelProperty} prop
+     */
+    private static getMappedAttribute(model: **ThisName**, prop: ModelProperty): any {
+        const localName = prop.relationship || prop.name;
+        const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
+        switch (prop.name) {
+            default:
+                return typeof model[localName] !== 'undefined' ? model[localName] : defaultValue;
+        }
+    }
+
+    /**
+     * Computes the value of a given **ThisName** object attribute based on the Server**ThisName** object
+     *
+     * @param {Server**ThisName**} serverObject
+     * @param {ModelProperty} prop
+     */
+    private static getReverseMappedAttribute(serverObject: Server**ThisName**, prop: ModelProperty): any {
+        const serverName = prop.mapReverseRelationship || prop.serverName || prop.name;
+        const defaultValue = prop.hasOwnProperty('value') ? prop.value : null;
+        switch (prop.name) {
+            default:
+                return typeof serverObject[serverName] !== 'undefined' ? serverObject[serverName] : defaultValue;
+        }
+    }
 }
 
 `;
