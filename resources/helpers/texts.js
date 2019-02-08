@@ -28,7 +28,7 @@ const dynamicTexts = {
     createService: name => [`\nCreating ${name} service...`, ''],
     createDetail: name => [`\nCreating ${name} detail...`, ''],
     createList: name => [`\nCreating ${name} list...`, ''],
-    provideIconForList: name => [`Provide the name of the icon that will be used for the ${name} list or press enter to not use an icon.\nFor available icon names, consult this page: https://material.io/tools/icons/?style=baseline\n`, ''],
+    provideIconForList: name => [`Provide the name of the icon that will be used for the ${name} list or press enter to not use an icon.\nFor available icon names, consult this page: https://material.io/tools/icons/?style=baseline\n>`, ''],
     whichElementsForModel: name => [`What do you want to generate for the model <${name}>?`, ''],
     nameAlreadyExists: elementType => [`\n${elementType.toUpperCase()} with this name already exists. Please provide a new name:`, 'RED'],
     nameModelNotFound: (elementType, name, isService) => [`\nModel for ${elementType} not found.\n\nDo you want to generate the <${name}> model${ isService ? ' ' : ' and <' + name + 'Service> service ' }automatically? (Y/n)`, 'RED'],
