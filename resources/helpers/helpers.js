@@ -1,6 +1,11 @@
 const fs = require('fs');
 const windowKeyList = require('./windowKeysList');
-const config = require(process.cwd() + '/winkit.conf.json');
+let config;
+try {
+    config = require(process.cwd() + '/winkit.conf');
+} catch (e) {
+    config = {};
+}
 
 /**
  * Enum for element type strings.
